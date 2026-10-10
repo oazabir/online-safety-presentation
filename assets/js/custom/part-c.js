@@ -67,7 +67,7 @@ var CSS = [
 
 /* Lost Screen Memorial */
 '.pc-lsm{position:absolute;inset:0;overflow:hidden;background:#212121}',
-'.pc-lsm img{position:absolute;left:0;top:0;width:1920px;height:auto;display:block;will-change:transform}',
+'.pc-lsm img{position:absolute;left:192px;top:0;width:1536px;height:auto;display:block;will-change:transform}',
 '.pc-lsm .top{position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(180deg,rgba(18,18,18,.96) 0%,rgba(18,18,18,.82) 48%,rgba(18,18,18,0));pointer-events:none}',
 '.pc-lsm .ttl{position:absolute;left:0;right:0;top:34px;text-align:center;font:italic 500 88px/1 var(--f-display);color:#fff;letter-spacing:-.01em;text-shadow:0 4px 30px rgba(0,0,0,.8)}',
 '.pc-lsm .bot{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,rgba(18,18,18,.7),rgba(18,18,18,0));pointer-events:none}',
@@ -255,7 +255,7 @@ D.slides.forEach(function (s) {
         r.t.split(/(naked|bondage|strippers?|sex\w*)/i).forEach(function (part, i) {
           if (!part) return;
           var c = Object.assign({}, r, { t: part });
-          if (i % 2) c.blur = true;
+          if (i % 2) c.blur = /^(naked|sex)/i.test(part) ? 2.8 : true;
           out.push(c);
         });
       });
@@ -386,7 +386,7 @@ Deck.registerSlide(45, {
   },
   enter: function (el, ctx) {
     var img = el.__lsm; if (!img || ctx.reduced) return;
-    var dist = LSM.h * W / LSM.w - H;                 // stretched to the slide width, keep aspect ratio
+    var dist = LSM.h * (W * 0.8) / LSM.w - H;         // 80% of the slide width, keep aspect ratio
     var an = img.animate([{ transform: 'translate3d(0,0,0)' }, { transform: 'translate3d(0,' + (-dist) + 'px,0)' }],
       { duration: LSM.ms, delay: 900, easing: 'cubic-bezier(.42,0,.58,1)', fill: 'both' });
     ctx.onLeave(function () { try { an.cancel(); } catch (e) {} });

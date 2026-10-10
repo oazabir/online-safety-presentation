@@ -107,7 +107,7 @@ function mkText(e) {
       if (!first) first = r;
       if (r.b) sp.style.fontWeight = 700; if (r.i) sp.style.fontStyle = 'italic';
       if (r.c) sp.style.color = r.c; if (r.f === 'mono') sp.classList.add('m'); else if (r.f === 'hand') sp.classList.add('hd'); else if (r.f === 'disp') sp.classList.add('dp');
-      if (r.blur) { sp.style.filter = 'blur(9px)'; sp.style.userSelect = 'none'; sp.style.display = 'inline-block'; }
+      if (r.blur) { sp.style.filter = 'blur(' + (r.blur === true ? 4 : r.blur) + 'px)'; sp.style.userSelect = 'none'; sp.style.display = 'inline-block'; }
       if (r.base) { sp.style.verticalAlign = 'super'; sp.style.fontSize = (fs * .7).toFixed(1) + 'px'; }
       pe.appendChild(sp);
     });
