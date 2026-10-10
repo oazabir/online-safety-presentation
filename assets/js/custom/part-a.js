@@ -41,7 +41,7 @@ var CSS = [
 '@keyframes pa-np{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) drop-shadow(0 0 22px rgba(255,200,60,.8))}}',
 
 /* ---- slide 1 */
-'.pa1-beam{position:absolute;left:880px;top:-120px;width:1100px;height:1100px;background:radial-gradient(ellipse at 78% 12%,rgba(110,215,255,.5),rgba(34,211,238,.12) 45%,transparent 68%);animation:pa-breathe 5s ease-in-out infinite alternate;pointer-events:none}',
+'.pa1-beam{position:absolute;left:880px;top:-120px;width:1100px;height:1100px;background:radial-gradient(ellipse at 78% 12%,rgba(110,215,255,.5),rgba(34,211,238,.12) 45%,transparent 68%);animation:pa-breathe 5s ease-in-out infinite alternate;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent 110px,#000 330px),linear-gradient(90deg,#000 800px,transparent 1030px);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 110px,#000 330px),linear-gradient(90deg,#000 800px,transparent 1030px);mask-composite:intersect}',
 '.pa1-phone{position:absolute;left:1600px;top:56px;width:150px;height:300px;border-radius:30px;background:#04080b;border:3px solid #1c5560;',
 '  --r0:8deg;--r1:13deg;animation:pa-float 6s ease-in-out infinite alternate;box-shadow:0 0 110px 26px rgba(34,211,238,.38),inset 0 0 0 2px rgba(255,255,255,.07)}',
 '.pa1-phone i{position:absolute;inset:11px;border-radius:21px;background:linear-gradient(165deg,#b6f0ff,#22D3EE 38%,#0891B2);animation:pa-np 3.2s ease-in-out infinite}',

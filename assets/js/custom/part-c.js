@@ -24,6 +24,13 @@ var CSS = [
 '.pa1-frame::after,.pbc-band::before{content:none!important;display:none!important}',
 
 /* typewriter */
+/* touch taps (slide #90) */
+'.pc-tap{position:absolute;width:0;height:0;pointer-events:none;z-index:5}',
+'.pc-tap i,.pc-tap b{position:absolute;left:0;top:0;border-radius:50%;transform:translate(-50%,-50%)}',
+'.pc-tap i{width:74px;height:74px;background:rgba(255,255,255,.45);border:3px solid rgba(255,255,255,.9);box-shadow:0 0 30px rgba(255,255,255,.5);animation:pc-tap-dot 1.1s ease-out forwards}',
+'.pc-tap b{width:74px;height:74px;border:4px solid rgba(255,255,255,.85);animation:pc-tap-ring 1.1s ease-out .12s forwards;opacity:0}',
+'@keyframes pc-tap-dot{0%{transform:translate(-50%,-50%) scale(1.5);opacity:0}25%{transform:translate(-50%,-50%) scale(.82);opacity:1}55%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}',
+'@keyframes pc-tap-ring{0%{transform:translate(-50%,-50%) scale(.8);opacity:.9}100%{transform:translate(-50%,-50%) scale(2.6);opacity:0}}',
 '.tw-c{visibility:hidden}.tw-c.on{visibility:visible}',
 '.tw-c.cur{position:relative}',
 '.tw-c.cur::after{content:"";position:absolute;left:100%;top:.06em;width:.5em;height:1.02em;margin-left:.04em;background:var(--cyan);animation:pc-blink 1s steps(1) infinite}',
@@ -201,6 +208,62 @@ function twRun(chars, ms, alive, done) {
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
 
+/* slide #57: everything after the intro paragraph waits until its typewriter (1.9 s) has finished */
+D.slides.forEach(function (s) {
+  if (s.orig !== 57 || !s.steps || !s.steps[1]) return;
+  s.steps[1].fx.forEach(function (f) { if (f.t >= 500) f.t += 1500; });
+  s.els.forEach(function (e) {
+    if (e.id !== 'e11' && e.id !== 'e12') return;
+    e.w = 82; e.paras.forEach(function (p) { p.runs.forEach(function (r) { r.sz = 46; }); });
+    if (e.id === 'e12') e.y = 60;
+  });
+});
+
+/* slide #74 title */
+D.slides.forEach(function (s) {
+  if (s.orig !== 74) return;
+  s.els.forEach(function (e) {
+    (e.paras || []).forEach(function (p) {
+      var t = p.runs.map(function (r) { return r.t || ''; }).join('');
+      if (/less exciting/i.test(t)) p.runs = [Object.assign({}, p.runs[0], { t: 'Choose violence-free, gore-free games', sz: 62 })];
+    });
+  });
+});
+
+/* slide #55 title */
+D.slides.forEach(function (s) {
+  if (s.orig !== 55) return;
+  s.els.forEach(function (e) {
+    if (e.k !== 'text' || !e.paras) return;
+    var txt = e.paras.map(function (p) { return p.runs.map(function (r) { return r.t || ''; }).join(''); }).join('');
+    if (!/harmful for kids/i.test(txt)) return;
+    var p = e.paras[0];
+    p.runs = [Object.assign({}, p.runs[0], { t: 'A pandemic of online harm affecting children', sz: 72 })];
+    e.paras = [p];
+  });
+});
+
+/* kids in the room: blur sensitive words in slide #43's BBC quote */
+D.slides.forEach(function (s) {
+  if (s.orig !== 43) return;
+  s.els.forEach(function (e) {
+    if (e.k !== 'text' || !e.paras) return;
+    e.paras.forEach(function (p) {
+      var out = [];
+      p.runs.forEach(function (r) {
+        if (!r.t || r.blur || !/naked|bondage|strippers?|\bsex/i.test(r.t)) { out.push(r); return; }
+        r.t.split(/(naked|bondage|strippers?|sex\w*)/i).forEach(function (part, i) {
+          if (!part) return;
+          var c = Object.assign({}, r, { t: part });
+          if (i % 2) c.blur = true;
+          out.push(c);
+        });
+      });
+      p.runs = out;
+    });
+  });
+});
+
 // #55 (slide 41): only the heading and the UNSW picture, filling the free area
 if (byN[55]) {
   var p55 = elData(55, 'e7');
@@ -253,11 +316,16 @@ hook(57, {
   },
   step: function (v, k) {
     if (k !== 1) return;
+    var intro = v.map.e5;                       // "In the UK, 15-year-old Kayleigh…" types out as the step opens
+    if (intro) {
+      var ic = twPrep(intro); twSet(ic, 0);
+      twRun(ic, 1900, function () { return Deck.view === v && !v.deactivated && v.k >= 1; });
+    }
     var a = v.map.e11, b = v.map.e12; if (!a || !b) return;
     var chars = twPrep(a).concat(twPrep(b)); twSet(chars, 0);
     v.timers.push(setTimeout(function () {
       twRun(chars, 5000, function () { return Deck.view === v && !v.deactivated && v.k >= 1; });
-    }, 7504));
+    }, 9004));
   }
 });
 
@@ -420,10 +488,27 @@ hook(64, { show: function (v) { dim64(v); }, enter: dim64, step: function (v) { 
 function tog71(v) {
   var t = v.root.querySelectorAll('.pb7-tog'); if (t.length < 2) return;
   var ph = elData(71, 'e6146'), x = (ph.x + ph.w) * W / 100 + 38, cy = (ph.y + ph.h / 2) * H / 100;
-  [cy - 128, cy + 26].forEach(function (y, i) { var n = t[i]; n.classList.add('pc-side'); n.style.left = x + 'px'; n.style.top = Math.round(y) + 'px'; n.style.width = '440px'; });
+  [cy - 128, cy + 26].forEach(function (y, i) { var n = t[i]; n.classList.add('pc-side'); n.style.left = x + 'px'; n.style.top = Math.round(y) + 'px'; n.style.width = '520px'; });
   Array.prototype.forEach.call(t, function (n) { n.classList.toggle('pc-out', v.k >= 3); });
 }
 hook(71, { show: tog71, enter: tog71, step: function (v) { tog71(v); } });
+/* #90 - two touch taps on the phone video: left 20% after 6 s, right 20% 2 s later */
+function tap90(v) {
+  var box = v.map.e3; if (!box || v.k !== 0 || v.static) return;
+  function tap(fx) {
+    if (Deck.view !== v || v.deactivated) return;
+    var t = h('div', 'pc-tap', box); t.style.left = (fx * 100) + '%'; t.style.top = '50%';
+    h('i', '', t); h('b', '', t);
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 1500);
+  }
+  v.timers.push(setTimeout(function () { tap(0.2); }, 6000));
+  v.timers.push(setTimeout(function () { tap(0.8); }, 9000));
+}
+hook(90, { enter: tap90 });
+
+/* #72 - the colour / sound chips are not shown on this slide */
+function noTog72(v) { Array.prototype.forEach.call(v.root.querySelectorAll('.pb7-tog'), function (n) { n.style.display = 'none'; }); }
+hook(72, { show: noTog72, enter: noTog72, step: noTog72 });
 
 /* ---------------------------------------------------------------- 10. #88 slide 58 / #92 slide 61 - website screenshots */
 function website(n, src, iw, ih, url, rgb) {
