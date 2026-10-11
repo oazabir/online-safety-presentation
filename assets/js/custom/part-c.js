@@ -1498,4 +1498,334 @@ Deck.registerSlide(51, {
   // the base build (menu screenshot) is a base step, not a custom one: follow it via the deck's step event
   Deck.on('step', function (k, v) { if (v && v.slide && v.slide.orig === 96 && v.custom) hot(v.custom, k >= 1); });
 })();
+
+/* ---------------------------------------------------------------- 16. #87 four major threats
+   replaces the Kahf Browser poster with a 2x2 grid of threat cards, one per click */
+(function () {
+  var css = [
+    '.pc87-k{position:absolute;left:0;right:0;top:70px;text-align:center;font:800 26px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}',
+    '.pc87-t{position:absolute;left:0;right:0;top:112px;margin:0;text-align:center;font:600 92px/1.05 var(--f-display);letter-spacing:-.025em;color:var(--ink)}',
+    '.pc87-t em{font-style:italic;color:var(--red);text-shadow:0 0 40px rgba(255,77,77,.4)}',
+    '.pc87{position:absolute;left:150px;top:290px;width:1620px;display:grid;grid-template-columns:1fr 1fr;gap:36px}',
+    '.pc87 .cd{position:relative;display:flex;gap:36px;align-items:center;height:330px;box-sizing:border-box;padding:0 48px 0 44px;border-radius:30px;overflow:hidden;',
+    '  background:linear-gradient(140deg,rgba(var(--c),.16),rgba(255,255,255,.025) 60%);border:1.5px solid rgba(var(--c),.45);',
+    '  box-shadow:0 0 50px rgba(var(--c),.12),0 22px 60px rgba(0,0,0,.4);transition:opacity .7s var(--ease),transform .7s var(--ease)}',
+    '.pc87 .cd.off{opacity:0;transform:translateY(40px) scale(.97)}',
+    '.pc87 .ic{flex:none;width:150px;height:150px;border-radius:36px;display:grid;place-items:center;background:rgba(var(--c),.16);',
+    '  box-shadow:inset 0 0 0 2px rgba(var(--c),.55),0 0 40px rgba(var(--c),.3)}',
+    '.pc87 .ic svg{width:88px;height:88px;color:rgb(var(--c));filter:drop-shadow(0 0 12px rgba(var(--c),.6))}',
+    '.pc87 .no{position:absolute;right:34px;top:22px;font:700 120px/1 var(--f-display);color:rgba(var(--c),.13)}',
+    '.pc87 .hd{font:600 52px/1.08 var(--f-display);letter-spacing:-.015em;color:var(--ink)}',
+    '.pc87 .sb{margin-top:14px;font:400 30px/1.35 var(--f-body);color:var(--ink2)}',
+    '.pc87-t.pre{opacity:0}.pc87-k.pre{opacity:0}',
+    '.pc87-t.go,.pc87-k.go{animation:pc96-in .8s var(--ease) both}',
+    '.pc87.inst .cd{transition:none}'
+  ].join('\n');
+  if (!document.getElementById('pc87-css')) { var st = document.createElement('style'); st.id = 'pc87-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var S = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+  var CARDS = [
+    { c: '255,77,77', hd: 'Harmful websites', sb: 'Adult, gambling, violent and scam sites are one search away.',
+      ic: S + '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/><path d="M5.6 5.6l12.8 12.8" stroke-width="2.6"/></svg>' },
+    { c: '190,120,255', hd: 'Haram images &amp; videos', sb: 'In the browser: image search, ads and autoplay previews slip through.',
+      ic: S + '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/><path d="M2 2l20 20" stroke-width="2.6"/></svg>' },
+    { c: '255,176,32', hd: 'Excessive time on social media', sb: 'Endless feeds engineered to keep kids scrolling for hours.',
+      ic: S + '<path d="M6 3h12M6 21h12"/><path d="M7 3v3a5 5 0 0 0 10 0V3M7 21v-3a5 5 0 0 1 10 0v3"/><path d="M10 18.5h4"/></svg>' },
+    { c: '255,42,42', hd: 'Harmful videos on YouTube', sb: 'The algorithm keeps serving the next, more extreme video.',
+      ic: '<svg viewBox="0 0 90 64"><rect x="2" y="2" width="86" height="60" rx="16" fill="none" stroke="currentColor" stroke-width="5"/><path d="M36 18v28l24-14z" fill="currentColor"/></svg>' }
+  ];
+
+  function show(el, k) { var c = el.__cards; if (c) c.forEach(function (n, i) { n.classList.toggle('off', i >= k); }); }
+  if (byN[87]) {
+    byN[87].steps = [];
+    byN[87].notes = 'Before we look at the protections, here are the four big threats we need to guard against: ' +
+      'harmful websites, haram images and videos in the browser, excessive time on social media, and harmful videos on YouTube. ' +
+      'The next few slides tackle each one.';
+  }
+  Deck.registerSlide(87, {
+    title: 'Four major threats', steps: 4,
+    render: function (el, ctx) {
+      var anim = !ctx.static && !ctx.reduced && !cameBack;
+      var k = h('div', 'pc87-k' + (anim ? ' pre' : ''), el, 'What we need to protect against');
+      var t = h('h2', 'pc87-t' + (anim ? ' pre' : ''), el, 'Four <em>major</em> threats');
+      var g = h('div', 'pc87 inst', el, CARDS.map(function (c, i) {
+        return '<div class="cd off" style="--c:' + c.c + '"><div class="no">' + (i + 1) + '</div><div class="ic">' + c.ic + '</div>' +
+          '<div><div class="hd">' + c.hd + '</div><div class="sb">' + c.sb + '</div></div></div>';
+      }).join(''));
+      el.__cards = [].slice.call(g.children);
+      if (ctx.static) show(el, 4);
+      void g.offsetWidth; g.classList.remove('inst');
+      if (anim) el.__go = function () { [k, t].forEach(function (n) { n.classList.remove('pre'); n.classList.add('go'); }); };
+    },
+    enter: function (el) { if (el.__go) { el.__go(); el.__go = null; } },
+    step: function (el, i) { show(el, i); },
+    unstep: function (el, i) { show(el, i - 1); }
+  });
+})();
+
+/* ---------------------------------------------------------------- 17. NEW built-in parental controls (after #87)
+   Google Family Link / Microsoft Family Safety / Apple Screen Time, one column each with a real settings screenshot.
+   Each click spotlights one of the three website-blocking features across all three apps. */
+(function () {
+  var css = [
+    '.pcfl-k{position:absolute;left:0;right:0;top:52px;text-align:center;font:800 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}',
+    '.pcfl-t{position:absolute;left:0;right:0;top:90px;margin:0;text-align:center;font:600 80px/1.05 var(--f-display);letter-spacing:-.025em;color:var(--ink)}',
+    '.pcfl-t em{font-style:italic;color:var(--cyan);text-shadow:0 0 40px rgba(34,211,238,.4)}',
+    '.pcfl-fs{position:absolute;left:0;right:0;top:204px;display:flex;justify-content:center;gap:22px}',
+    '.pcfl-f{display:flex;align-items:center;gap:14px;padding:12px 28px 12px 14px;border-radius:999px;font:600 28px/1 var(--f-body);color:var(--ink);',
+    '  background:rgba(var(--c),.10);border:1.5px solid rgba(var(--c),.4);transition:opacity .5s var(--ease),box-shadow .5s var(--ease),background .5s var(--ease),transform .5s var(--ease)}',
+    '.pcfl-n{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;font:800 23px/1 var(--f-body);color:#05080B;background:rgb(var(--c))}',
+    '.pcfl.act .pcfl-f{opacity:.38}',
+    '.pcfl.act .pcfl-f.on{opacity:1;background:rgba(var(--c),.22);box-shadow:0 0 40px rgba(var(--c),.45);transform:scale(1.05)}',
+    '.pcfl-g{position:absolute;left:110px;top:290px;width:1700px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px}',
+    '.pcfl-cd{position:relative;box-sizing:border-box;height:760px;padding:22px 24px 18px;border-radius:28px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02) 55%);',
+    '  border:1.5px solid rgba(255,255,255,.12);box-shadow:0 22px 60px rgba(0,0,0,.45)}',
+    '.pcfl-hd{display:flex;align-items:center;gap:16px;height:62px}',
+    '.pcfl-lg{flex:none;width:56px;height:56px;border-radius:15px;display:grid;place-items:center;background:#fff}',
+    '.pcfl-lg svg{width:34px;height:34px}',
+    '.pcfl-nm{font:700 31px/1.1 var(--f-body);color:var(--ink);letter-spacing:-.01em}',
+    '.pcfl-pl{margin-top:5px;font:500 19px/1 var(--f-body);color:var(--muted);letter-spacing:.04em}',
+    '.pcfl-st{position:relative;height:430px;margin:14px 0 12px}',
+    '.pcfl-sh{position:absolute;top:50%;left:50%;overflow:hidden;border-radius:16px;background:#fff;box-shadow:0 18px 44px rgba(0,0,0,.55);',
+    '  transform:translate(-50%,-50%);transition:transform .7s var(--ease),opacity .7s var(--ease),z-index 0s .35s}',
+    '.pcfl-sh img{display:block;width:100%;height:100%}',
+    '.pcfl-sh.ph{border-radius:22px;background:#f2f2f7}',
+    '.pcfl-sh.bk{transform:translate(calc(-50% + var(--dx)),-50%) scale(.9);opacity:.55;z-index:1}',
+    '.pcfl-sh.fr{transform:translate(calc(-50% + var(--dx)),-50%);opacity:1;z-index:2}',
+    '.pcfl-hl{position:absolute;border-radius:10px;border:3px solid rgb(var(--c));box-shadow:0 0 0 2000px rgba(5,8,11,.42),0 0 26px rgba(var(--c),.8),inset 0 0 18px rgba(var(--c),.35);',
+    '  opacity:0;transition:opacity .5s var(--ease)}',
+    '.pcfl-hl.on{opacity:1;animation:pcfl-pulse 1.8s ease-in-out .5s infinite}',
+    '@keyframes pcfl-pulse{50%{box-shadow:0 0 0 2000px rgba(5,8,11,.42),0 0 44px rgba(var(--c),1),inset 0 0 22px rgba(var(--c),.5)}}',
+    '.pcfl-rw{display:flex;align-items:center;gap:14px;min-height:68px;padding:4px 14px;border-radius:14px;font:600 23px/1.2 var(--f-body);color:var(--ink2);',
+    '  transition:opacity .5s var(--ease),background .5s var(--ease),color .5s var(--ease)}',
+    '.pcfl-rw .pcfl-n{width:34px;height:34px;font-size:19px}',
+    '.pcfl.act .pcfl-rw{opacity:.32}',
+    '.pcfl.act .pcfl-rw.on{opacity:1;color:var(--ink);background:rgba(var(--c),.16);box-shadow:inset 0 0 0 1.5px rgba(var(--c),.55)}',
+    '.pcfl .pre{opacity:0}',
+    '.pcfl .go{animation:pcfl-in .8s var(--ease) both}',
+    '@keyframes pcfl-in{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}',
+    '.pcfl.inst *{transition:none!important}',
+    '@media (prefers-reduced-motion:reduce){.pcfl-hl.on{animation:none}}'
+  ].join('\n');
+  if (!document.getElementById('pcfl-css')) { var st = document.createElement('style'); st.id = 'pcfl-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var FEAT = [
+    { c: '255,77,77', t: 'Auto-block adult sites' },
+    { c: '255,176,32', t: 'Block specific sites' },
+    { c: '46,229,157', t: 'Allow only approved sites' }
+  ];
+  // hl: [left, top, width, height] in % of the screenshot, one per feature (null = not on this screenshot)
+  var APPS = [
+    { nm: 'Google Family Link', pl: 'Android · Chromebook · Chrome',
+      lg: '<svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="4.2" fill="#4285F4"/><circle cx="17" cy="7" r="4.2" fill="#EA4335"/><circle cx="7" cy="17" r="4.2" fill="#34A853"/><circle cx="17" cy="17" r="4.2" fill="#FBBC04"/></svg>',
+      rows: ['Try to block explicit sites', 'Manage sites &rarr; Blocked sites', 'Only allow approved sites'],
+      shots: [{ src: 'media/parental/familylink-chrome.webp', w: 287, h: 430, dx: 0, fs: [1, 2, 3],
+        hl: [[2.5, 12.3, 94, 13.6], [2.5, 88.4, 94, 8.4], [2.5, 30.3, 94, 12.6]] }] },
+    { nm: 'Microsoft Family Safety', pl: 'Windows · Xbox · Edge',
+      lg: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="9.5" height="9.5" fill="#F25022"/><rect x="12.5" y="2" width="9.5" height="9.5" fill="#7FBA00"/><rect x="2" y="12.5" width="9.5" height="9.5" fill="#00A4EF"/><rect x="12.5" y="12.5" width="9.5" height="9.5" fill="#FFB900"/></svg>',
+      rows: ['Filter inappropriate websites and searches', 'Blocked sites &rarr; Add a website', 'Only use allowed websites'],
+      shots: [{ src: 'media/parental/ms-family-filters.webp', w: 500, h: 227, dx: 0, fs: [1, 2, 3],
+        hl: [[2, 25.5, 96, 23.5], [2, 81, 96, 19], [2, 56, 96, 20]] }] },
+    { nm: 'Apple Screen Time', pl: 'iPhone · iPad · Mac',
+      lg: '<svg viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="6" fill="#5E5CE6"/><path d="M8 5.5h8M8 18.5h8M9 5.5v2.2a3 3 0 0 0 6 0V5.5M9 18.5v-2.2a3 3 0 0 1 6 0v2.2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      rows: ['Limit Adult Websites', 'Apps &amp; Websites &rarr; Blocked', 'Approved Websites Only'],
+      shots: [
+        { src: 'media/parental/ios-blocked.webp', w: 297, h: 430, dx: 90, fs: [2], ph: true,
+          hl: [null, [50.2, 63.6, 35.6, 6.8], null] },
+        { src: 'media/parental/ios-web-filtering.webp', w: 297, h: 430, dx: -90, fs: [1, 3], ph: true, def: true,
+          hl: [[14.3, 35.2, 71.4, 7.2], null, [14.3, 28.5, 71.4, 7.2]] }] }
+  ];
+
+  function set(el, k) {
+    var r = el.__pcfl; if (!r) return;
+    r.classList.toggle('act', k > 0);
+    [].forEach.call(r.querySelectorAll('[data-k]'), function (n) { n.classList.toggle('on', +n.getAttribute('data-k') === k); });
+    [].forEach.call(r.querySelectorAll('.pcfl-st'), function (stg) {
+      var shots = [].slice.call(stg.querySelectorAll('.pcfl-sh')); if (shots.length < 2) return;
+      var front = shots.filter(function (s) { return k > 0 && s.getAttribute('data-fs').indexOf(k) >= 0; })[0] ||
+        shots.filter(function (s) { return s.hasAttribute('data-def'); })[0];
+      shots.forEach(function (s) { s.classList.toggle('fr', s === front); s.classList.toggle('bk', s !== front); });
+    });
+  }
+
+  Deck.insertSlide({
+    after: 87, id: 'parental-controls', title: 'Built-in parental controls', section: 'protect',
+    tr: { type: 'fade', ms: 800 }, steps: 3,
+    notes: 'Before you buy anything, use what is already free on your child\'s device. Google Family Link for Android and Chromebook, ' +
+      'Microsoft Family Safety for Windows and Xbox, and Apple Screen Time for iPhone, iPad and Mac. All three can block harmful websites in three ways. ' +
+      '[click] One: automatically block adult sites. Family Link: Try to block explicit sites. Microsoft: Filter inappropriate websites and searches, which also forces SafeSearch on Bing. Apple: Limit Adult Websites. ' +
+      '[click] Two: block specific sites you add yourself. Family Link: Manage sites, Blocked sites. Microsoft: Blocked sites, add a website. Apple: Apps and Websites, Blocked. ' +
+      '[click] Three, the strictest: allow only the sites you approve, everything else is blocked. Best for young children. ' +
+      'Caveat: Family Link filters only Chrome, Microsoft only Edge (it blocks other browsers), Apple covers Safari and most apps. No filter is perfect, which is why we need more layers.',
+    render: function (el, ctx) {
+      var anim = !ctx.static && !ctx.reduced && !cameBack;
+      var r = h('div', 'pcfl inst', el);
+      var pre = anim ? ' pre' : '';
+      h('div', 'pcfl-k' + pre, r, 'Free &middot; already on your child&rsquo;s device');
+      h('h2', 'pcfl-t' + pre, r, 'Built-in <em>parental controls</em>');
+      h('div', 'pcfl-fs' + pre, r, FEAT.map(function (f, i) {
+        return '<div class="pcfl-f" data-k="' + (i + 1) + '" style="--c:' + f.c + '"><span class="pcfl-n">' + (i + 1) + '</span>' + f.t + '</div>';
+      }).join(''));
+      h('div', 'pcfl-g', r, APPS.map(function (a) {
+        var shots = a.shots.map(function (s) {
+          var hl = s.hl.map(function (b, i) {
+            return b ? '<div class="pcfl-hl" data-k="' + (i + 1) + '" style="--c:' + FEAT[i].c + ';left:' + b[0] + '%;top:' + b[1] + '%;width:' + b[2] + '%;height:' + b[3] + '%"></div>' : '';
+          }).join('');
+          return '<div class="pcfl-sh' + (s.ph ? ' ph' : '') + (a.shots.length > 1 ? (s.def ? ' fr' : ' bk') : '') + '" data-fs="' + s.fs.join(',') + '"' + (s.def ? ' data-def' : '') +
+            ' style="width:' + s.w + 'px;height:' + s.h + 'px;--dx:' + s.dx + 'px"><img src="' + s.src + '" alt="' + a.nm + ' settings" draggable="false">' + hl + '</div>';
+        }).join('');
+        var rows = a.rows.map(function (t, i) {
+          return '<div class="pcfl-rw" data-k="' + (i + 1) + '" style="--c:' + FEAT[i].c + '"><span class="pcfl-n">' + (i + 1) + '</span><span>' + t + '</span></div>';
+        }).join('');
+        return '<div class="pcfl-cd' + pre + '"><div class="pcfl-hd"><div class="pcfl-lg">' + a.lg + '</div><div><div class="pcfl-nm">' + a.nm + '</div>' +
+          '<div class="pcfl-pl">' + a.pl + '</div></div></div><div class="pcfl-st">' + shots + '</div>' + rows + '</div>';
+      }).join(''));
+      el.__pcfl = r;
+      void r.offsetWidth; r.classList.remove('inst');
+      if (anim) el.__go = function () {
+        [].forEach.call(r.querySelectorAll('.pre'), function (n, i) {
+          n.style.animationDelay = (i < 3 ? i * 0.08 : 0.3 + (i - 3) * 0.14) + 's'; n.classList.remove('pre'); n.classList.add('go');
+        });
+      };
+    },
+    enter: function (el) { if (el.__go) { el.__go(); el.__go = null; } },
+    step: function (el, i) { set(el, i); },
+    unstep: function (el, i) { set(el, i - 1); }
+  });
+})();
+
+/* ---------------------------------------------------------------- 18. NEW gaps in built-in controls (after parental-controls, before #88 Kahf Guard)
+   left: "allow only approved sites" drowns parents in requests + how kids bypass the controls;
+   right: built-in tools vs Kahf Guard. Clicks: bypasses, built-in column, Kahf Guard column. */
+(function () {
+  var css = [
+    '.pcgp-k{position:absolute;left:0;right:0;top:52px;text-align:center;font:800 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}',
+    '.pcgp-t{position:absolute;left:0;right:0;top:90px;margin:0;text-align:center;font:600 80px/1.05 var(--f-display);letter-spacing:-.025em;color:var(--ink)}',
+    '.pcgp-t em{font-style:italic;color:var(--red);text-shadow:0 0 40px rgba(255,77,77,.4)}',
+    /* left panel */
+    '.pcgp-l{position:absolute;left:90px;top:236px;width:680px;height:800px}',
+    '.pcgp-q{font:600 40px/1.1 var(--f-display);color:var(--ink)}',
+    '.pcgp-q small{display:block;margin-top:8px;font:500 24px/1.2 var(--f-body);color:var(--muted)}',
+    '.pcgp-ph{position:relative;margin-top:18px;height:330px;padding:16px;box-sizing:border-box;border-radius:26px;overflow:hidden;',
+    '  background:linear-gradient(170deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1.5px solid rgba(255,255,255,.12)}',
+    '.pcgp-ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(transparent,rgba(10,20,24,.95));pointer-events:none}',
+    '.pcgp-bd{position:absolute;right:16px;top:14px;z-index:2;min-width:44px;height:44px;padding:0 12px;box-sizing:border-box;border-radius:22px;display:grid;place-items:center;',
+    '  font:800 24px/1 var(--f-body);color:#fff;background:var(--red);box-shadow:0 0 24px rgba(255,77,77,.6)}',
+    '.pcgp-ns{display:flex;flex-direction:column;gap:10px}',
+    '.pcgp-n{display:flex;align-items:center;gap:16px;width:560px;padding:12px 16px;box-sizing:border-box;border-radius:16px;background:rgba(244,241,234,.95);color:#1b1f22;',
+    '  box-shadow:0 8px 20px rgba(0,0,0,.35);transition:opacity .45s var(--ease),transform .45s var(--ease),margin .45s var(--ease)}',
+    '.pcgp-n.off{opacity:0;transform:translateY(-30px) scale(.96);margin-top:-82px}',
+    '.pcgp-n i{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#1a73e8;color:#fff;font:800 22px/1 var(--f-body);font-style:normal}',
+    '.pcgp-n b{display:block;font:700 21px/1.2 var(--f-body)}',
+    '.pcgp-n span{display:block;margin-top:3px;font:500 18px/1.2 var(--f-body);color:#5f6368}',
+    '.pcgp-n em{margin-left:auto;font:700 18px/1 var(--f-body);font-style:normal;color:#1a73e8;white-space:nowrap}',
+    '.pcgp-c{margin-top:16px;font:500 25px/1.35 var(--f-body);color:var(--ink2)}',
+    '.pcgp-c b{color:var(--red)}',
+    '.pcgp-by{margin-top:26px;transition:opacity .6s var(--ease),transform .6s var(--ease)}',
+    '.pcgp-by.off{opacity:0;transform:translateY(24px)}',
+    '.pcgp-by h4{margin:0 0 12px;font:800 22px/1 var(--f-body);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}',
+    '.pcgp-by div{display:flex;align-items:center;gap:14px;margin-top:10px;font:600 25px/1.2 var(--f-body);color:var(--ink)}',
+    '.pcgp-by div i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,176,32,.16);',
+    '  box-shadow:inset 0 0 0 2px rgba(255,176,32,.6);color:var(--amber);font:800 20px/1 var(--f-body);font-style:normal}',
+    /* comparison table */
+    '.pcgp-tb{position:absolute;left:820px;top:236px;width:1010px;display:grid;grid-template-columns:230px 1fr 1fr;column-gap:14px}',
+    '.pcgp-tb>div{box-sizing:border-box;transition:opacity .6s var(--ease),transform .6s var(--ease)}',
+    '.pcgp-tb .off{opacity:0;transform:translateX(30px)}',
+    '.pcgp-h{display:flex;align-items:flex-end;height:78px;padding:0 18px 14px;font:800 21px/1.15 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}',
+    '.pcgp-h.nat{color:var(--red);border-radius:20px 20px 0 0;background:rgba(255,77,77,.10)}',
+    '.pcgp-h.kg{color:var(--green);border-radius:20px 20px 0 0;background:rgba(46,229,157,.12)}',
+    '.pcgp-h small{display:block;margin-top:6px;font:600 17px/1 var(--f-body);letter-spacing:.04em;text-transform:none;opacity:.8}',
+    '.pcgp-r{display:flex;align-items:center;height:106px;padding:0 18px;border-top:1px solid rgba(255,255,255,.10);font:700 25px/1.2 var(--f-body);color:var(--ink)}',
+    '.pcgp-v{display:flex;align-items:center;gap:14px;height:106px;padding:0 18px;border-top:1px solid rgba(255,255,255,.10);font:500 23px/1.25 var(--f-body);color:var(--ink2)}',
+    '.pcgp-v.nat{background:rgba(255,77,77,.10)}',
+    '.pcgp-v.kg{background:rgba(46,229,157,.12);color:var(--ink)}',
+    '.pcgp-v.last{border-radius:0 0 20px 20px}',
+    '.pcgp-v svg{flex:none;width:34px;height:34px}',
+    '.pcgp-v.nat svg{color:var(--red)}.pcgp-v.kg svg{color:var(--green)}',
+    '.pcgp .pre{opacity:0}',
+    '.pcgp .go{animation:pcgp-in .8s var(--ease) both}',
+    '@keyframes pcgp-in{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}',
+    '.pcgp.inst *{transition:none!important}'
+  ].join('\n');
+  if (!document.getElementById('pcgp-css')) { var st = document.createElement('style'); st.id = 'pcgp-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var NO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7"/></svg>';
+  var OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>';
+  var REQ = [   // newest first once all are in; they arrive in reverse order
+    ['classroom.google.com', 'Homework due tonight', 'now'],
+    ['quran.com', 'Tafsir for Islamic studies', '4m'],
+    ['scratch.mit.edu', 'Coding club project', '11m'],
+    ['docs.google.com', 'Group assignment', '18m'],
+    ['wikipedia.org', 'Science project', '26m'],
+    ['khanacademy.org', 'Maths practice', '35m']
+  ];
+  var ROWS = [
+    ['How it blocks', 'Only OS and browser restrictions', 'DNS-level: every app &amp; browser'],
+    ['Cross-platform', 'Fragmented: each works on its own devices', 'Android, iOS, Windows, Mac &amp; routers'],
+    ['Social media', 'All or nothing: block or time the whole app', 'Blocks just Shorts &amp; Reels'],
+    ['Whole home', 'Impossible: set up every device by hand', 'One router DNS setting for the home'],
+    ['Ads &amp; trackers', 'Minimal to none: needs browser extensions', 'Built-in system-wide filter'],
+    ['Tampering', 'Mid-to-high: re-install the app or shift the clock', 'Low risk: forced cooldown &amp; DNS lock']
+  ];
+
+  function stage(el, k) {
+    var r = el.__pcgp; if (!r) return;
+    r.querySelector('.pcgp-by').classList.toggle('off', k < 1);
+    [].forEach.call(r.querySelectorAll('.pcgp-tb [data-s]'), function (n) { n.classList.toggle('off', k < +n.getAttribute('data-s')); });
+  }
+  function shown(r, m) {
+    var ns = r.querySelectorAll('.pcgp-n');   // DOM order is newest first; show the last m
+    [].forEach.call(ns, function (n, i) { n.classList.toggle('off', i < ns.length - m); });
+    r.querySelector('.pcgp-bd').textContent = m;
+  }
+
+  Deck.insertSlide({
+    after: 'parental-controls', id: 'parental-gaps', title: 'Built-in controls have gaps', section: 'protect',
+    tr: { type: 'fade', ms: 800 }, steps: 3,
+    notes: 'So why not just switch on "only allow approved sites" and be done? Because it is impractical. Every homework link, every school video, every login page, quran.com, Wikipedia, Google Docs, has to be approved by a parent first. ' +
+      'The requests never stop, and parents give up and switch it back off. ' +
+      '[click] And children find the holes fast: they open links inside other apps or another browser, change the clock or time zone to escape downtime, or delete and re-download an app to reset its limit. ' +
+      '[click] Compare what the built-in tools can actually do. They only work as OS and browser restrictions, each one only on its own company\'s devices, social media is all or nothing, every device has to be set up by hand, almost no ad or tracker blocking, and they are easy to tamper with. ' +
+      '[click] Kahf Guard works at the DNS level, so it covers every app and every browser, on Android, iOS, Windows, Mac and even your home router. It can block just Shorts and Reels instead of the whole app, filters ads and trackers system-wide, and has a forced cooldown and DNS lock so children cannot simply switch it off.',
+    render: function (el, ctx) {
+      var anim = !ctx.static && !ctx.reduced && !cameBack, pre = anim ? ' pre' : '';
+      var r = h('div', 'pcgp inst', el);
+      h('div', 'pcgp-k' + pre, r, 'The catch');
+      h('h2', 'pcgp-t' + pre, r, 'Built-in controls have <em>gaps</em>');
+      var notes = REQ.map(function (q) {
+        return '<div class="pcgp-n"><i>?</i><div><b>Can Ayaan visit ' + q[0] + '?</b><span>' + q[1] + '</span></div><em>' + q[2] + '</em></div>';
+      }).join('');
+      h('div', 'pcgp-l' + pre, r,
+        '<div class="pcgp-q">&ldquo;Only allow approved sites&rdquo;<small>Sounds safe. In practice, every school site needs your approval:</small></div>' +
+        '<div class="pcgp-ph"><div class="pcgp-bd">0</div><div class="pcgp-ns">' + notes + '</div></div>' +
+        '<div class="pcgp-c">Every homework link, video &amp; login waits for a parent. <b>Parents give up and switch it off.</b></div>' +
+        '<div class="pcgp-by off"><h4>Kids bypass it in minutes</h4>' +
+          '<div><i>1</i>Open links inside other apps or another browser</div>' +
+          '<div><i>2</i>Shift the clock or time zone to escape limits</div>' +
+          '<div><i>3</i>Delete &amp; re-download the app to reset it</div></div>');
+      var cells = '<div class="pcgp-h" data-s="2"></div><div class="pcgp-h nat" data-s="2"><div>Built-in tools<small>Apple / Google / Microsoft</small></div></div>' +
+        '<div class="pcgp-h kg" data-s="3"><div>Kahf Guard<small>kahfguard.com</small></div></div>';
+      ROWS.forEach(function (row, i) {
+        var last = i === ROWS.length - 1 ? ' last' : '';
+        cells += '<div class="pcgp-r" data-s="2">' + row[0] + '</div>' +
+          '<div class="pcgp-v nat' + last + '" data-s="2">' + NO + '<span>' + row[1] + '</span></div>' +
+          '<div class="pcgp-v kg' + last + '" data-s="3">' + OK + '<span>' + row[2] + '</span></div>';
+      });
+      var tb = h('div', 'pcgp-tb', r, cells);
+      [].forEach.call(tb.children, function (n, i) { n.style.transitionDelay = (Math.floor(i / 3) * 0.07) + 's'; });
+      el.__pcgp = r;
+      stage(el, ctx.static ? 3 : 0);
+      shown(r, anim ? 0 : REQ.length);
+      void r.offsetWidth; r.classList.remove('inst');
+      if (anim) el.__go = function (c) {
+        [].forEach.call(r.querySelectorAll('.pre'), function (n, i) { n.style.animationDelay = (i * 0.1) + 's'; n.classList.remove('pre'); n.classList.add('go'); });
+        var m = 0;
+        (function next() { if (m >= REQ.length) return; shown(r, ++m); c.timeout(next, m < 3 ? 900 : 650); })();
+      };
+    },
+    enter: function (el, ctx) { if (el.__go) { var g = el.__go; el.__go = null; ctx.timeout(function () { g(ctx); }, 700); } },
+    step: function (el, i) { stage(el, i); },
+    unstep: function (el, i) { stage(el, i - 1); }
+  });
+})();
 })();
