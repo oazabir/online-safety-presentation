@@ -294,6 +294,7 @@ function twRun(chars, ms, alive, done) {
 }
 
 /* ---------------------------------------------------------------- 1. removals + data patches */
+D.slides.forEach(function (s) { if (s.orig === 4) s.hidden = true; });
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
 // every video in the deck plays at 10% volume (muted ones stay muted)
@@ -1174,74 +1175,37 @@ Deck.registerSlide(112, {
   var ONL_Y = FEED_Y * 33.5 / WK;                        // 13.4 waking years, all online media
   var TOT_Y = FEED_Y * (6 + 40 / 60) * 7 / WK;          // all screen use: 6h 40m/day internet time (slide #4, Digital 2024), same age profile: 18.6
   var PF = FEED_Y / LIFE, PO = ONL_Y / LIFE, PT = TOT_Y / LIFE;   // 12.4% , 22.3% , 31.1%
-  var C = 2 * Math.PI * 100, NL = 22;                  // pie = r 100 circle with stroke 200; NL extrusion layers
-  var START = 90 - PO * 180, START2 = 90 - PT * 180;    // keep the red slice centred at the front (6 o'clock)
   var css = [
-    '.yr{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink);overflow:hidden}',
+    '.yr{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink);overflow:hidden;background:radial-gradient(ellipse at 76% 48%,rgba(83,32,25,.19),transparent 55%)}',
     '.yr *{box-sizing:border-box}',
-    '.yr .rv{opacity:0}',
-    '.yr.go .rv{animation:yr-rise .9s cubic-bezier(.22,.8,.3,1) var(--d,0s) both}',
-    '.yr.static .rv{opacity:1;animation:none}',
-    '@keyframes yr-rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}',
-    '.yr-glow{position:absolute;left:1130px;top:560px;width:1000px;height:1000px;margin:-500px 0 0 -500px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,77,.22),transparent 62%);opacity:0;transition:opacity 2.4s ease;pointer-events:none}',
-    '.yr.a1 .yr-glow{opacity:1}',
-    '.yr-k{position:absolute;left:100px;top:62px;font:700 19px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}',
-    '.yr-t{position:absolute;left:96px;top:96px;font:600 86px/1 var(--f-display);letter-spacing:-.02em;white-space:nowrap}',
-    '.yr-t em{font-style:italic;color:#ff8a7a}',
-    /* left: the ladder */
-    '.yr-l{position:absolute;left:100px;top:270px;width:700px}',
-    '.yr-l .lab{font-size:27px;color:var(--muted);line-height:1.3}',
-    '.yr-big{font:600 168px/1 var(--f-display);letter-spacing:-.03em;margin:6px 0 4px;white-space:nowrap;font-variant-numeric:tabular-nums;',
-    '  background:linear-gradient(100deg,#ffd27a,#FFB020 45%,#FF7A1A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(255,150,40,.35))}',
-    '.yr-big small{font-size:.5em;letter-spacing:0}',
-    '.yr-l .what{font-size:31px;font-weight:600;color:var(--ink)}',
-    '.yr-rows{position:absolute;left:100px;top:600px;width:700px;display:flex;flex-direction:column;gap:14px}',
-    '.yr-row{display:flex;align-items:baseline;gap:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.09)}',
-    '.yr-row b{font:600 56px/1 var(--f-display);color:#fff;min-width:260px;font-variant-numeric:tabular-nums}',
-    '.yr-row span{font-size:26px;color:var(--ink2,#cfd6da)}',
-    '.yr-row span i{font-style:normal;color:var(--muted);font-size:20px;display:block;margin-top:4px}',
-    /* right: the 3D life pie */
-    '.yr-pie{position:absolute;left:880px;top:250px;width:956px;height:600px}',
-    '.yr-pie .hd{font-size:24px;color:var(--muted);letter-spacing:.02em}',
-    '.yr-pie .hd b{color:var(--ink);font-weight:600}',
-    '.yr-shd{position:absolute;left:40px;top:500px;width:480px;height:120px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.75),transparent 70%)}',
-    '.yr-stage{position:absolute;left:0;top:40px;width:560px;height:560px;perspective:1700px}',
-    '.yr-3d{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(54deg) rotateZ(-10deg)}',
-    '.yr-3d svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}',
-    '.yr-3d circle{fill:none;stroke-width:200}',
-    '.yr-3d .arc{stroke-dasharray:0 ' + C.toFixed(1) + ';transform:rotate(' + START.toFixed(2) + 'deg);transform-origin:250px 250px;transition:stroke-dasharray 1.8s cubic-bezier(.65,0,.35,1) .3s,transform 1.8s cubic-bezier(.65,0,.35,1)}',
-    '.yr.a1 .yr-3d .arc{stroke-dasharray:' + (PO * C).toFixed(1) + ' ' + C.toFixed(1) + '}',
-    '.yr.s1 .yr-3d .arc{stroke-dasharray:' + (PT * C).toFixed(1) + ' ' + C.toFixed(1) + ';transform:rotate(' + START2.toFixed(2) + 'deg);transition-delay:0s}',
-    '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block;animation:yr-pop .7s cubic-bezier(.3,1.6,.5,1) both}',
-    '.yr-sw span.v1{max-width:100%}',
-    '@keyframes yr-pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}',
-    '.yr-pct{position:absolute;left:316px;top:432px;transform:translate(-50%,-50%);font:700 58px/1 var(--f-display);color:#fff;text-shadow:0 2px 0 rgba(120,10,20,.8),0 6px 18px rgba(0,0,0,.55);opacity:0;transition:opacity .6s ease;pointer-events:none;white-space:nowrap}',
-    '.yr.a1 .yr-pct{opacity:1;transition-delay:2.6s}.yr.s1 .yr-pct{transition-delay:0s}',
-    '.yr-3d .pop{transition:transform .9s cubic-bezier(.3,1.4,.5,1) 2.1s}',
-    '.yr.a1 .yr-3d .pop{transform:translate(0,34px)}',
-    '.yr.a1 .yr-3d .top .arc{filter:drop-shadow(0 0 14px rgba(255,90,60,.7))}',
-    '.yr-lg{position:absolute;left:600px;top:190px;width:356px;display:flex;flex-direction:column;gap:44px}',
-    '.yr-lg>div{position:relative;padding-left:34px;opacity:0;transform:translateX(16px);transition:opacity .8s ease,transform .8s ease}',
-    '.yr-lg>div:before{content:"";position:absolute;left:0;top:18px;width:20px;height:20px;border-radius:6px;background:var(--c)}',
-    '.yr-lg b{display:block;font:600 64px/1 var(--f-display);color:var(--c2,#fff);white-space:nowrap}',
-    '.yr-lg b small{font-size:.45em}',
-    '.yr-lg .l1 b{font-size:96px;text-shadow:0 0 34px rgba(255,90,60,.5)}',
-    '.yr-lg span{display:block;font-size:23px;line-height:1.3;color:var(--ink2,#cfd6da);margin-top:8px}',
-    '.yr.a1 .yr-lg>div{opacity:1;transform:none}',
-    '.yr.a1 .yr-lg .l1{transition-delay:1.6s}',
-    '.yr-cap{position:absolute;left:880px;top:860px;width:956px;font:600 38px/1.2 var(--f-display);white-space:nowrap;opacity:0;transform:translateY(20px);transition:opacity .9s ease,transform .9s ease}',
-    '.yr-cap em{font-style:normal;color:#ff6b6b}',
-    '.yr.a1 .yr-cap{opacity:1;transform:none;transition-delay:3.4s}',
-    /* step 2: the line */
-    '.yr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(4,6,8,.86);opacity:0;transition:opacity 1s ease;pointer-events:none;z-index:30;text-align:center}',
-    '.yr.s2 .yr-end{opacity:1}',
-    '.yr-end p{margin:0;font:600 104px/1.08 var(--f-display);letter-spacing:-.02em;transform:translateY(24px);transition:transform 1.2s cubic-bezier(.22,.8,.3,1)}',
-    '.yr-end p em{color:#ff6b6b}',
-    '.yr-end span{margin-top:34px;font-size:30px;color:var(--muted);opacity:0;transition:opacity 1s ease 1.1s}',
-    '.yr.s2 .yr-end p{transform:none}.yr.s2 .yr-end span{opacity:1}',
-    '.yr-src{position:absolute;right:84px;bottom:30px;font-size:16px;color:var(--muted);text-align:right;max-width:1040px;line-height:1.35;z-index:41}',
-    '.yr.static *,.yr.static *::before{transition:none!important}',
-    '@media (prefers-reduced-motion:reduce){.yr *{transition-duration:.01s!important;transition-delay:0s!important;animation:none!important}}'
+    '.yr .rv{opacity:0}.yr.go .rv{animation:yr-rise .8s cubic-bezier(.22,.8,.3,1) var(--d,0s) both}.yr.static .rv{opacity:1;animation:none}',
+    '@keyframes yr-rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}',
+    '.yr-k{position:absolute;left:104px;top:67px;font:700 22px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#eac583}',
+    '.yr-t{position:absolute;left:98px;top:117px;margin:0;font:600 91px/1.08 var(--f-display);letter-spacing:-.035em;white-space:nowrap}.yr-t em{color:#ff9c89}',
+    '.yr-l{position:absolute;left:104px;top:304px;width:700px}.yr-l .lab{font-size:23px;letter-spacing:.075em;text-transform:uppercase;color:#bac7c6;font-weight:600}',
+    '.yr-big{font:600 157px/1.05 var(--f-display);letter-spacing:-.035em;margin:20px 0 3px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#f4ce8f}.yr-big small{font-size:.46em;letter-spacing:0}',
+    '.yr-l .what{font-size:35px;font-weight:500;color:var(--ink)}.yr-l .who{font-size:21px;color:#adb9b8;margin-top:12px}',
+    '.yr-rows{position:absolute;left:108px;top:614px;width:615px;display:flex;gap:44px}.yr-row{flex:1;border-top:1px solid #52605b;padding-top:19px}.yr-row b{display:block;font:600 61px/1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--ink)}.yr-row span{display:block;margin-top:12px;font-size:24px;color:#bdc9c5;line-height:1.35}',
+    '.yr-exclude{position:absolute;left:108px;top:770px;font-size:20px;color:#a5b4b1}',
+    '.yr-question{position:absolute;left:106px;top:849px;margin:0;font:500 italic 42px/1.14 var(--f-display);color:#e9dfcb}',
+    '.yr-lifetime{position:absolute;left:900px;top:300px;width:916px;padding-left:62px;border-left:1px solid #44544d}',
+    '.yr-lifetime .hd{font-size:23px;letter-spacing:.065em;text-transform:uppercase;color:#bac7c6;font-weight:600}',
+    '.yr-years{margin:13px 0 0;font:600 217px/.98 var(--f-display);letter-spacing:-.045em;color:#ff927d;font-variant-numeric:tabular-nums;white-space:nowrap}.yr-years small{font:500 70px/1 var(--f-display);letter-spacing:-.025em;margin-left:18px}',
+    '.yr-years i{font-style:normal}.yr-description{font-size:30px;margin:5px 0 0;color:var(--ink)}.yr-model{font-size:20px;color:#b8c7c1;margin-top:12px}',
+    '.yr-life{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin-top:36px;width:800px}',
+    '.yr-tile{position:relative;height:29px;border-radius:3px;background:#29403b;overflow:hidden}.yr-tile:after{content:"";position:absolute;inset:0;background:#ed8d77;transform:scaleX(0);transform-origin:left;transition:transform .65s cubic-bezier(.22,.8,.3,1) var(--delay,0s)}',
+    '.yr.a1 .yr-tile:after{transform:scaleX(var(--fill0))}.yr.s1 .yr-tile:after{transform:scaleX(var(--fill1));transition-delay:0s}',
+    '.yr-grid-note{display:flex;justify-content:space-between;width:800px;margin-top:14px;font-size:18px;color:#afbeb8}.yr-grid-note b{font-weight:600;color:#ffa18c}',
+    '.yr-cap{margin-top:29px;font:500 38px/1.18 var(--f-display);color:var(--ink)}.yr-cap em{font-style:normal;color:#ff9c89}',
+    '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block}',
+    '.yr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,10,12,.97);opacity:0;transition:opacity .75s ease;pointer-events:none;z-index:30;text-align:center}',
+    '.yr.s2 .yr-end{opacity:1}.yr-end .eyebrow{font-size:23px;letter-spacing:.19em;text-transform:uppercase;color:#c7bfae;margin-bottom:48px}',
+    '.yr-end p{margin:0;font:500 85px/1.25 var(--f-display);letter-spacing:-.025em;transform:translateY(24px);transition:transform .8s cubic-bezier(.22,.8,.3,1)}.yr-end p strong{display:block;font-size:162px;font-weight:600}.yr-end p em{color:#ff947f}',
+    '.yr-end .last-line{margin-top:48px;font-size:56px;font-weight:600;color:var(--ink2);opacity:0;transition:opacity .8s ease .7s}.yr.s2 .yr-end p{transform:none}.yr.s2 .yr-end .last-line{opacity:1}',
+    '.yr-src{position:absolute;right:84px;bottom:28px;font-size:16px;color:#a5b3af;text-align:right;max-width:1130px;line-height:1.35;z-index:41}',
+    '.yr.static *,.yr.static *::before,.yr.static *::after{transition:none!important}',
+    '.yr.reduced .rv{opacity:1;animation:none}.yr.reduced *,.yr.reduced *::after{transition:none!important;animation:none!important}',
+    '@media (prefers-reduced-motion:reduce){.yr *,.yr *::after{transition:none!important;animation:none!important}}',
   ].join('\n');
   (function () { if (document.getElementById('pc-yr-css')) return; var st = document.createElement('style'); st.id = 'pc-yr-css'; st.textContent = css; document.head.appendChild(st); })();
 
@@ -1251,44 +1215,35 @@ Deck.registerSlide(112, {
     after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false, steps: 2,
     notes: 'Newest data: DataReportal Digital 2026 Global Overview (GWI survey, data up to Oct 2025). The average internet user aged 16+ spends 18 hours 36 minutes every week just on social media and online video, not counting Netflix or TV streaming. ' +
       'That is 970 hours a year, 1 in 6 of your waking hours. ' +
-      '[pie builds by itself] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
-      '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from the previous slide, it grows to ' + fmt(TOT_Y, 1) + ' years: nearly 1 in 3 waking hours of your life on a screen. ' +
+      '[life grid fills by itself] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
+      '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from Digital 2024, it grows to ' + fmt(TOT_Y, 1) + ' years: nearly 1 in 3 waking hours of your life on a screen. ' +
       '[click] This is not screen time. It is life time. ' +
       'Defending the numbers: 18.6 h x 52.14 weeks = 970 h a year. Lifetime: GWI hours/week by age band (mean of women and men) x 52.14 x years in band: 16-24 24.7h x 9, 25-34 20.9h x 10, 35-44 17.7h x 10, 45-54 15.7h x 10, 55-59 13.3h x 5 = ' + fmt(LIFE_H) + ' h; / (16 h x 365) = ' + fmt(FEED_Y, 1) + ' waking years = ' + fmt(PF * 100, 1) + '% of 60 x 365 x 16 waking hours. All online media (33.5 h/week, DataReportal) scaled by the same age profile = ' + fmt(ONL_Y, 1) + ' years (' + fmt(PO * 100, 1) + '%). All internet use 6h 40m/day (Digital 2024, slide 4) same way = ' + fmt(TOT_Y, 1) + ' years (' + fmt(PT * 100, 1) + '%).',
     render: function (el, ctx) {
-      var r = document.createElement('div'); r.className = 'yr' + (ctx.static ? ' static a1' : ''); el.appendChild(r);
-      var layers = '';
-      for (var k = NL - 1; k >= 0; k--) {                   // bottom layer first; k = 0 is the lit top face
-        var top = k === 0, rim = k === 1;
-        layers += '<svg viewBox="0 0 500 500" class="' + (top ? 'top' : '') + '" style="transform:translateZ(' + (-k * 2.6).toFixed(1) + 'px)">' +
-          (top ? '<defs><linearGradient id="yr-gc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe8f5"/><stop offset="1" stop-color="#127c8f"/></linearGradient>' +
-            '<linearGradient id="yr-gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset=".55" stop-color="#ff5a3c"/><stop offset="1" stop-color="#c41d2c"/></linearGradient>' +
-            '<radialGradient id="yr-gs" cx=".36" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' : '') +
-          '<circle cx="250" cy="250" r="100" stroke="' + (top ? 'url(#yr-gc)' : rim ? '#1a95a8' : '#0b4b57') + '"/>' +
-          '<g class="pop"><circle class="arc" cx="250" cy="250" r="100" stroke="' + (top ? 'url(#yr-gh)' : rim ? '#d8452e' : '#7d1420') + '"/></g>' +
-          (top ? '<circle cx="250" cy="250" r="200" fill="url(#yr-gs)" stroke="none" style="pointer-events:none"/>' : '') + '</svg>';
+      var r = document.createElement('div'); r.className = 'yr' + (ctx.static ? ' static a1' : '') + (ctx.reduced ? ' reduced' : ''); el.appendChild(r);
+      var tiles = '';
+      for (var k = 0; k < LIFE; k++) {
+        var f0 = Math.max(0, Math.min(1, ONL_Y - k)), f1 = Math.max(0, Math.min(1, TOT_Y - k));
+        tiles += '<span class="yr-tile" style="--fill0:' + f0.toFixed(4) + ';--fill1:' + f1.toFixed(4) + ';--delay:' + (k * .018).toFixed(3) + 's"></span>';
       }
       r.innerHTML =
-        '<div class="yr-glow"></div>' +
-        '<div class="yr-k rv" style="--d:.05s">Digital 2026 &middot; DataReportal &times; GWI &middot; newest global data</div>' +
-        '<div class="yr-t rv" style="--d:.15s">Where does your <em>life</em> go?</div>' +
-        '<div class="yr-l"><div class="lab rv" style="--d:.3s">Every week, the average internet user spends</div>' +
+        '<div class="yr-k rv" style="--d:.05s">The cost of “just one more”</div>' +
+        '<h1 class="yr-t rv" style="--d:.15s">A little scrolling. <em>A lot of life.</em></h1>' +
+        '<div class="yr-l"><div class="lab rv" style="--d:.3s">Social media + online video</div>' +
           '<div class="yr-big rv" style="--d:.4s"><span class="n">18</span><small>h</small> <span class="m">36</span><small>m</small></div>' +
-          '<div class="what rv" style="--d:.5s">on social media &amp; online video alone</div></div>' +
-        '<div class="yr-rows">' +
-          '<div class="yr-row rv" style="--d:1.6s"><b>' + fmt(HY) + ' h</b><span>every year</span></div>' +
-          '<div class="yr-row rv" style="--d:2.2s"><b>1 in 6</b><span>of all your waking hours<i>not counting Netflix or any TV streaming</i></span></div>' +
-        '</div>' +
-        '<div class="yr-pie rv" style="--d:.7s"><div class="hd">A <b>' + LIFE + '-year life</b>, waking hours only</div>' +
-          '<div class="yr-shd"></div><div class="yr-stage"><div class="yr-3d">' + layers + '</div></div>' +
-          '<div class="yr-pct yr-sw"><i class="v0" style="font-style:normal">' + Math.round(PO * 100) + '%</i><i class="v1" style="font-style:normal">' + Math.round(PT * 100) + '%</i></div>' +
-          '<div class="yr-lg">' +
-            '<div class="l1 yr-sw" style="--c:#ff6a3d;--c2:#ff7b5c"><b><i class="v0" style="font-style:normal">' + fmt(ONL_Y, 1) + '</i><i class="v1" style="font-style:normal">' + fmt(TOT_Y, 1) + '</i><small> years</small></b>' +
-              '<span class="v0">of your waking life spent online</span><span class="v1">of your waking life on screens, counting all internet use</span></div>' +
-'</div></div>' +
-        '<div class="yr-cap yr-sw"><span class="v0">More than <em>1 in 5</em> waking hours of your life, spent online.</span><span class="v1">Nearly <em>1 in 3</em> waking hours of your life, on a screen.</span></div>' +
-        '<div class="yr-end"><p>This isn&rsquo;t <em>screen</em> time.<br>It&rsquo;s <em>life</em> time.</p><span>And you never get it back.</span></div>' +
-        '<div class="yr-src">GWI Q2 2025 survey of internet users 16+, via DataReportal Digital 2026 Global Overview (Oct 2025). Year = 52.14 weeks; waking day = 16 h. Lifetime: 60 years, nothing before 16, each age group at its own rate. Online (33.5 h/wk, Digital 2026) and all internet use (6h 40m/day, Digital 2024) use the same age profile.</div>';
+          '<div class="what rv" style="--d:.5s">every single week.</div><div class="who rv" style="--d:.5s">Average internet user, aged 16+</div></div>' +
+        '<div class="yr-rows rv" style="--d:.7s"><div class="yr-row"><b>' + fmt(HY) + ' h</b><span>every year</span></div><div class="yr-row"><b>1 in 6</b><span>of your waking hours</span></div></div>' +
+        '<div class="yr-exclude rv" style="--d:.7s">Not counting Netflix or any TV streaming.</div>' +
+        '<p class="yr-question rv" style="--d:1.1s">What would you want<br>those years to hold?</p>' +
+        '<div class="yr-lifetime rv" style="--d:.7s"><div class="hd">Zoom out to a 60-year life</div>' +
+          '<div class="yr-years yr-sw"><i class="v0">' + fmt(ONL_Y, 1) + '</i><i class="v1">' + fmt(TOT_Y, 1) + '</i><small>years</small></div>' +
+          '<div class="yr-description">of waking life spent online.</div>' +
+          '<div class="yr-model yr-sw"><span class="v0">All online media · modelled estimate</span><span class="v1">All internet use · modelled estimate</span></div>' +
+          '<div class="yr-life" aria-hidden="true">' + tiles + '</div>' +
+          '<div class="yr-grid-note"><span>Each tile = one waking-year equivalent</span><b class="yr-sw"><span class="v0">' + Math.round(PO * 100) + '% online</span><span class="v1">' + Math.round(PT * 100) + '% online</span></b></div>' +
+          '<div class="yr-cap yr-sw"><span class="v0">More than <em>1 in 5</em> waking hours.</span><span class="v1">Nearly <em>1 in 3</em> waking hours.</span></div></div>' +
+        '<div class="yr-end"><div class="eyebrow">There is no replay button.</div><p>This isn’t <em>screen</em> time.<strong>It’s <em>life</em> time.</strong></p><span class="last-line">And you never get it back.</span></div>' +
+        '<div class="yr-src">GWI Q2 2025, via DataReportal Digital 2026. Model: 60-year life; 16 waking hours/day; nothing counted before age 16; age-specific usage rates. All online media: 33.5 h/week (2026). All internet use: 6h 40m/day (2024), scaled by the same age profile.</div>';
       var box = document.createElement('div'); box.className = 'chips';
       var a2 = document.createElement('a'); a2.className = 'chip'; a2.href = 'https://datareportal.com/reports/digital-2026-global-overview-report'; a2.target = '_blank'; a2.rel = 'noopener'; a2.setAttribute('data-noadvance', '');
       a2.innerHTML = '<b>source</b><span>datareportal.com/reports/digital-2026-global-overview-report</span>'; box.appendChild(a2); r.appendChild(box);
@@ -1297,16 +1252,18 @@ Deck.registerSlide(112, {
     },
     enter: function (el, ctx) {
       var r = el.__yr; if (!r) return;
-      r.classList.add('a1');                                // the pie builds by itself
+      r.classList.add('a1');                                // the life grid fills by itself
       if (ctx.reduced) return;
-      var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), t0 = null, DUR = 1800, done = false;
+      var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), DUR = 1800, JUMPS = 5, TOTAL = 18 * 60 + 36;
       n.textContent = '0'; m.textContent = '00';
-      ctx.tick(function () {
-        if (done) return; var now = performance.now(); if (t0 === null) t0 = now;
-        var p = Math.min(1, (now - t0) / DUR), e = 1 - Math.pow(1 - p, 3), tot = Math.round(e * (18 * 60 + 36));
-        n.textContent = Math.floor(tot / 60); var mm = tot % 60; m.textContent = (mm < 10 ? '0' : '') + mm;
-        done = p >= 1;
-      });
+      for (var i = 1; i <= JUMPS; i++) {
+        (function (jump) {
+          ctx.timeout(function () {
+            var tot = Math.round(TOTAL * jump / JUMPS), mm = tot % 60;
+            n.textContent = Math.floor(tot / 60); m.textContent = (mm < 10 ? '0' : '') + mm;
+          }, DUR * jump / JUMPS);
+        })(i);
+      }
     },
     step: function (el, i) { var r = el.__yr; if (r) r.classList.add('s' + i); },
     unstep: function (el, i) { var r = el.__yr; if (r) r.classList.remove('s' + i); }

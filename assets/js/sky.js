@@ -44,21 +44,51 @@ function buildStars() {
 }
 
 /* ---- fire ash ---- */
-var MAX = 85;                          // embers on screen at full heat (1920x1080)
+var MAX = 220;                         // fuller ember bed, with a mix of distant sparks and close flakes
 var ash = [], spawnAcc = 0, clock = 0;
 var mx = 0, my = 0, tmx = 0, tmy = 0;
-function spawnAsh(y0) {
-  var flake = Math.random() < .26, k = VH / 1080;
+var glowSprites = [];
+
+// Bake soft light falloff once. No hard-edged circles or per-particle blur filters.
+function buildGlowSprites() {
+  for (var tint = 0; tint < 2; tint++) {
+    glowSprites[tint] = [];
+    for (var j = 0; j < 6; j++) {
+      var tile = document.createElement('canvas'); tile.width = tile.height = 64;
+      var c = tile.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+      var col = tint ? '230,55,32' : '255,' + (65 + j * 23) + ',' + (12 + j * 9);
+      gr.addColorStop(0, 'rgba(' + col + ',.65)');
+      gr.addColorStop(.12, 'rgba(' + col + ',.28)');
+      gr.addColorStop(.34, 'rgba(' + col + ',.07)');
+      gr.addColorStop(.68, 'rgba(' + col + ',.012)');
+      gr.addColorStop(1, 'rgba(' + col + ',0)');
+      c.fillStyle = gr; c.fillRect(0, 0, 64, 64); glowSprites[tint].push(tile);
+    }
+  }
+}
+function spawnAsh(prewarm) {
+  var flake = Math.random() < .3, k = Math.max(.6, VH / 1080);
+  var depth = Math.pow(Math.random(), 1.8), phase = Math.random() * 6.283;
+  // Broad, shifting updrafts, with a few stray sparks between them.
+  var plume = Math.floor(Math.random() * 4);
+  var x = (plume + .5) * VW / 4 + Math.sin(clock * .15 + plume * 2) * VW * .065;
+  x += (Math.random() + Math.random() - 1) * VW * .21;
+  if (Math.random() < .22) x = Math.random() * VW;
+  var life = 5 + Math.random() * 8, speed = (34 + depth * 48 + Math.random() * 32) * k;
+  if (flake) { life *= 1.3; speed *= .62; }
+  var age = prewarm ? Math.random() * life * .95 : 0;
+  var shape = [];
+  for (var j = 0; j < 5; j++) {
+    var angle = j * 6.283 / 5, radius = .55 + Math.random() * .55;
+    shape.push([Math.cos(angle) * radius, Math.sin(angle) * radius]);
+  }
   ash.push({
-    flake: flake,
-    x: Math.random() * VW, y: y0 === undefined ? VH + 8 + Math.random() * 30 : y0,
-    vy: -(flake ? 22 + Math.random() * 26 : 30 + Math.random() * 55) * k,      // px/s upward
-    sw: 14 + Math.random() * 34, sf: .25 + Math.random() * .7, sp: Math.random() * 6.283,  // sway amplitude / frequency / phase
-    r: flake ? 1.4 + Math.random() * 2.2 : .8 + Math.random() * 2.2,
-    rot: Math.random() * 6.283, vr: (Math.random() - .5) * 2.4,
-    top: VH * (.18 + Math.random() * .55),                                        // height where it has burnt out
-    fl: Math.random() * 6.283, ff: 7 + Math.random() * 12,                        // flicker phase / speed
-    a: .55 + Math.random() * .45, life: 0
+    flake: flake, x: x, y: VH + 12 - speed * age * .83,
+    vx: 0, vy: -speed, speed: speed, depth: depth,
+    r: flake ? 1.1 + depth * 2.8 : .7 + depth * 1.9,
+    rot: phase, vr: (Math.random() - .5) * 3, shape: shape,
+    phase: phase, flicker: 3 + Math.random() * 5,
+    a: .45 + Math.random() * .55, age: age, life: life
   });
 }
 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -72,38 +102,75 @@ function emberCol(temp, alpha) {
 }
 
 function drawAsh(dt, t) {
-  var wind = Math.sin(t * .13) * 10 + Math.sin(t * .051 + 1.7) * 14;             // slow draught, px/s sideways
+  var wind = Math.sin(t * .19) * 12 + Math.sin(t * .071 + 1.7) * 18;
   for (var i = ash.length - 1; i >= 0; i--) {
-    var p = ash[i];
-    p.life += dt; p.y += p.vy * dt; p.x += wind * dt * (p.flake ? 1.3 : .8); p.rot += p.vr * dt;
-    var x = p.x + Math.sin(p.sp + p.life * p.sf * 2.4) * p.sw - mx * 10, y = p.y - my * 6;
-    var h = (VH + 20 - p.y) / (VH + 20 - p.top);                                 // 0 at the bottom .. 1 burnt out
-    if (h >= 1 || x < -60 || x > VW + 60) { ash.splice(i, 1); continue; }
-    var env = Math.min(1, p.life / .8) * (h > .7 ? 1 - (h - .7) / .3 : 1);       // fade in, then die out near the top
-    if (p.flake) {                                                               // grey ash flake, tumbling
-      var fa = .38 * p.a * env * fade;
+    var p = ash[i]; p.age += dt;
+    var h = p.age / p.life;
+    if (h >= 1 || p.y < -24 || p.x < -80 || p.x > VW + 80) { ash.splice(i, 1); continue; }
+    // Smooth turbulence with inertia: neighbouring particles share a draught,
+    // while small eddies and tumbling give each flake its own path.
+    var eddy = Math.sin(p.y * .012 + t * .8 + p.phase) * 17 + Math.sin(p.x * .008 - t * .53) * 11;
+    var response = 1 - Math.exp(-dt * (p.flake ? 1.1 : 2.2));
+    p.vx += (wind + eddy * (.45 + p.depth) - p.vx) * response;
+    p.vy += (-p.speed * (1 - h * .48) + Math.sin(t * 1.3 + p.phase) * 8 - p.vy) * response;
+    p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+    var x = p.x - mx * (3 + p.depth * 9), y = p.y - my * (2 + p.depth * 4);
+    var env = Math.min(1, p.age / .45) * Math.pow(Math.max(0, 1 - h), .75);
+    var temp = Math.max(0, 1 - h * 1.3);
+    var flutter = .58 + .42 * Math.abs(Math.sin(p.rot * 1.7 + p.phase));
+    var flicker = .78 + .14 * Math.sin(t * p.flicker + p.phase) + .08 * Math.sin(t * p.flicker * 2.37);
+    var A = p.a * env * fade * (.25 + .75 * heat);
+    if (p.flake || temp < .12) {
+      // Uneven charcoal chips, turning edge-on and briefly catching the firelight.
       g.globalCompositeOperation = 'source-over';
-      g.save(); g.translate(x, y); g.rotate(p.rot); g.scale(1, .45 + .4 * Math.abs(Math.sin(p.rot * .7)));
-      g.fillStyle = 'rgba(' + (h < .25 ? '180,96,60' : '128,120,116') + ',' + fa.toFixed(3) + ')';
-      g.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+      g.save(); g.translate(x, y); g.rotate(p.rot); g.scale(1, .18 + flutter * .65);
+      g.fillStyle = 'rgba(177,159,139,' + (.50 * A * flutter).toFixed(3) + ')';
+      g.beginPath();
+      for (var j = 0; j < p.shape.length; j++) {
+        var pt = p.shape[j];
+        if (!j) g.moveTo(pt[0] * p.r, pt[1] * p.r);
+        else g.lineTo(pt[0] * p.r, pt[1] * p.r);
+      }
+      g.closePath(); g.fill();
+      if (temp > .45) {
+        g.strokeStyle = emberCol(temp, .35 * A * flutter); g.lineWidth = .55;
+        g.beginPath(); g.moveTo(-p.r * .65, 0); g.lineTo(0, -p.r * .65); g.stroke();
+      }
       g.restore();
-    } else {                                                                     // glowing ember, flickering, cooling as it rises
-      var temp = Math.max(0, 1 - h * 1.15), fl = .72 + .28 * Math.sin(p.fl + t * p.ff) * Math.sin(p.fl * 1.7 + t * p.ff * .53);
-      var A = p.a * env * fade * fl * (.35 + .65 * heat);
+    } else {
+      var light = Math.min(1, 1.45 * A * flicker * (.4 + .6 * temp)), size = p.r * (10 + p.depth * 6);
+      var bin = Math.min(5, Math.floor(temp * 6));
       g.globalCompositeOperation = 'lighter';
-      g.fillStyle = emberCol(temp, .10 * A); g.beginPath(); g.arc(x, y, p.r * 5.5, 0, 6.283); g.fill();
-      g.fillStyle = emberCol(temp, .22 * A); g.beginPath(); g.arc(x, y, p.r * 2.4, 0, 6.283); g.fill();
-      g.fillStyle = emberCol(Math.min(1, temp + .25), .95 * A); g.beginPath(); g.arc(x, y, p.r, 0, 6.283); g.fill();
+      g.globalAlpha = light * (1 - red * .65);
+      g.drawImage(glowSprites[0][bin], x - size / 2, y - size / 2, size, size);
+      if (red > .01) {
+        g.globalAlpha = light * red * .65;
+        g.drawImage(glowSprites[1][bin], x - size / 2, y - size / 2, size, size);
+      }
+      g.globalAlpha = 1;
+      // Short, tapered-looking spark streaks follow actual velocity.
+      if (p.depth > .35) {
+        g.strokeStyle = emberCol(temp, light * .23); g.lineWidth = p.r * .75; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(x - p.vx * .035, y - p.vy * .035); g.lineTo(x, y); g.stroke();
+      }
+      g.save(); g.translate(x, y); g.rotate(p.rot);
+      g.fillStyle = emberCol(Math.min(1, temp + .18), light * .95);
+      g.beginPath(); g.ellipse(0, 0, p.r * (.5 + flutter * .25), p.r * 1.2, 0, 0, 6.283); g.fill();
+      if (temp > .65 && p.depth > .45) {
+        g.fillStyle = 'rgba(255,237,187,' + (light * .7).toFixed(3) + ')';
+        g.fillRect(-p.r * .2, -p.r * .35, p.r * .4, p.r * .7);
+      }
+      g.restore();
     }
   }
-  g.globalCompositeOperation = 'source-over';
+  g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
 }
 /* faint heat along the bottom edge: an uneven, breathing glow */
 function drawHeat(t) {
   var b = (.55 + .2 * Math.sin(t * .9) + .12 * Math.sin(t * 2.3 + 1) + .08 * Math.sin(t * 5.1)) * heat * fade;
   if (b <= .01) return;
-  var hh = VH * .34, gr = g.createLinearGradient(0, VH, 0, VH - hh);
-  gr.addColorStop(0, emberCol(.55, .21 * b)); gr.addColorStop(.35, emberCol(.35, .08 * b)); gr.addColorStop(1, emberCol(.3, 0));
+  var hh = VH * .25, gr = g.createLinearGradient(0, VH, 0, VH - hh);
+  gr.addColorStop(0, emberCol(.55, .13 * b)); gr.addColorStop(.35, emberCol(.35, .035 * b)); gr.addColorStop(1, emberCol(.3, 0));
   g.globalCompositeOperation = 'lighter';
   g.fillStyle = gr; g.fillRect(0, VH - hh, VW, hh);
   for (var k = 0; k < 3; k++) {                                                  // slow-moving hot spots
@@ -151,7 +218,7 @@ function tick(ts) {
   mx += (tmx - mx) * (1 - Math.exp(-dt * 3)); my += (tmy - my) * (1 - Math.exp(-dt * 3));
   // keep the ember count near its target: a new one roughly every (life / target) seconds
   var target = MAX * heat * Math.max(.6, VW / 1920);
-  spawnAcc += dt * target / 14;
+  spawnAcc += dt * target / 10;
   while (spawnAcc >= 1) { spawnAcc -= 1; if (ash.length < target * 1.3) spawnAsh(); }
   draw(dt, t);
 }
@@ -171,7 +238,8 @@ function resize() {
   VW = w; VH = h;
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR);
   buildStars(); staticFrame();
-  if (!ash.length) for (var i = 0; i < MAX * .7; i++) spawnAsh(VH * (.35 + Math.random() * .7));   // start mid-flight, not empty
+  ash = []; // reseed at the new viewport size, with physically consistent particle ages
+  if (!reduced) for (var i = 0; i < MAX * .7 * Math.max(.6, VW / 1920); i++) spawnAsh(true);
 }
 
 /* ---- slide wiring ---- */
@@ -195,7 +263,7 @@ if (window.Deck) {
   Deck.on('show', function (s) { apply(s); });
   Deck.on('ready', function () { apply(Deck.cur); sync(); });
 }
-resize(); sync();
+buildGlowSprites(); resize(); sync();
 window.Sky = { mode: setMode,
   state: function () { return { mode: mode, embers: ash.length, running: running, fade: fade, heat: heat, red: red, stars: stars.length, dpr: DPR }; } };
 })();

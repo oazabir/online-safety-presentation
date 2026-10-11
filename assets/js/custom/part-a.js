@@ -40,27 +40,32 @@ var CSS = [
 '.pa-numpulse{animation:pa-np 2.6s ease-in-out infinite}',
 '@keyframes pa-np{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35) drop-shadow(0 0 22px rgba(255,200,60,.8))}}',
 
-/* ---- slide 1 */
-'.pa1-beam{position:absolute;left:880px;top:-120px;width:1100px;height:1100px;background:radial-gradient(ellipse at 78% 12%,rgba(110,215,255,.5),rgba(34,211,238,.12) 45%,transparent 68%);animation:pa-breathe 5s ease-in-out infinite alternate;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent 110px,#000 330px),linear-gradient(90deg,#000 800px,transparent 1030px);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 110px,#000 330px),linear-gradient(90deg,#000 800px,transparent 1030px);mask-composite:intersect}',
-'.pa1-phone{position:absolute;left:1600px;top:56px;width:150px;height:300px;border-radius:30px;background:#04080b;border:3px solid #1c5560;',
-'  --r0:8deg;--r1:13deg;animation:pa-float 6s ease-in-out infinite alternate;box-shadow:0 0 110px 26px rgba(34,211,238,.38),inset 0 0 0 2px rgba(255,255,255,.07)}',
-'.pa1-phone i{position:absolute;inset:11px;border-radius:21px;background:linear-gradient(165deg,#b6f0ff,#22D3EE 38%,#0891B2);animation:pa-np 3.2s ease-in-out infinite}',
-'.pa1-phone b{position:absolute;left:50%;top:18px;width:46px;height:9px;margin-left:-23px;border-radius:9px;background:#04080b}',
-'.pa1-t1,.pa1-t2{position:absolute;left:104px;font-family:var(--f-display);font-weight:600;letter-spacing:-.02em;line-height:1;white-space:nowrap}',
-'.pa1-t1{top:74px;font-size:116px;color:var(--ink)}',
-'.pa1-t2{top:196px;font-size:132px;background:linear-gradient(100deg,#7fe4ff 0%,#22D3EE 30%,#2EE59D 60%,#7fe4ff 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:pa-grad 7s linear infinite;filter:drop-shadow(0 0 28px rgba(34,211,238,.45))}',
+/* ---- slide 1: family scrapbook cover */
+'@font-face{font-family:"Cover Baloo";src:url(assets/fonts/baloo-da-2-latin.woff2) format("woff2");font-weight:500 800;font-display:block}',
+'@font-face{font-family:"Cover Nunito";src:url(assets/fonts/nunito-latin.woff2) format("woff2");font-weight:400 900;font-display:block}',
+'.pa1{--cover-accent:#a7e0cc;--cover-peach:#ffb19c;--cover-yellow:#f8cf73;font-family:"Cover Nunito",var(--f-body)}',
+'.pa1-top{position:absolute;left:108px;right:108px;top:80px;display:flex;justify-content:space-between;align-items:center}',
+'.pa1-kicker{display:inline-block;padding:9px 25px 11px;background:var(--cover-yellow);color:#28332b;border-radius:8px 14px 6px 12px;transform:translateY(145px) rotate(-3deg);font-size:28px;font-weight:800;box-shadow:5px 6px 0 rgba(248,207,115,.12)}',
+'.pa1-brand{font:800 38px "Cover Nunito",var(--f-body);color:var(--cover-accent);transform:rotate(3deg)}',
+'.pa1-title{position:absolute;left:101px;top:353px;margin:0;width:820px;font:700 108px/1.03 "Cover Baloo",var(--f-display);letter-spacing:-.025em;color:#fff4de}',
+'.pa1-title span{display:block}.pa1-title .pa1-cure{color:var(--cover-peach);transform:rotate(-2deg);transform-origin:0 50%}.pa1-title .pa1-accent{color:var(--cover-accent)}',
+'.pa1-underline{position:absolute;left:99px;top:683px;width:730px;height:40px;color:var(--cover-accent);transform:rotate(-1deg)}',
+'.pa1-photo{position:absolute;left:956px;top:237px;width:850px;margin:0}',
+'.pa1-paper{position:relative;padding:22px 22px 24px;background:#fff4de;transform:rotate(3deg);border-radius:3px 7px 4px 6px;box-shadow:13px 20px 0 rgba(167,224,204,.13),0 24px 55px rgba(0,8,12,.4)}',
+'.pa1-tape{position:absolute;top:-22px;left:288px;width:225px;height:57px;z-index:2;background:repeating-linear-gradient(90deg,rgba(255,255,255,.15) 0 2px,transparent 2px 13px),#a7d8c5;opacity:.94;transform:rotate(-9deg);clip-path:polygon(2% 0,98% 3%,100% 18%,98% 29%,100% 42%,98% 57%,100% 71%,98% 85%,99% 100%,1% 96%,2% 80%,0 63%,2% 48%,0 34%,2% 19%)}',
+'.pa1-frame{width:806px;height:440px;overflow:hidden;background:#d0c7ac}',
+'.pa1-frame img{width:100%;height:100%;object-fit:cover;display:block}',
+'.pa1-photo figcaption{width:50%;text-align:left;text-wrap:balance;margin-top:20px;font:800 29px/1.23 "Cover Nunito",var(--f-body);color:#33423c}',
+'.pa1-arrow{position:absolute;left:345px;top:419px;width:240px;height:174px;overflow:visible;color:#cf644e;pointer-events:none}',
+'.pa1-photo-note{position:absolute;left:52px;top:-125px;font:500 italic 35px var(--f-display);color:var(--cover-yellow);transform:rotate(-6deg)}',
+'.pa1-footer{position:absolute;left:110px;right:100px;top:905px;display:grid;grid-template-columns:560px 660px 1fr;gap:30px;align-items:center}',
+'.pa1-who{position:relative;padding-left:25px;border-left:5px solid var(--cover-yellow);transform:rotate(-1deg)}',
+'.pa1-who .n{font:700 48px/1 "Cover Baloo",var(--f-display);color:#fff4de}',
+'.pa1-who .r{margin-top:8px;font-size:25px;font-weight:700;color:var(--cover-accent)}',
+'.pa1-experience,.pa1-education{margin:0;font:600 25px/1.4 "Cover Nunito",var(--f-body);color:#ced9d2}',
+'.pa1-education{padding-left:23px;border-left:2px dashed #61776e}',
+'.pa1.static .rv,.pa1.reduced .rv{opacity:1;animation:none}.pa1.reduced *{animation:none!important;transition:none!important}',
 '@keyframes pa-grad{to{background-position:-220% 0}}',
-'.pa1-sub{position:absolute;left:108px;top:362px;font-size:44px;font-weight:600;color:var(--amber);letter-spacing:.005em;display:flex;align-items:center;gap:22px}',
-'.pa1-photo{position:absolute;left:930px;top:440px;width:900px;height:490px;--r0:-2.4deg;--r1:-1.4deg;animation:pa-float 9s ease-in-out infinite alternate}',
-'.pa1-photo:before{content:"";position:absolute;inset:-70px;border-radius:50%;background:radial-gradient(ellipse,rgba(34,211,238,.30),transparent 66%);animation:pa-breathe 4.5s ease-in-out infinite alternate}',
-'.pa1-frame{position:absolute;inset:0;border-radius:22px;overflow:hidden;box-shadow:var(--shadow),0 0 0 1px rgba(255,255,255,.18)}',
-'.pa1-frame img{width:100%;height:100%;object-fit:cover;display:block;animation:pa-kb 32s ease-in-out infinite alternate;will-change:transform}',
-'@keyframes pa-kb{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.13) translate3d(-1.8%,-1.2%,0)}}',
-'.pa1-frame:after{content:"";position:absolute;top:-10%;bottom:-10%;width:30%;left:0;background:linear-gradient(100deg,transparent,rgba(160,230,255,.34),transparent);transform:translateX(-140%) skewX(-18deg);animation:pa-sw 8s ease-in-out infinite;animation-delay:2s;mix-blend-mode:screen}',
-'.pa1-who{position:absolute;left:108px;top:640px;width:760px}',
-'.pa1-who .n{font-family:var(--f-display);font-weight:700;font-size:70px;line-height:1.05}',
-'.pa1-who .r{margin-top:14px;font-size:38px;font-weight:700;color:var(--cyan)}',
-'.pa1-who .x{margin-top:16px;font-size:29px;line-height:1.38;color:var(--ink2);font-weight:500}',
 
 /* ---- live counter */
 '.lc-k{position:absolute;left:0;right:0;top:92px;text-align:center;font-size:40px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);font-weight:700}',
@@ -265,19 +270,17 @@ function chipsFor(r, list) {
 
 /* ================================================================ SLIDE 1 - opener */
 Deck.registerSlide(1, {
-  loop: 'orbs',
+  loop: false,
   render: function (el, ctx) {
-    var r = root(el, 'pa1', ctx);
+    var r = root(el, 'pa1' + (ctx.reduced ? ' reduced' : ''), ctx);
     r.innerHTML =
-      '<div class="pa1-beam"></div><div class="pa1-phone"><i></i><b></b></div><div class="pa1-pts"></div>' +
-      '<div class="pa1-t1 rv" style="--d:.2s">Online Safety &amp;</div>' +
-      '<div class="pa1-t2 rv" style="--d:.45s">Device Addiction</div>' +
-      '<div class="pa1-sub rv" style="--d:.8s">Understand, Diagnose &amp; Prevent addiction</div>' +
-      '<div class="pa1-photo rv" style="--d:1s"><div class="pa1-frame"><img src="media/image3.webp" alt="A family sitting together, each looking at a screen"></div></div>' +
-      '<div class="pa1-who rv" style="--d:1.25s"><div class="n">Omar AL Zabir</div><div class="r">Co-Founder CTO of Kahf.co</div>' +
-      '<div class="x">Ex-Engineering Manager of Child Safety team at Messenger &amp; Instagram.<br>M.Sc. From Oxford<br>MA Islamic Studies</div></div>';
-    if (!ctx.static) particles(r.querySelector('.pa1-pts'), 34, 5, ['110,215,255', '46,229,157', '255,255,255'], { t: 15 });
-    ctx.onLeave(function () {});
+      '<div class="pa1-top"><span class="pa1-kicker">A little less scrolling. A lot more family.</span><span class="pa1-brand">Kahf.co</span></div>' +
+      '<h1 class="pa1-title rv" style="--d:.1s"><span>Device Addiction</span> <span class="pa1-cure">Cure &amp; Latest</span> <span class="pa1-accent">Online Threats</span></h1>' +
+      '<svg class="pa1-underline" viewBox="0 0 730 40" aria-hidden="true"><path d="M8 14 Q178 37 375 14 T718 16 M92 30 Q329 40 598 27" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>' +
+      '<figure class="pa1-photo rv" style="--d:.2s"><span class="pa1-photo-note">Together… but miles apart?</span><div class="pa1-paper"><i class="pa1-tape" aria-hidden="true"></i><div class="pa1-frame"><img src="media/image3.webp" alt="A family sitting together, each looking at a screen"></div><figcaption>Let\'s discuss how not to make our families look like this</figcaption><svg class="pa1-arrow" viewBox="0 0 240 174" aria-hidden="true"><path d="M12 139 C64 171 151 160 154 117 C156 81 101 82 111 115 C122 149 216 114 188 20" fill="none" stroke="#fff4de" stroke-width="13" stroke-linecap="round"/><path d="M12 139 C64 171 151 160 154 117 C156 81 101 82 111 115 C122 149 216 114 188 20" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M167 39 Q183 28 187 12 Q197 30 211 38 L190 32Z" fill="currentColor" stroke="#fff4de" stroke-width="3" stroke-linejoin="round"/></svg></div></figure>' +
+      '<div class="pa1-footer rv" style="--d:.35s"><div class="pa1-who"><div class="n">Omar AL Zabir</div><div class="r">Co-Founder CTO of Kahf.co</div></div>' +
+      '<p class="pa1-experience">Ex-Engineering Manager, Child Safety<br>Messenger &amp; Instagram</p>' +
+      '<p class="pa1-education">M.Sc. from Oxford<br>MA Islamic Studies</p></div>';
     go(r, ctx);
   }
 });
