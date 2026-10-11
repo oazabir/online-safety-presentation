@@ -384,57 +384,7 @@ add(60, {
   }
 });
 
-/* 57 (video, calm): small typing indicator before each chat line - driven by the click step */
-(function chat57() {
-  var shown = [], tms = [], dog = 0;
-  function clear() { shown.forEach(function (r) { r.pill.remove(); }); shown = []; tms.forEach(clearTimeout); tms = []; clearInterval(dog); dog = 0; }
-  Deck.on('step', function (k, view) {
-    if (!view || !view.slide || view.slide.n !== 57) return;
-    clear();
-    if (k !== 1) return;
-    var ctx = view.ctx, el = view.custom;
-    function hidden(id) { var x = view.map[id]; return !!x && x.classList.contains('pre'); }
-    function drop(r) { r.pill.remove(); shown = shown.filter(function (q) { return q !== r; }); }
-    function pillAt(id, tid, t0, t1) {
-      var g = px(57, id), rec = null;
-      tms.push(setTimeout(function () {
-        if (!hidden(tid)) return;
-        var p = typingPill(el, false, true); p.style.left = (g.x + 70) + 'px'; p.style.top = (g.y + 4) + 'px'; p.style.height = '54px';
-        rec = { pill: p, tid: tid }; shown.push(rec);
-      }, t0));
-      tms.push(setTimeout(function () { if (rec && rec.pill.isConnected) drop(rec); }, t1));
-    }
-    pillAt('e4', 'e4', 1100, 2000);
-    pillAt('e9', 'e9', 4700, 5500);
-    dog = setInterval(function () { shown.slice().forEach(function (r) { if (!hidden(r.tid)) drop(r); }); }, 60);
-  });
-  add(57, { leave: clear });
-  /* the two original cursor blocks (e6 after "Hey, how are you?", e10 after "Fine - who are you?") follow the revealed text edge */
-  add(57, {
-    render: function (el, ctx) { ['e6', 'e10'].forEach(function (id) { var c = ctx.view.map[id]; if (c) c.classList.add('pb-cur', 'on'); }); },
-    enter: function (el, ctx) {
-      var pairs = [['e4', 'e6'], ['e9', 'e10']].map(function (pr) {
-        var t = E(ctx, pr[0]), c = E(ctx, pr[1]), sp = t && t.querySelector('p'); if (!sp || !c) return null;
-        var r = document.createRange(); r.selectNodeContents(sp); var rc = r.getClientRects(); if (!rc.length || !t.offsetWidth) return null;
-        var tb = t.getBoundingClientRect(), k = tb.width / t.offsetWidth, f = rc[0], l = rc[rc.length - 1];
-        var fs = parseFloat(getComputedStyle(sp).fontSize) || 40, w = Math.round(fs * .52), hh = Math.round(fs * 1.02), gap = Math.round(fs * .1);
-        var x0 = t.offsetLeft + (f.left - tb.left) / k, x1 = t.offsetLeft + (l.right - tb.left) / k;
-        c.style.width = w + 'px'; c.style.height = hh + 'px'; c.style.minHeight = '0';
-        c.style.top = (t.offsetTop + (f.top - tb.top) / k + ((f.height / k) - hh) / 2) + 'px';
-        return { t: t, c: c, x0: x0, x1: x1, w: w, gap: gap, E: t.offsetWidth, L: t.offsetLeft };
-      }).filter(Boolean);
-      ctx.tick(function () {
-        pairs.forEach(function (p) {
-          var left, an = p.t.getAnimations ? p.t.getAnimations().filter(function (a) { return a.effect && a.playState === 'running'; })[0] : null;
-          if (p.t.classList.contains('pre')) left = p.x0;
-          else if (an) { var pr = an.effect.getComputedTiming().progress || 0; left = Math.max(p.x0, Math.min(p.x1 + p.gap, p.L + p.E * pr + p.gap)); }
-          else left = p.x1 + p.gap;
-          p.c.style.left = left + 'px';
-        });
-      });
-    }
-  });
-})();
+/* 57: the chat now lives in a messenger-style phone built by part-c (#57) */
 
 /* ---------------------------------------------------------------- 5. tech free zones (66) and slow phones (70) */
 function noDeviceSVG() {

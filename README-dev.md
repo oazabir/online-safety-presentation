@@ -18,7 +18,7 @@ Deck.insertSlide({after: 4, id: 'live-counter', title: '...', section: 'problem'
   loop: 'orbs' | ['aurora','float'] | false }       // override ambient loops
 ```
 Insert order: several inserts with the same `after` keep call order; `after` may be another inserted id.
-`tr.type`: fade | pageturn | peel | circle | wipe | cover | pull | none | morph(only between consecutive originals).
+`tr.type`: fade | slide (pageturn, peel = aliases) | circle | wipe | cover | pull | none | morph(only between consecutive originals).
 `ctx`: `{deck, slide, el, root, n, id, section, step, steps, static, W, H, reduced}` plus helpers
 `ctx.onLeave(fn)`, `ctx.timeout(fn,ms)`, `ctx.interval(fn,ms)`, `ctx.tick((dt,t)=>..)` (rAF, auto-stopped), `ctx.q/qa(sel)`, `ctx.elapsed()`.
 `ctx.static` is true when rendered as overview/presenter thumbnail: draw the end state, no timers.

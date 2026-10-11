@@ -164,8 +164,17 @@ var CSS = [
 '.pa.go .sp-L .sp-hh{display:block;animation:pa-np 3s ease-in-out 1.2s infinite}',
 
 /* ---- slide 28 chart */
-'.dp-card{position:absolute;left:1000px;top:70px;width:870px;height:610px;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px var(--glass-b),var(--shadow)}',
+'.dp-card{position:absolute;left:1010px;top:40px;width:870px;height:610px;transform:scale(.8);transform-origin:0 0;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px var(--glass-b),var(--shadow)}',
 '.dp-card svg{position:absolute;left:0;top:0;width:870px;height:610px;overflow:visible}',
+/* #28: research paper on the left, the slide's three points as callouts coming out of it */
+'.pa28 .co-t{position:absolute;left:80px;top:44px;font:700 64px/1 var(--f-body);color:var(--ink);letter-spacing:-.01em}',
+'.pa28 .co{position:absolute;width:880px;padding:20px 32px;border-radius:28px;background:linear-gradient(180deg,#fbf8f1,#e9e4d8);color:#141a1e;font:500 27px/1.32 var(--f-body);',
+'  box-shadow:0 26px 60px -18px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.6);opacity:0;transform:scale(.4) translateX(-40px);transform-origin:0 70%;transition:opacity .35s ease,transform .55s cubic-bezier(.3,1.5,.5,1);z-index:6}',
+'.pa28 .co:before{content:"";position:absolute;left:-34px;top:62%;width:0;height:0;border-style:solid;border-width:20px 44px 20px 0;border-color:transparent #ece7dc transparent transparent;transform:translateY(-50%) rotate(14deg)}',
+'.pa28 .co.on{opacity:1;transform:none}',
+'.pa28 .co b{font-weight:800;color:#c2410c}',
+'.pa28 .co .tw-c.cur::after{background:#c2410c}',
+'.pa28.static .co{opacity:1;transform:none;transition:none}',
 '.dp-clip rect{animation:pa-reveal 10s linear infinite}',
 '@keyframes pa-reveal{0%{width:0}74%,100%{width:810px}}',
 '.dp-now{animation:pa-now 10s linear infinite}',
@@ -349,7 +358,7 @@ Deck.registerSlide(7, { keepBase: true, render: function (el, ctx) { addSweep(ct
 Deck.registerSlide(8, {
   keepBase: true,
   render: function (el, ctx) { addSweep(ctx, 'e5', 1); },
-  enter: function (el, ctx) { countOnShow(ctx, 'e2', '1752', { dur: 2200, delay: 600, pulse: false }); }
+  enter: function (el, ctx) { countOnShow(ctx, 'e2', '1752', { dur: 1000, delay: 0, pulse: false }); }
 });
 Deck.registerSlide(9, {
   keepBase: true,
@@ -542,12 +551,25 @@ Deck.registerSlide(27, {
     spikes.forEach(function (s) { d += spike(X0 + s[0] * W, s[1], s[2], s[3], base, hh); });
     return d + 'L' + (X0 + W) + ',' + (end == null ? base : end);
   }
+  // the three points pop out of the study page as speech bubbles (tail on the paper's right edge)
+  var CO = [
+    { x: 940, y: 548, t: 'Both device use and substance use activate the <b>dopamine reward system</b> in the brain, especially the nucleus accumbens and ventral tegmental area.' },
+    { x: 990, y: 718, t: 'When you get a like, a message, or reach a game milestone, <b>your brain releases dopamine</b>, reinforcing the behavior.' },
+    { x: 940, y: 850, t: 'This is the same reward loop involved in addictions to substances like <b>nicotine or cocaine</b>.' }
+  ];
+  function callouts() {
+    var h = '<div class="co-t">Dopamine Pathways</div>';
+    CO.forEach(function (c, i) { h += '<div class="co" data-i="' + i + '" style="left:' + c.x + 'px;top:' + c.y + 'px"><p style="margin:0">' + c.t + '</p></div>'; });
+    return h;
+  }
   Deck.registerSlide(28, {
     keepBase: true,
     render: function (el, ctx) {
       var m = ctx.view.map, pic = m.e5, qr = m.e10242;
-      if (pic) { pic.style.left = '1000px'; pic.style.top = '716px'; pic.style.width = '330px'; pic.style.height = '310px'; }
-      if (qr) { qr.style.left = '1380px'; qr.style.top = '728px'; qr.style.width = '300px'; qr.style.height = '300px'; }
+      // #28 layout: the study page large on the left, the three points come out of it as callouts (typed by part-c)
+      if (m.e4) m.e4.style.display = 'none';
+      if (pic) { pic.style.left = '80px'; pic.style.top = '150px'; pic.style.width = '830px'; pic.style.height = '778px'; }
+      if (qr) { qr.style.left = '1722px'; qr.style.top = '186px'; qr.style.width = '170px'; qr.style.height = '170px'; }
       var A = lane(250, 138, [[.1, 1, 22, 40], [.28, .95, 22, 40], [.46, 1, 22, 40], [.64, .95, 22, 40], [.82, 1, 22, 40]], 250);
       var B = lane(530, 150, [[.12, .45, 30, 90], [.3, 1.0, 40, 200]], 516);
       var uid = 'dpc' + Math.floor(Math.random() * 1e6);
@@ -569,7 +591,7 @@ Deck.registerSlide(27, {
           '<path d="' + B + '" fill="none" stroke="url(#' + uid + 'b)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px rgba(255,77,77,.8))"/></g>' +
         '<g class="dp-now" style="' + (ctx.static ? 'display:none' : '') + '"><line x1="' + X0 + '" y1="95" x2="' + X0 + '" y2="570" stroke="#fff" stroke-width="3" opacity=".7"/><circle cx="' + X0 + '" cy="95" r="7" fill="#fff"/></g>' +
         '<text x="30" y="590" fill="#9AA7AD" font-size="21" font-family="Inter,sans-serif">time &#8594;</text></svg>' +
-        '<div class="dp-ill" style="left:130px;text-align:right;right:24px">Illustrative schematic, not measured data</div></div>';
+        '<div class="dp-ill" style="left:130px;text-align:right;right:24px">Illustrative schematic, not measured data</div></div>' + callouts();
     }
   });
 })();

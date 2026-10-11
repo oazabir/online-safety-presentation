@@ -68,9 +68,8 @@ var CSS = [
 /* Lost Screen Memorial */
 '.pc-lsm{position:absolute;inset:0;overflow:hidden;background:#212121}',
 '.pc-lsm img{position:absolute;left:192px;top:0;width:1536px;height:auto;display:block;will-change:transform}',
-'.pc-lsm .top{position:absolute;left:0;right:0;top:0;height:210px;background:linear-gradient(180deg,rgba(18,18,18,.96) 0%,rgba(18,18,18,.82) 48%,rgba(18,18,18,0));pointer-events:none}',
-'.pc-lsm .ttl{position:absolute;left:0;right:0;top:34px;text-align:center;font:italic 500 88px/1 var(--f-display);color:#fff;letter-spacing:-.01em;text-shadow:0 4px 30px rgba(0,0,0,.8)}',
-'.pc-lsm .bot{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,rgba(18,18,18,.7),rgba(18,18,18,0));pointer-events:none}',
+'.pc-lsm .bot{position:absolute;left:0;right:0;bottom:0;height:200px;background:linear-gradient(0deg,rgba(18,18,18,.96) 0%,rgba(18,18,18,.8) 45%,rgba(18,18,18,0));pointer-events:none}',
+'.pc-lsm .url{position:absolute;left:0;right:0;bottom:44px;text-align:center;font:500 54px/1 var(--f-mono);color:#fff;letter-spacing:.01em;text-shadow:0 4px 30px rgba(0,0,0,.8)}',
 
 /* dimming */
 '.slide[data-n="56"] .el[data-id=e1026] img{filter:brightness(.42) saturate(.85)}',
@@ -161,7 +160,32 @@ var CSS = [
 '.p58 .wl{position:absolute;left:190px;top:128px;width:340px;text-align:center;font:600 21px/1.3 var(--f-body);color:#b9c4ca;letter-spacing:.06em;text-transform:uppercase}',
 '.p58 .fin{opacity:0;transition:opacity .6s}.p58 .fin.on{opacity:1}',
 
-'@media (prefers-reduced-motion:reduce){.pc-hl *,.pc-q *,.p58 *{animation:none!important;transition:none!important}}'
+/* #51 "Don't drug your kids with device" */
+'.pc51{position:absolute;left:930px;top:50%;width:900px;transform:translateY(-50%);color:#F4F1EA;text-shadow:0 4px 30px rgba(0,0,0,.6)}',
+'.pc51 .ln{display:block;white-space:nowrap}',
+'.pc51 .a{font:italic 500 112px/1 var(--f-display);color:#D2CFC7;letter-spacing:-.01em}',
+'.pc51 .b{position:relative;display:inline-block;margin:-14px 0 -22px -8px;padding:0 .1em .16em .04em;font:800 160px/1.05 var(--f-display);letter-spacing:-.045em;text-shadow:none;background:linear-gradient(180deg,#ffb3ba 0%,#ff4d5e 45%,#e01a35 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 8px 40px rgba(255,59,78,.55))}',
+'.pc51 .halo{position:absolute;left:46%;top:52%;width:400px;height:400px;margin:-200px 0 0 -200px;border-radius:50%;background:radial-gradient(circle,rgba(255,59,78,.42) 0%,rgba(255,59,78,.12) 40%,rgba(255,59,78,0) 68%);pointer-events:none;opacity:0}',
+'.pc51 .cap{position:absolute;left:410px;top:96px;width:110px;height:110px;transform:rotate(-32deg);filter:drop-shadow(0 10px 26px rgba(0,0,0,.6))}',
+'.pc51 .c{font:600 112px/1.05 var(--f-display);letter-spacing:-.015em}',
+'.pc51 .d{margin-top:18px;font:500 92px/1 var(--f-display);color:#D2CFC7;letter-spacing:-.01em}',
+'.pc51 .scr{position:relative;display:inline-block;margin-left:14px;padding:10px 30px 18px;border-radius:22px;color:#fff;font-weight:700;background:linear-gradient(180deg,rgba(34,211,238,.20),rgba(34,211,238,.06));box-shadow:inset 0 0 0 4px rgba(34,211,238,.85),0 0 60px rgba(34,211,238,.45),inset 0 0 40px rgba(34,211,238,.25)}',
+'.pc51 .scr::after{content:"";position:absolute;left:50%;bottom:-26px;width:90px;height:10px;margin-left:-45px;border-radius:6px;background:rgba(34,211,238,.75);box-shadow:0 0 20px rgba(34,211,238,.6)}',
+'.pc51.go .a{animation:pc-kin .7s cubic-bezier(.2,.9,.25,1) .15s both}',
+'.pc51.go .b{animation:pc51-slam .65s cubic-bezier(.2,1.25,.35,1) .65s both}',
+'.pc51.go .halo{animation:pc51-ring 1.4s ease-out .8s both}',
+'.pc51.go .cap{animation:pc51-pill .9s cubic-bezier(.3,1.4,.4,1) 1.15s both}',
+'.pc51.go .c{animation:pc-lin .7s cubic-bezier(.2,.9,.25,1) 1.55s both}',
+'.pc51.go .d{animation:pc-lin .7s cubic-bezier(.2,.9,.25,1) 1.85s both}',
+'.pc51.go .scr{animation:pc51-on 1s steps(1) 2.4s both,pc51-glow 3.2s ease-in-out 3.4s infinite}',
+'.pc51.static .halo{opacity:.7}',
+'@keyframes pc51-slam{0%{opacity:0;transform:scale(1.9)}55%{opacity:1}100%{opacity:1;transform:scale(1)}}',
+'@keyframes pc51-ring{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:.7;transform:scale(1)}}',
+'@keyframes pc51-pill{0%{opacity:0;transform:translate(120px,-260px) rotate(-200deg)}60%{opacity:1}100%{opacity:1;transform:rotate(-32deg)}}',
+'@keyframes pc51-on{0%{box-shadow:inset 0 0 0 4px rgba(34,211,238,.15);background:transparent}20%{box-shadow:inset 0 0 0 4px rgba(34,211,238,.85),0 0 60px rgba(34,211,238,.45)}30%{box-shadow:inset 0 0 0 4px rgba(34,211,238,.2)}45%{box-shadow:inset 0 0 0 4px rgba(34,211,238,.85),0 0 60px rgba(34,211,238,.45),inset 0 0 40px rgba(34,211,238,.25);background:linear-gradient(180deg,rgba(34,211,238,.20),rgba(34,211,238,.06))}}',
+'@keyframes pc51-glow{0%,100%{opacity:1}50%{opacity:.82}}',
+
+'@media (prefers-reduced-motion:reduce){.pc-hl *,.pc-q *,.p58 *,.pc51 *{animation:none!important;transition:none!important}}'
 ].join('\n');
 (function () { if (document.getElementById('part-c-css')) return; var st = document.createElement('style'); st.id = 'part-c-css'; st.textContent = CSS; document.head.appendChild(st); })();
 
@@ -171,10 +195,11 @@ Deck.on('show', function (s) { cameBack = lastPos !== null && s.pos < lastPos; l
 
 /* per-slide event hooks for slides whose spec is owned by part-a/part-b (registerSlide would replace their handlers) */
 var hooks = {};
-function hook(n, o) { hooks[n] = Object.assign(hooks[n] || {}, o); }
-Deck.on('show', function (s, v) { var k = hooks[s.key]; if (k && k.show) k.show(v); });
-Deck.on('enter', function (s, v) { var k = hooks[s.key]; if (k && k.enter) k.enter(v); });
-Deck.on('step', function (i, v) { var k = v && v.slide && hooks[v.slide.key]; if (k && k.step) k.step(v, i); });
+function hook(n, o) { (hooks[n] = hooks[n] || []).push(o); }
+function runHooks(key, name, a, b) { (hooks[key] || []).forEach(function (k) { if (k[name]) k[name](a, b); }); }
+Deck.on('show', function (s, v) { runHooks(s.key, 'show', v); });
+Deck.on('enter', function (s, v) { runHooks(s.key, 'enter', v); });
+Deck.on('step', function (i, v) { if (v && v.slide) runHooks(v.slide.key, 'step', v, i); });
 
 /* ---- typewriter: wraps every character in a span (layout never shifts), reveals them in order ---- */
 function twPrep(node) {
@@ -207,15 +232,34 @@ function twRun(chars, ms, alive, done) {
 /* ---------------------------------------------------------------- 1. removals + data patches */
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
+// every video in the deck plays at 10% volume (muted ones stay muted)
+D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
+/* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
+D.slides.forEach(function (s) {
+  if (s.orig !== 8 || !s.steps[0]) return;
+  s.steps[0].fx.forEach(function (f, i) { f.t = i * 180; f.d = 350; });
+});
 
-/* slide #57: everything after the intro paragraph waits until its typewriter (1.9 s) has finished */
+/* slide #57: one strictly sequential timeline (ms from the click). The intro types out over 0-1.9 s, then the
+   messenger phone (section 2), on screen from the moment the slide appears and covering the girl's forehead and hair, plays: Luke typing "..." -> "Hey, how are you?" ->
+   Kayleigh types her reply in the composer and sends it -> the two story lines type out while the chat floods -> source.
+   The original "Luke:/Kayleigh:" text boxes and cursor blocks are dropped; the phone replaces them. */
+var T57 = { luke: 2200, lukeMsg: 3400, kay: 4200, kayMs: 1100, send: 5600, story: 6500, storyMs: 5000 };
 D.slides.forEach(function (s) {
   if (s.orig !== 57 || !s.steps || !s.steps[1]) return;
-  s.steps[1].fx.forEach(function (f) { if (f.t >= 500) f.t += 1500; });
-  s.els.forEach(function (e) {
+  var chatIds = ['e4', 'e6', 'e7', 'e8', 'e9', 'e10'];
+  s.els = s.els.filter(function (e) { return chatIds.indexOf(e.id) < 0; });
+  s.steps[1].fx = [
+    { ids: ['e5'], t: 0, d: 500, do: 'in', a: 'wipe', dir: 'l' },
+    { ids: ['e11'], t: T57.story, d: 1, do: 'in', a: 'appear' },
+    { ids: ['e12'], t: T57.story, d: 1, do: 'in', a: 'appear' },
+    { ids: ['e14'], t: T57.story + T57.storyMs + 400, d: 500, do: 'in', a: 'fly', dir: 'b' }
+  ];
+  s.els.forEach(function (e) {             // text column ends well left of the phone (x 1300), which covers the girl's forehead and hair
+    if (e.id === 'e5') e.w = 41.5;
     if (e.id !== 'e11' && e.id !== 'e12') return;
-    e.w = 82; e.paras.forEach(function (p) { p.runs.forEach(function (r) { r.sz = 46; }); });
-    if (e.id === 'e12') e.y = 60;
+    e.w = 41.5; e.paras.forEach(function (p) { p.runs.forEach(function (r) { r.sz = 40; }); });
+    e.y = e.id === 'e11' ? 37 : 50;
   });
 });
 
@@ -274,34 +318,25 @@ if (byN[55]) {
 }
 // #28 (slide 20): all text auto-types, no click builds
 if (byN[28]) byN[28].steps = [];
-// #57 (slide 43): "They exchanged..." + the next paragraph type out together over 5s; source line waits for them
-if (byN[57]) byN[57].steps.forEach(function (st) {
-  st.fx.forEach(function (fx) {
-    if (fx.ids.indexOf('e11') >= 0 || fx.ids.indexOf('e12') >= 0) { fx.a = 'appear'; fx.t = 7504; }
-    if (fx.ids.indexOf('e14') >= 0) fx.t = 7504 + 5000 + 400;
-  });
-});
 // #58 (slide 44): new narrative builds replace the paragraph wipes
 if (byN[58]) byN[58].steps = [{ auto: 1, fx: [{ ids: ['e4'], t: 0, d: 0, do: 'play' }] }];
 
 /* ---------------------------------------------------------------- 2. typewriter slides */
-/* #28 slide 20 - each paragraph types itself out, one after another, as soon as the slide opens */
+/* #28 slide 20 - the three points pop out of the study page as speech bubbles, one by one, and type themselves out */
 Deck.registerSlide(28, {
   enter: function (el, ctx) {
-    var box = ctx.view.map.e4; if (!box) return;
-    box.classList.add('tw-bar');
-    var ps = Array.prototype.slice.call(box.querySelectorAll('p'));
-    ps.forEach(function (p) { p.classList.remove('bp-pre'); });
-    if (cameBack || ctx.reduced) return;
-    var segs = ps.map(function (p) { return twPrep(p); }).filter(function (c) { return c.length; });
-    segs.forEach(function (c) { twSet(c, 0); });
+    var r = el.querySelector('.pa28'); if (!r) return;
+    var cos = Array.prototype.slice.call(r.querySelectorAll('.co'));
+    if (cameBack || ctx.reduced) { cos.forEach(function (c) { c.classList.add('on'); }); return; }
     var alive = true; ctx.onLeave(function () { alive = false; });
-    var i = 0;
+    var i = 0, prev = null;
     (function next() {
-      if (!alive || i >= segs.length) return;
-      var c = segs[i++], ms = Math.max(250, c.length / 70 * 1000);   // ~70 characters per second
-      if (i > 1) segs[i - 2].forEach(function (x) { x.classList.remove('cur'); });
-      twRun(c, ms, function () { return alive; }, function () { ctx.timeout(next, 320); });
+      if (!alive || i >= cos.length) return;
+      var co = cos[i++], c = twPrep(co.querySelector('p')); twSet(c, 0); co.classList.add('tw-bar', 'on');
+      if (prev) prev.forEach(function (x) { x.classList.remove('cur'); }); prev = c;
+      ctx.timeout(function () {
+        twRun(c, Math.max(250, c.length / 70 * 1000), function () { return alive; }, function () { ctx.timeout(next, 420); });
+      }, 450);
     })();
   }
 });
@@ -324,10 +359,129 @@ hook(57, {
     var a = v.map.e11, b = v.map.e12; if (!a || !b) return;
     var chars = twPrep(a).concat(twPrep(b)); twSet(chars, 0);
     v.timers.push(setTimeout(function () {
-      twRun(chars, 5000, function () { return Deck.view === v && !v.deactivated && v.k >= 1; });
-    }, 9004));
+      twRun(chars, T57.storyMs, function () { return Deck.view === v && !v.deactivated && v.k >= 1; });
+    }, T57.story));
   }
 });
+
+/* #57 messenger phone: generic dark-mode chat app (no brand marks), always on screen over the girl's face on the right.
+   The chat plays on the click step (T57), resets on Back to step 0, and is drawn finished in thumbnails / when arriving via Back. */
+(function () {
+  var css = [
+    '.pc57{position:absolute;left:1300px;top:64px;width:450px;height:920px;border-radius:66px;background:#141418;padding:11px;z-index:4;pointer-events:none;',
+    '  box-shadow:0 0 0 2px #3a3a42,0 40px 90px rgba(0,0,0,.65),0 0 140px rgba(10,124,255,.22)}',
+    '.pc57 .scr{position:relative;width:100%;height:100%;border-radius:56px;background:#000;overflow:hidden;display:flex;flex-direction:column;font-family:var(--f-body);color:#fff}',
+    '.pc57 .isl{position:absolute;left:50%;top:12px;width:118px;height:34px;margin-left:-59px;border-radius:20px;background:#000;box-shadow:0 0 0 1px #111;z-index:3}',
+    '.pc57 .sb{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:6px 34px 0 42px;font-size:19px;font-weight:600}',
+    '.pc57 .sb svg{height:15px;margin-left:6px;fill:#fff}',
+    '.pc57 .hd{flex:none;display:flex;align-items:center;gap:12px;padding:8px 18px 14px 12px;border-bottom:1px solid rgba(255,255,255,.08)}',
+    '.pc57 .hd .bk{width:26px;height:26px;stroke:#a970ff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}',
+    '.pc57 .av{position:relative;flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(140deg,#5b6b7d,#2c3440);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:21px;color:#dfe6ee}',
+    '.pc57 .av i{position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;background:#31d158;box-shadow:0 0 0 3px #000}',
+    '.pc57 .nm{flex:1;line-height:1.15}.pc57 .nm b{display:block;font-size:22px}.pc57 .nm span{font-size:15px;color:#9a9aa2}',
+    '.pc57 .hd .ac{width:27px;height:27px;fill:#a970ff;margin-left:14px}',
+    '.pc57 .msgs{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;padding:16px 14px 12px;overflow:hidden}',
+    '.pc57 .chip{position:absolute;left:50%;top:14px;transform:translateX(-50%);padding:6px 16px;border-radius:20px;background:rgba(40,40,46,.92);font-size:16px;font-weight:600;color:#c9c9d0;white-space:nowrap;opacity:0;transition:opacity .3s;z-index:2}',
+    '.pc57 .chip.on{opacity:1}.pc57 .chip b{color:#fff;font-variant-numeric:tabular-nums}',
+    '.pc57 .row{display:flex;align-items:flex-end;gap:8px;flex:none}',
+    '.pc57 .row.out{justify-content:flex-end}',
+    '.pc57 .row .mini{flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(140deg,#5b6b7d,#2c3440);font-size:14px;font-weight:700;color:#dfe6ee;display:flex;align-items:center;justify-content:center}',
+    '.pc57 .bb{max-width:76%;padding:12px 18px;border-radius:24px;font-size:25px;line-height:1.25;animation:pc57-pop .38s var(--ease) both}',
+    '.pc57 .in .bb{background:#303036;border-bottom-left-radius:8px;transform-origin:0 100%}',
+    '.pc57 .out .bb{background:linear-gradient(170deg,#9b3cfb,#0a7cff);border-bottom-right-radius:8px;transform-origin:100% 100%}',
+    '.pc57 .bb.typ{display:flex;gap:6px;padding:17px 18px}',
+    '.pc57 .bb.typ i{width:10px;height:10px;border-radius:50%;background:#9a9aa2;animation:pbdot 1.15s ease-in-out infinite}',
+    '.pc57 .bb.typ i:nth-child(2){animation-delay:.18s}.pc57 .bb.typ i:nth-child(3){animation-delay:.36s}',
+    '.pc57 .bb.fz{padding:13px 16px;display:flex;flex-direction:column;gap:7px;animation-duration:.22s}',
+    '.pc57 .bb.fz s{display:block;height:11px;border-radius:6px;background:rgba(255,255,255,.34);filter:blur(1.5px)}',
+    '.pc57 .cmp{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px 30px}',
+    '.pc57 .cmp svg{flex:none;width:28px;height:28px;fill:#a970ff}',
+    '.pc57 .fld{flex:1;min-height:46px;border-radius:24px;background:#242428;display:flex;align-items:center;padding:6px 18px;font-size:22px;overflow:hidden;white-space:nowrap}',
+    '.pc57 .fld .ph{color:#8e8e96}.pc57 .fld.typing .ph{display:none}',
+    '.pc57 .fld .tx:not(:empty)::after{content:"";display:inline-block;width:2px;height:24px;margin-left:2px;vertical-align:-4px;background:#a970ff;animation:pc-blink 1s steps(1) infinite}',
+    '.pc57 .snd{opacity:.45;transition:opacity .2s,transform .2s}.pc57 .snd.on{opacity:1;transform:scale(1.12)}',
+    '@keyframes pc57-pop{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}',
+    '.pc57.static,.pc57.static *{transition:none!important;animation:none!important}',
+    '@media (prefers-reduced-motion:reduce){.pc57,.pc57 *{transition:none!important;animation:none!important}}'
+  ].join('\n');
+  if (!document.getElementById('pc57-css')) { var st = document.createElement('style'); st.id = 'pc57-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var ICON = {
+    sig: '<svg viewBox="0 0 34 20"><rect x="0" y="13" width="6" height="7" rx="1.5"/><rect x="9" y="9" width="6" height="11" rx="1.5"/><rect x="18" y="4.5" width="6" height="15.5" rx="1.5"/><rect x="27" y="0" width="6" height="20" rx="1.5"/></svg>',
+    bat: '<svg viewBox="0 0 44 20"><rect x="1" y="1" width="37" height="18" rx="5" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/><rect x="4" y="4" width="22" height="12" rx="2.5"/><rect x="40" y="7" width="3" height="6" rx="1.5" fill-opacity=".5"/></svg>',
+    back: '<svg class="bk" viewBox="0 0 24 24"><path d="M15 4 7 12l8 8"/></svg>',
+    call: '<svg class="ac" viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>',
+    video: '<svg class="ac" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M17 10.5 22 7v10l-5-3.5z"/></svg>',
+    plus: '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 11v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>',
+    cam: '<svg viewBox="0 0 24 24"><path d="M9 4 7.2 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.2L15 4zm3 4.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg>',
+    send: '<svg class="snd" viewBox="0 0 24 24"><path d="M3 20.5 22 12 3 3.5 3 10l13 2-13 2z"/></svg>'
+  };
+  var LUKE = 'Hey, how are you?', KAY = 'Fine – who are you?', FLOOD = 7, TOTAL = 2600;
+
+  function build(el) {
+    var p = h('div', 'pc57', el,
+      '<div class="scr"><div class="isl"></div>' +
+      '<div class="sb"><span>23:47</span><span>' + ICON.sig + ICON.bat + '</span></div>' +
+      '<div class="hd">' + ICON.back + '<div class="av">L<i></i></div><div class="nm"><b>Luke</b><span>Active now</span></div>' + ICON.call + ICON.video + '</div>' +
+      '<div class="msgs"><div class="chip"></div></div>' +
+      '<div class="cmp">' + ICON.plus + ICON.cam + '<div class="fld"><span class="tx"></span><span class="ph">Aa</span></div>' + ICON.send + '</div></div>');
+    var q = function (s) { return p.querySelector(s); };
+    return { root: p, msgs: q('.msgs'), chip: q('.chip'), fld: q('.fld'), tx: q('.tx'), snd: q('.snd') };
+  }
+  function row(P, out, html, cls) {
+    var r = h('div', 'row ' + (out ? 'out' : 'in'), P.msgs, (out ? '' : '<span class="mini">L</span>') + '<div class="bb ' + (cls || '') + '"></div>');
+    var b = r.lastChild; if (html != null) b.textContent = html; return r;
+  }
+  function floodRow(P, i) {                  // text-less blurred bubble: volume, not content
+    var rnd = Math.sin(i * 91.7) * 43758.5453, f = rnd - Math.floor(rnd), lines = f > .7 ? 2 : 1;
+    var r = row(P, i % 3 !== 0, null, 'fz'), b = r.querySelector('.bb'), w = 120 + Math.round(f * 170);
+    for (var l = 0; l < lines; l++) h('s', '', b).style.width = (l ? Math.round(w * .6) : w) + 'px';
+  }
+  function chip(P, n) { P.chip.innerHTML = '<b>' + n.toLocaleString('en-GB') + (n >= TOTAL ? '+' : '') + '</b> messages'; P.chip.classList.add('on'); }
+  function clearMsgs(P) { Array.prototype.slice.call(P.msgs.querySelectorAll('.row')).forEach(function (r) { r.remove(); }); P.chip.classList.remove('on'); }
+  function reset(P) {
+    (P.tms || []).forEach(clearTimeout); P.tms = []; P.gen = (P.gen || 0) + 1;
+    clearMsgs(P); P.tx.textContent = ''; P.fld.classList.remove('typing'); P.snd.classList.remove('on');
+  }
+  function final(P) {
+    reset(P);
+    row(P, false, LUKE); row(P, true, KAY);
+    for (var i = 0; i < FLOOD; i++) floodRow(P, i);
+    chip(P, TOTAL);
+  }
+  function play(P, alive) {
+    reset(P);
+    var gen = P.gen;
+    function at(t, f) { P.tms.push(setTimeout(function () { if (P.gen === gen && alive()) f(); }, t)); }
+    var typ;
+    at(T57.luke, function () { typ = row(P, false, null, 'typ'); typ.querySelector('.bb').innerHTML = '<i></i><i></i><i></i>'; });
+    at(T57.lukeMsg, function () { if (typ) typ.remove(); row(P, false, LUKE); });
+    at(T57.kay, function () { P.fld.classList.add('typing'); P.snd.classList.add('on'); });
+    Array.from(KAY).forEach(function (ch, i) { at(T57.kay + Math.round((i + 1) * T57.kayMs / KAY.length), function () { P.tx.textContent += ch; }); });
+    at(T57.send, function () { P.tx.textContent = ''; P.fld.classList.remove('typing'); P.snd.classList.remove('on'); row(P, true, KAY); });
+    // flood: bubbles arrive faster and faster while the counter runs up to 2,600 alongside "They exchanged…"
+    var span = 2200, t = 0;
+    for (var i = 0; i < FLOOD; i++) {
+      t = Math.round(span * Math.pow((i + 1) / FLOOD, .8));
+      (function (i, t) { at(T57.story + t, function () { floodRow(P, i); chip(P, Math.round(TOTAL * Math.pow((i + 1) / FLOOD, 2.2))); }); })(i, t);
+    }
+  }
+
+  Deck.registerSlide(57, {
+    keepBase: true,
+    render: function (el, ctx) {
+      var P = el.__p57 = build(el);
+      if (ctx.static) { P.root.classList.add('static'); final(P); }
+    }
+  });
+  hook(57, {
+    enter: function (v) { var P = v.custom && v.custom.__p57; if (P && v.k >= 1) final(P); },   // arrived built (Back)
+    step: function (v, k) {
+      var P = v.custom && v.custom.__p57; if (!P) return;
+      if (k >= 1) play(P, function () { return Deck.view === v && !v.deactivated && v.k >= 1; }); else reset(P);
+    }
+  });
+})();
 
 /* ---------------------------------------------------------------- 3. game headlines (slides 29-33) */
 var WARN = '<svg viewBox="0 0 32 32"><path d="M16 3 30 28H2z" fill="#ff3b4e" stroke="#ffd0d4" stroke-width="2" stroke-linejoin="round"/><rect x="14.4" y="11" width="3.2" height="9.5" rx="1.6" fill="#fff"/><circle cx="16" cy="24" r="1.9" fill="#fff"/></svg>';
@@ -380,8 +534,8 @@ Deck.registerSlide(45, {
   render: function (el, ctx) {
     var box = h('div', 'pc-lsm', el);
     var img = h('img', '', box); img.src = LSM.src; img.alt = 'The Lost Screen Memorial website'; img.decoding = 'async';
-    h('div', 'top', box); h('div', 'bot', box);
-    h('div', 'ttl', box, 'The Lost Screen Memorial');
+    h('div', 'bot', box);
+    h('div', 'url', box, 'lostscreenmemorial.org');
     el.__lsm = img;
   },
   enter: function (el, ctx) {
@@ -613,6 +767,127 @@ Deck.registerSlide(112, {
   },
   enter: function (el, ctx) { var v = el.__v; if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
 });
+/* ---------------------------------------------------------------- 13b. NEW directly after #96 - a child's Google account (age 11, Qatar), then sign it in on the TV + shared computers
+   Step 1 (left): create the child account (media/kid-google/create-account.webp), DOB -> 11 years old, location Qatar;
+   [click] Family Link > Account settings lets the parent change DOB/location later (family-link.webp).
+   [click] Step 2 (right): sign in on the TV and shared computers -> Search, YouTube feed and ads get clean. */
+(function () {
+  var CSSG = [
+    '.gk{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA}',
+    '.gk .ttl{position:absolute;left:0;right:0;top:34px;text-align:center;font:600 80px/1.05 var(--f-display);letter-spacing:-.015em}',
+    '.gk .ttl em{font-style:italic;color:var(--green);text-shadow:0 0 40px rgba(46,229,157,.4)}',
+    '.gk .sub{position:absolute;left:0;right:0;top:134px;text-align:center;font:600 28px/1.2 var(--f-body);color:#9AA7AD}',
+    '.gk .sub b{color:#F4F1EA;font-weight:700}',
+    '.gk .pnl{position:absolute;top:200px;height:846px;border-radius:30px;background:linear-gradient(170deg,rgba(var(--rc),.10),rgba(10,18,22,.55) 40%);box-shadow:inset 0 0 0 1.5px rgba(var(--rc),.42),0 40px 90px -40px rgba(0,0,0,.95)}',
+    '.gk .hd{position:absolute;left:30px;top:24px;right:30px;display:flex;align-items:center;gap:20px}',
+    '.gk .hd .n{flex:none;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font:800 34px/1 var(--f-display);color:#071014;background:rgb(var(--rc));box-shadow:0 0 30px rgba(var(--rc),.6)}',
+    '.gk .hd h3{margin:0;font:700 40px/1.1 var(--f-body)}',
+    '.gk .hd h3 span{color:rgb(var(--rc))}',
+    '.gk .shot{position:absolute;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.07),0 30px 70px -26px rgba(0,0,0,.95)}',
+    '.gk .shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}',
+    '.gk .ring{position:absolute;border-radius:16px;box-shadow:0 0 0 5px var(--amber),0 0 30px rgba(255,176,32,.8);animation:gk-ring 2.2s ease-in-out infinite}',
+    '@keyframes gk-ring{0%,100%{box-shadow:0 0 0 4px var(--amber),0 0 16px rgba(255,176,32,.5)}50%{box-shadow:0 0 0 6px #ffc94d,0 0 40px rgba(255,176,32,.95)}}',
+    '.gk .fld{position:absolute;display:flex;align-items:center;gap:18px;padding:0 22px;height:76px;border-radius:18px;background:rgba(8,16,20,.8);box-shadow:inset 0 0 0 2px rgba(255,176,32,.6)}',
+    '.gk .fld svg{flex:none;width:40px;height:40px}',
+    '.gk .fld small{display:block;font:700 17px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:#9AA7AD}',
+    '.gk .fld b{display:block;margin-top:6px;font:800 30px/1 var(--f-body);color:var(--amber)}',
+    '.gk .fld .qa{width:54px;height:22px;border-radius:3px;margin-left:auto;box-shadow:0 0 0 1px rgba(255,255,255,.3)}',
+    '.gk .cap{position:absolute;font:600 25px/1.3 var(--f-body);color:#c9d2d6}',
+    '.gk .cap b{color:#F4F1EA}',
+    '.gk .cap .path{display:inline-block;margin-top:8px;padding:5px 14px;border-radius:99px;font:600 20px/1.2 var(--f-mono);color:#bfe9ff;background:rgba(34,211,238,.12);box-shadow:inset 0 0 0 1.5px rgba(34,211,238,.45)}',
+    '.gk .dev{position:absolute;top:116px;width:280px;height:206px;border-radius:22px;background:rgba(8,16,20,.7);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}',
+    '.gk .dev svg{width:96px;height:96px}',
+    '.gk .dev p{margin:0;font:700 26px/1.15 var(--f-body)}',
+    '.gk .dev p small{display:block;margin-top:4px;font:600 19px/1.1 var(--f-body);color:#9AA7AD}',
+    '.gk .dev .ok{position:absolute;top:-14px;right:-14px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#062014;font:900 26px/1 var(--f-body);box-shadow:0 0 22px rgba(46,229,157,.7)}',
+    '.gk .then{position:absolute;left:30px;right:30px;top:352px;display:flex;align-items:center;gap:16px;font:700 21px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#9AA7AD}',
+    '.gk .then:before,.gk .then:after{content:"";flex:1;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent)}',
+    '.gk .out{position:absolute;left:30px;right:30px;height:128px;display:flex;align-items:center;gap:24px;padding:0 26px;border-radius:22px;background:linear-gradient(100deg,rgba(var(--oc),.16),rgba(var(--oc),.04));box-shadow:inset 0 0 0 1.5px rgba(var(--oc),.5)}',
+    '.gk .out .ic{flex:none;width:76px;height:76px;border-radius:20px;display:grid;place-items:center;background:rgba(var(--oc),.18)}',
+    '.gk .out .ic svg{width:46px;height:46px}',
+    '.gk .out p{margin:0;font:600 25px/1.25 var(--f-body);color:#c9d2d6}',
+    '.gk .out p b{display:block;font:800 31px/1.1 var(--f-body);color:#F4F1EA}',
+    '.gk .out p b span{color:rgb(var(--oc))}',
+    '.gk .bb,.gk .p2{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.25,1)}',
+    '.gk.s1 .bb,.gk.s2 .p2{opacity:1;transform:none}',
+    '.gk .p2 .out{opacity:0;transform:translateX(40px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.25,1)}',
+    '.gk.s2 .p2 .out{opacity:1;transform:none}',
+    '.gk.s2 .p2 .o1{transition-delay:.5s}.gk.s2 .p2 .o2{transition-delay:.85s}.gk.s2 .p2 .o3{transition-delay:1.2s}',
+    '.gk.static *{transition:none!important;animation:none!important}'
+  ].join('\n');
+  var st = document.createElement('style'); st.id = 'part-c-gk-css'; st.textContent = CSSG; document.head.appendChild(st);
+
+  var SVG = function (vb, body, c) { return '<svg viewBox="' + vb + '" fill="none" stroke="' + c + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">' + body + '</svg>'; };
+  var CAKE = SVG('0 0 48 48', '<path d="M8 40h32V26a4 4 0 0 0-4-4H12a4 4 0 0 0-4 4z"/><path d="M8 32c4 0 4-3 8-3s4 3 8 3 4-3 8-3 4 3 8 3"/><path d="M24 22v-8"/><path d="M24 6c2 2 2 4 0 5-2-1-2-3 0-5z" fill="#FFB020"/>', '#FFB020');
+  var PIN = SVG('0 0 48 48', '<path d="M24 44s14-12.5 14-24a14 14 0 0 0-28 0c0 11.5 14 24 14 24z"/><circle cx="24" cy="20" r="5"/>', '#FFB020');
+  var TV = SVG('0 0 96 96', '<rect x="8" y="14" width="80" height="52" rx="8"/><path d="M32 82h32M48 66v16"/><path d="M40 29v22l19-11z" fill="#FFB020"/>', '#FFB020');
+  var PC = SVG('0 0 96 96', '<rect x="14" y="16" width="68" height="46" rx="6"/><path d="M6 76h84l-6-14H12z"/><path d="M40 70h16"/>', '#FFB020');
+  var SEARCH = SVG('0 0 48 48', '<circle cx="21" cy="21" r="12"/><path d="M30 30l11 11"/>', 'rgb(76,141,246)');
+  var YT = '<svg viewBox="0 0 48 48"><rect x="3" y="10" width="42" height="28" rx="9" fill="#FF3B4E"/><path d="M20 18v12l11-6z" fill="#fff"/></svg>';
+  var AD = SVG('0 0 48 48', '<rect x="5" y="9" width="38" height="30" rx="6"/><path d="M13 31l5-14 5 14M15 26h6M29 17v14h3a6 6 0 0 0 0-14z"/>', 'rgb(46,229,157)');
+  var zig = 'M0 0H22'; for (var k = 0; k < 9; k++) zig += 'L30 ' + ((k + .5) * 26 / 9).toFixed(2) + 'L22 ' + ((k + 1) * 26 / 9).toFixed(2);
+  var QATAR = '<svg class="qa" viewBox="0 0 66 26" preserveAspectRatio="none"><rect width="66" height="26" fill="#8A1538"/><path d="' + zig + 'H0z" fill="#fff"/></svg>';
+
+  /* Family Link screenshot is 1446x1316; the "Date of birth" card is x 630-1432, y 525-722 */
+  var FLW = 660, FLH = Math.round(FLW * 1316 / 1446), CAW = 384, CAH = Math.round(CAW * 1408 / 958);
+
+  Deck.insertSlide({
+    after: 96, id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
+    notes: 'Step 1: create a Google account for your child as a child account (Google asks "Create a Google Account... you will help manage this account until your child is 13"). Set the date of birth so the account is 11 years old, and set the location to Qatar. ' +
+      '[click] Already have one? In Family Link, open the child > Controls > Account settings: you can change the date of birth there, and the location as well. ' +
+      '[click] Step 2: sign in with this account on the TV (YouTube app) and on every shared computer at home. Google now treats whoever is watching as a child: Google Search results are sanitised, the YouTube feed becomes much cleaner, and the ads on YouTube and Google become far cleaner too. Pair it with "train YouTube what not to show" from the previous slide.',
+    render: function (el, ctx) {
+      var r = h('div', 'gk' + (ctx.static ? ' static s1 s2' : ''), el);
+      h('div', 'ttl', r, 'A child&rsquo;s <em>Google account</em>');
+      h('div', 'sub', r, 'Set it up once &mdash; then <b>Search</b>, <b>YouTube</b> and <b>ads</b> turn clean on every shared screen');
+
+      /* ---- step 1: create */
+      var p1 = h('div', 'pnl', r); p1.style.cssText = 'left:56px;width:1140px;--rc:34,211,238';
+      h('div', 'hd', p1, '<div class="n">1</div><h3>Create a <span>child account</span></h3>');
+      var a = h('div', 'shot', p1); a.style.cssText = 'left:30px;top:112px;width:' + CAW + 'px;height:' + Math.min(CAH, 480) + 'px';
+      var ai = h('img', '', a); ai.src = 'media/kid-google/create-account.webp'; ai.alt = 'Google: Create a Google Account for your child'; ai.decoding = 'async';
+      var f1 = h('div', 'fld', p1, CAKE + '<div><small>Date of birth</small><b>11 years old</b></div>'); f1.style.cssText = 'left:30px;top:620px;width:' + CAW + 'px';
+      var f2 = h('div', 'fld', p1, PIN + '<div><small>Location</small><b>Qatar</b></div>' + QATAR); f2.style.cssText = 'left:30px;top:714px;width:' + CAW + 'px';
+
+      var bx = 30 + CAW + 36;
+      var b = h('div', 'shot bb', p1); b.style.cssText = 'left:' + bx + 'px;top:112px;width:' + FLW + 'px;height:' + FLH + 'px';
+      var bi = h('img', '', b); bi.src = 'media/kid-google/family-link.webp'; bi.alt = 'Family Link: Account settings with date of birth'; bi.decoding = 'async';
+      var ring = h('div', 'ring', b);
+      ring.style.cssText = 'left:' + (630 / 1446 * 100) + '%;top:' + (525 / 1316 * 100) + '%;width:' + (802 / 1446 * 100) + '%;height:' + (197 / 1316 * 100) + '%';
+      var cap = h('div', 'cap bb', p1, '<b>Change date of birth &amp; location</b> any time<br><span class="path">Family Link &rsaquo; Controls &rsaquo; Account settings</span>');
+      cap.style.cssText = 'left:' + bx + 'px;top:' + (112 + FLH + 20) + 'px;width:' + FLW + 'px';
+
+      /* ---- step 2: sign in everywhere */
+      var p2 = h('div', 'pnl p2', r); p2.style.cssText = 'left:1222px;width:642px;--rc:255,176,32';
+      h('div', 'hd', p2, '<div class="n">2</div><h3>Sign in <span>everywhere</span></h3>');
+      var d1 = h('div', 'dev', p2, TV + '<p>TV<small>YouTube app</small></p><i class="ok">&#10003;</i>'); d1.style.left = '30px';
+      var d2 = h('div', 'dev', p2, PC + '<p>Shared computers<small>Chrome &amp; Google</small></p><i class="ok">&#10003;</i>'); d2.style.left = '332px';
+      h('div', 'then', p2, 'Google now sees a child');
+      [
+        { c: '76,141,246', ic: SEARCH, t: 'Google Search <span>sanitised</span>', s: 'safe results by default' },
+        { c: '255,59,78', ic: YT, t: 'YouTube feed <span>cleaner</span>', s: 'age-appropriate recommendations' },
+        { c: '46,229,157', ic: AD, t: 'Ads <span>much cleaner</span>', s: 'on YouTube and Google' }
+      ].forEach(function (o, i) {
+        var d = h('div', 'out o' + (i + 1), p2, '<div class="ic">' + o.ic + '</div><p><b>' + o.t + '</b>' + o.s + '</p>');
+        d.style.cssText = 'top:' + (400 + i * 146) + 'px;--oc:' + o.c;
+      });
+
+      el.__gk = r;
+      if (!ctx.static) { el.__gkIn = [p1.querySelector('.hd'), a, f1, f2]; el.__gkIn.forEach(function (n) { n.style.opacity = 0; }); }
+    },
+    enter: function (el, ctx) {
+      var parts = el.__gkIn; if (!parts) return;
+      parts.forEach(function (n) { n.style.opacity = ''; });
+      if (cameBack || ctx.reduced) return;
+      parts.forEach(function (n, i) {
+        n.animate([{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 750, delay: 250 + i * 300, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'backwards' });
+      });
+    },
+    step: function (el, i) { var r = el.__gk; if (r) r.classList.add('s' + i); },
+    unstep: function (el, i) { var r = el.__gk; if (r) r.classList.remove('s' + i); }
+  });
+})();
 /* ---------------------------------------------------------------- 14. NEW after #96 - "How to keep Susan away" (WhatsApp privacy) */
 (function () {
   var S = 320 / 924;                                   // screenshot px -> card px (screenshots are 924 wide, cropped to 1560 tall)
@@ -718,4 +993,176 @@ Deck.registerSlide(112, {
     var rr = s.cards[4]; rr.tg.classList.add('off'); rr.was.style.display = ''; rr.val.lastChild.textContent = 'Off';
   }
 })();
+
+/* ---------------------------------------------------------------- 15. NEW "Where does your life go?" (after #4)
+   Digital 2026 (DataReportal x GWI, data to Oct 2025): 18h 36m / week on social media + online video
+   (internet users 16+, excludes streaming TV). Derived numbers are plain arithmetic: year = 52.14 weeks,
+   waking day = 16 h. Lifetime = a 60-year life, nothing counted before 16, each GWI age band at its own
+   rate (mean of female and male h/week x years in band, 16-59). All online media (33.5 h/week) uses the
+   same age profile. */
+(function () {
+  var WK = 18.6, WEEKS = 365 / 7, LIFE = 60;
+  var HY = WK * WEEKS;                                   // 970 h a year
+  var BANDS = [[24 + 41 / 60, 9], [20.9, 10], [17 + 40 / 60, 10], [15 + 41.5 / 60, 10], [13 + 20 / 60, 5]];
+  var LIFE_H = BANDS.reduce(function (t, b) { return t + b[0] * WEEKS * b[1]; }, 0);   // 43,350 h
+  var FEED_Y = LIFE_H / (365 * 16);                      // 7.4 waking years
+  var ONL_Y = FEED_Y * 33.5 / WK;                        // 13.4 waking years, all online media
+  var TOT_Y = FEED_Y * (6 + 40 / 60) * 7 / WK;          // all screen use: 6h 40m/day internet time (slide #4, Digital 2024), same age profile: 18.6
+  var PF = FEED_Y / LIFE, PO = ONL_Y / LIFE, PT = TOT_Y / LIFE;   // 12.4% , 22.3% , 31.1%
+  var C = 2 * Math.PI * 100, NL = 22;                  // pie = r 100 circle with stroke 200; NL extrusion layers
+  var START = 90 - PO * 180, START2 = 90 - PT * 180;    // keep the red slice centred at the front (6 o'clock)
+  var css = [
+    '.yr{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink);overflow:hidden}',
+    '.yr *{box-sizing:border-box}',
+    '.yr .rv{opacity:0}',
+    '.yr.go .rv{animation:yr-rise .9s cubic-bezier(.22,.8,.3,1) var(--d,0s) both}',
+    '.yr.static .rv{opacity:1;animation:none}',
+    '@keyframes yr-rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}',
+    '.yr-glow{position:absolute;left:1130px;top:560px;width:1000px;height:1000px;margin:-500px 0 0 -500px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,77,.22),transparent 62%);opacity:0;transition:opacity 2.4s ease;pointer-events:none}',
+    '.yr.a1 .yr-glow{opacity:1}',
+    '.yr-k{position:absolute;left:100px;top:62px;font:700 19px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}',
+    '.yr-t{position:absolute;left:96px;top:96px;font:600 86px/1 var(--f-display);letter-spacing:-.02em;white-space:nowrap}',
+    '.yr-t em{font-style:italic;color:#ff8a7a}',
+    /* left: the ladder */
+    '.yr-l{position:absolute;left:100px;top:270px;width:700px}',
+    '.yr-l .lab{font-size:27px;color:var(--muted);line-height:1.3}',
+    '.yr-big{font:600 168px/1 var(--f-display);letter-spacing:-.03em;margin:6px 0 4px;white-space:nowrap;font-variant-numeric:tabular-nums;',
+    '  background:linear-gradient(100deg,#ffd27a,#FFB020 45%,#FF7A1A);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(255,150,40,.35))}',
+    '.yr-big small{font-size:.5em;letter-spacing:0}',
+    '.yr-l .what{font-size:31px;font-weight:600;color:var(--ink)}',
+    '.yr-rows{position:absolute;left:100px;top:600px;width:700px;display:flex;flex-direction:column;gap:14px}',
+    '.yr-row{display:flex;align-items:baseline;gap:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.09)}',
+    '.yr-row b{font:600 56px/1 var(--f-display);color:#fff;min-width:260px;font-variant-numeric:tabular-nums}',
+    '.yr-row span{font-size:26px;color:var(--ink2,#cfd6da)}',
+    '.yr-row span i{font-style:normal;color:var(--muted);font-size:20px;display:block;margin-top:4px}',
+    /* right: the 3D life pie */
+    '.yr-pie{position:absolute;left:880px;top:250px;width:956px;height:600px}',
+    '.yr-pie .hd{font-size:24px;color:var(--muted);letter-spacing:.02em}',
+    '.yr-pie .hd b{color:var(--ink);font-weight:600}',
+    '.yr-shd{position:absolute;left:40px;top:500px;width:480px;height:120px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.75),transparent 70%)}',
+    '.yr-stage{position:absolute;left:0;top:40px;width:560px;height:560px;perspective:1700px}',
+    '.yr-3d{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(54deg) rotateZ(-10deg)}',
+    '.yr-3d svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}',
+    '.yr-3d circle{fill:none;stroke-width:200}',
+    '.yr-3d .arc{stroke-dasharray:0 ' + C.toFixed(1) + ';transform:rotate(' + START.toFixed(2) + 'deg);transform-origin:250px 250px;transition:stroke-dasharray 1.8s cubic-bezier(.65,0,.35,1) .3s,transform 1.8s cubic-bezier(.65,0,.35,1)}',
+    '.yr.a1 .yr-3d .arc{stroke-dasharray:' + (PO * C).toFixed(1) + ' ' + C.toFixed(1) + '}',
+    '.yr.s1 .yr-3d .arc{stroke-dasharray:' + (PT * C).toFixed(1) + ' ' + C.toFixed(1) + ';transform:rotate(' + START2.toFixed(2) + 'deg);transition-delay:0s}',
+    '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block;animation:yr-pop .7s cubic-bezier(.3,1.6,.5,1) both}',
+    '.yr-sw span.v1{max-width:100%}',
+    '@keyframes yr-pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}',
+    '.yr-pct{position:absolute;left:316px;top:432px;transform:translate(-50%,-50%);font:700 58px/1 var(--f-display);color:#fff;text-shadow:0 2px 0 rgba(120,10,20,.8),0 6px 18px rgba(0,0,0,.55);opacity:0;transition:opacity .6s ease;pointer-events:none;white-space:nowrap}',
+    '.yr.a1 .yr-pct{opacity:1;transition-delay:2.6s}.yr.s1 .yr-pct{transition-delay:0s}',
+    '.yr-3d .pop{transition:transform .9s cubic-bezier(.3,1.4,.5,1) 2.1s}',
+    '.yr.a1 .yr-3d .pop{transform:translate(0,34px)}',
+    '.yr.a1 .yr-3d .top .arc{filter:drop-shadow(0 0 14px rgba(255,90,60,.7))}',
+    '.yr-lg{position:absolute;left:600px;top:190px;width:356px;display:flex;flex-direction:column;gap:44px}',
+    '.yr-lg>div{position:relative;padding-left:34px;opacity:0;transform:translateX(16px);transition:opacity .8s ease,transform .8s ease}',
+    '.yr-lg>div:before{content:"";position:absolute;left:0;top:18px;width:20px;height:20px;border-radius:6px;background:var(--c)}',
+    '.yr-lg b{display:block;font:600 64px/1 var(--f-display);color:var(--c2,#fff);white-space:nowrap}',
+    '.yr-lg b small{font-size:.45em}',
+    '.yr-lg .l1 b{font-size:96px;text-shadow:0 0 34px rgba(255,90,60,.5)}',
+    '.yr-lg span{display:block;font-size:23px;line-height:1.3;color:var(--ink2,#cfd6da);margin-top:8px}',
+    '.yr.a1 .yr-lg>div{opacity:1;transform:none}',
+    '.yr.a1 .yr-lg .l1{transition-delay:1.6s}',
+    '.yr-cap{position:absolute;left:880px;top:860px;width:956px;font:600 38px/1.2 var(--f-display);white-space:nowrap;opacity:0;transform:translateY(20px);transition:opacity .9s ease,transform .9s ease}',
+    '.yr-cap em{font-style:normal;color:#ff6b6b}',
+    '.yr.a1 .yr-cap{opacity:1;transform:none;transition-delay:3.4s}',
+    /* step 2: the line */
+    '.yr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(4,6,8,.86);opacity:0;transition:opacity 1s ease;pointer-events:none;z-index:30;text-align:center}',
+    '.yr.s2 .yr-end{opacity:1}',
+    '.yr-end p{margin:0;font:600 104px/1.08 var(--f-display);letter-spacing:-.02em;transform:translateY(24px);transition:transform 1.2s cubic-bezier(.22,.8,.3,1)}',
+    '.yr-end p em{color:#ff6b6b}',
+    '.yr-end span{margin-top:34px;font-size:30px;color:var(--muted);opacity:0;transition:opacity 1s ease 1.1s}',
+    '.yr.s2 .yr-end p{transform:none}.yr.s2 .yr-end span{opacity:1}',
+    '.yr-src{position:absolute;right:84px;bottom:30px;font-size:16px;color:var(--muted);text-align:right;max-width:1040px;line-height:1.35;z-index:41}',
+    '.yr.static *,.yr.static *::before{transition:none!important}',
+    '@media (prefers-reduced-motion:reduce){.yr *{transition-duration:.01s!important;transition-delay:0s!important;animation:none!important}}'
+  ].join('\n');
+  (function () { if (document.getElementById('pc-yr-css')) return; var st = document.createElement('style'); st.id = 'pc-yr-css'; st.textContent = css; document.head.appendChild(st); })();
+
+  function fmt(n, d) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+
+  Deck.insertSlide({
+    after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false, steps: 2,
+    notes: 'Newest data: DataReportal Digital 2026 Global Overview (GWI survey, data up to Oct 2025). The average internet user aged 16+ spends 18 hours 36 minutes every week just on social media and online video, not counting Netflix or TV streaming. ' +
+      'That is 970 hours a year, 1 in 6 of your waking hours. ' +
+      '[pie builds by itself] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
+      '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from the previous slide, it grows to ' + fmt(TOT_Y, 1) + ' years: nearly 1 in 3 waking hours of your life on a screen. ' +
+      '[click] This is not screen time. It is life time. ' +
+      'Defending the numbers: 18.6 h x 52.14 weeks = 970 h a year. Lifetime: GWI hours/week by age band (mean of women and men) x 52.14 x years in band: 16-24 24.7h x 9, 25-34 20.9h x 10, 35-44 17.7h x 10, 45-54 15.7h x 10, 55-59 13.3h x 5 = ' + fmt(LIFE_H) + ' h; / (16 h x 365) = ' + fmt(FEED_Y, 1) + ' waking years = ' + fmt(PF * 100, 1) + '% of 60 x 365 x 16 waking hours. All online media (33.5 h/week, DataReportal) scaled by the same age profile = ' + fmt(ONL_Y, 1) + ' years (' + fmt(PO * 100, 1) + '%). All internet use 6h 40m/day (Digital 2024, slide 4) same way = ' + fmt(TOT_Y, 1) + ' years (' + fmt(PT * 100, 1) + '%).',
+    render: function (el, ctx) {
+      var r = document.createElement('div'); r.className = 'yr' + (ctx.static ? ' static a1' : ''); el.appendChild(r);
+      var layers = '';
+      for (var k = NL - 1; k >= 0; k--) {                   // bottom layer first; k = 0 is the lit top face
+        var top = k === 0, rim = k === 1;
+        layers += '<svg viewBox="0 0 500 500" class="' + (top ? 'top' : '') + '" style="transform:translateZ(' + (-k * 2.6).toFixed(1) + 'px)">' +
+          (top ? '<defs><linearGradient id="yr-gc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe8f5"/><stop offset="1" stop-color="#127c8f"/></linearGradient>' +
+            '<linearGradient id="yr-gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset=".55" stop-color="#ff5a3c"/><stop offset="1" stop-color="#c41d2c"/></linearGradient>' +
+            '<radialGradient id="yr-gs" cx=".36" cy=".3" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' : '') +
+          '<circle cx="250" cy="250" r="100" stroke="' + (top ? 'url(#yr-gc)' : rim ? '#1a95a8' : '#0b4b57') + '"/>' +
+          '<g class="pop"><circle class="arc" cx="250" cy="250" r="100" stroke="' + (top ? 'url(#yr-gh)' : rim ? '#d8452e' : '#7d1420') + '"/></g>' +
+          (top ? '<circle cx="250" cy="250" r="200" fill="url(#yr-gs)" stroke="none" style="pointer-events:none"/>' : '') + '</svg>';
+      }
+      r.innerHTML =
+        '<div class="yr-glow"></div>' +
+        '<div class="yr-k rv" style="--d:.05s">Digital 2026 &middot; DataReportal &times; GWI &middot; newest global data</div>' +
+        '<div class="yr-t rv" style="--d:.15s">Where does your <em>life</em> go?</div>' +
+        '<div class="yr-l"><div class="lab rv" style="--d:.3s">Every week, the average internet user spends</div>' +
+          '<div class="yr-big rv" style="--d:.4s"><span class="n">18</span><small>h</small> <span class="m">36</span><small>m</small></div>' +
+          '<div class="what rv" style="--d:.5s">on social media &amp; online video alone</div></div>' +
+        '<div class="yr-rows">' +
+          '<div class="yr-row rv" style="--d:1.6s"><b>' + fmt(HY) + ' h</b><span>every year</span></div>' +
+          '<div class="yr-row rv" style="--d:2.2s"><b>1 in 6</b><span>of all your waking hours<i>not counting Netflix or any TV streaming</i></span></div>' +
+        '</div>' +
+        '<div class="yr-pie rv" style="--d:.7s"><div class="hd">A <b>' + LIFE + '-year life</b>, waking hours only</div>' +
+          '<div class="yr-shd"></div><div class="yr-stage"><div class="yr-3d">' + layers + '</div></div>' +
+          '<div class="yr-pct yr-sw"><i class="v0" style="font-style:normal">' + Math.round(PO * 100) + '%</i><i class="v1" style="font-style:normal">' + Math.round(PT * 100) + '%</i></div>' +
+          '<div class="yr-lg">' +
+            '<div class="l1 yr-sw" style="--c:#ff6a3d;--c2:#ff7b5c"><b><i class="v0" style="font-style:normal">' + fmt(ONL_Y, 1) + '</i><i class="v1" style="font-style:normal">' + fmt(TOT_Y, 1) + '</i><small> years</small></b>' +
+              '<span class="v0">of your waking life spent online</span><span class="v1">of your waking life on screens, counting all internet use</span></div>' +
+'</div></div>' +
+        '<div class="yr-cap yr-sw"><span class="v0">More than <em>1 in 5</em> waking hours of your life, spent online.</span><span class="v1">Nearly <em>1 in 3</em> waking hours of your life, on a screen.</span></div>' +
+        '<div class="yr-end"><p>This isn&rsquo;t <em>screen</em> time.<br>It&rsquo;s <em>life</em> time.</p><span>And you never get it back.</span></div>' +
+        '<div class="yr-src">GWI Q2 2025 survey of internet users 16+, via DataReportal Digital 2026 Global Overview (Oct 2025). Year = 52.14 weeks; waking day = 16 h. Lifetime: 60 years, nothing before 16, each age group at its own rate. Online (33.5 h/wk, Digital 2026) and all internet use (6h 40m/day, Digital 2024) use the same age profile.</div>';
+      var box = document.createElement('div'); box.className = 'chips';
+      var a2 = document.createElement('a'); a2.className = 'chip'; a2.href = 'https://datareportal.com/reports/digital-2026-global-overview-report'; a2.target = '_blank'; a2.rel = 'noopener'; a2.setAttribute('data-noadvance', '');
+      a2.innerHTML = '<b>source</b><span>datareportal.com/reports/digital-2026-global-overview-report</span>'; box.appendChild(a2); r.appendChild(box);
+      el.__yr = r;
+      if (!ctx.static) { void r.offsetWidth; r.classList.add('go'); }
+    },
+    enter: function (el, ctx) {
+      var r = el.__yr; if (!r) return;
+      r.classList.add('a1');                                // the pie builds by itself
+      if (ctx.reduced) return;
+      var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), t0 = null, DUR = 1800, done = false;
+      n.textContent = '0'; m.textContent = '00';
+      ctx.tick(function () {
+        if (done) return; var now = performance.now(); if (t0 === null) t0 = now;
+        var p = Math.min(1, (now - t0) / DUR), e = 1 - Math.pow(1 - p, 3), tot = Math.round(e * (18 * 60 + 36));
+        n.textContent = Math.floor(tot / 60); var mm = tot % 60; m.textContent = (mm < 10 ? '0' : '') + mm;
+        done = p >= 1;
+      });
+    },
+    step: function (el, i) { var r = el.__yr; if (r) r.classList.add('s' + i); },
+    unstep: function (el, i) { var r = el.__yr; if (r) r.classList.remove('s' + i); }
+  });
+})();
+
+/* ---------------------------------------------------------------- #51 - "Don't drug your kids with device" headline */
+var PILL = '<svg viewBox="0 0 100 100"><defs><linearGradient id="pc51-pr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a95"/><stop offset="1" stop-color="#c8102e"/></linearGradient></defs>' +
+  '<rect x="10" y="34" width="80" height="32" rx="16" fill="#F4F1EA"/><path d="M26 34h24v32H26a16 16 0 0 1 0-32z" fill="url(#pc51-pr)"/>' +
+  '<rect x="49" y="34" width="2.5" height="32" fill="rgba(0,0,0,.18)"/><rect x="18" y="39" width="58" height="6" rx="3" fill="#fff" opacity=".55"/></svg>';
+Deck.registerSlide(51, {
+  keepBase: true,
+  render: function (el, ctx) {
+    hide(ctx, ['e3']);
+    var t = h('div', 'pc51' + (ctx.static || cameBack ? ' static' : ''), el,
+      '<span class="ln a">Don’t</span>' +
+      '<span class="ln"><span class="b"><span class="halo"></span>drug</span></span>' +
+      '<span class="cap">' + PILL + '</span>' +
+      '<span class="ln c">your kids</span>' +
+      '<span class="ln d">with <span class="scr">device</span></span>');
+    if (!ctx.static && !cameBack) { void t.offsetWidth; t.classList.add('go'); }
+  }
+});
 })();

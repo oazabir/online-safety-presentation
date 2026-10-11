@@ -419,23 +419,10 @@ function runTransition(A, B, T, dir) {
   var cleanup = function () {};
   switch (type) {
     case 'none': ms = 0; break;
-    case 'pageturn': case 'peel': {
-      var rotp = type === 'peel' ? 'rotateX' : 'rotateY', sgn = -1;
-      var turn = dir > 0 ? A : B, under = dir > 0 ? B : A;
-      turn.root.style.zIndex = 3; under.root.style.zIndex = 1;
-      turn.root.style.transformOrigin = type === 'peel' ? '50% 0' : '0 50%';
-      if (type === 'peel') turn.pageback.style.transform = 'rotateX(180deg)';
-      var shade = h('div', 'tshade', under.sc); if (type === 'peel') shade.style.background = 'linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,0) 70%)';
-      var sheen = h('div', 'tsheen', turn.sc); sheen.style.inset = '0 -100%';
-      var dark = h('div', 'tshade', turn.sc); dark.style.background = '#000';
-      var from = dir > 0 ? 0 : -180 * (type === 'peel' ? -1 : 1) * 1, to = dir > 0 ? -180 : 0;
-      if (type === 'peel') { from = dir > 0 ? 0 : 180; to = dir > 0 ? 180 : 0; sgn = 1; }
-      an(turn.root, [{ transform: rotp + '(' + from + 'deg)' }, { transform: rotp + '(' + to + 'deg)' }]);
-      var rev = dir > 0 ? 1 : -1;
-      an(shade, dir > 0 ? [{ opacity: 1 }, { opacity: 0 }] : [{ opacity: 0 }, { opacity: 1 }]);
-      an(sheen, dir > 0 ? [{ opacity: 0, transform: 'translateX(-30%)' }, { opacity: 1, offset: .5 }, { opacity: 0, transform: 'translateX(30%)' }] : [{ opacity: 0, transform: 'translateX(30%)' }, { opacity: 1, offset: .5 }, { opacity: 0, transform: 'translateX(-30%)' }]);
-      an(dark, dir > 0 ? [{ opacity: 0 }, { opacity: 0, offset: .4 }, { opacity: .55 }] : [{ opacity: .55 }, { opacity: 0, offset: .6 }, { opacity: 0 }]);
-      cleanup = function () { turn.root.style.transformOrigin = ''; shade.remove(); sheen.remove(); dark.remove(); };
+    case 'slide': case 'pageturn': case 'peel': {   // page flips retired: both now slide left (right on Back)
+      var dx = dir > 0 ? 100 : -100;
+      an(A.root, [{ transform: 'translateX(0)' }, { transform: 'translateX(' + (-dx) + '%)' }]);
+      an(B.root, [{ transform: 'translateX(' + dx + '%)' }, { transform: 'translateX(0)' }]);
       break;
     }
     case 'fade': an(B.root, [{ opacity: 0 }, { opacity: 1 }]); break;
