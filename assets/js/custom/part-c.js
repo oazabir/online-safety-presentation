@@ -6,7 +6,7 @@
              3 game headlines (#39-#43) . 4 Lost Screen Memorial scroll (#45) . 5 single picture (#55)
              6 Meet Susan narrative (#58) . 7 auto-advance (#59) . 8 dimming (#56, #64) . 9 toggles (#71)
              10 website screenshots (#88, #92) . 11 Kahf Kids hero (#97) . 12 chart line reveal (#106-109)
-             13 closing video (#112) . 14 NEW WhatsApp privacy (after #96)
+             13 closing video (#112) . 14 NEW WhatsApp privacy (after #97)
    ============================================================================ */
 (function () {
 'use strict';
@@ -926,7 +926,7 @@ Deck.registerSlide(112, {
     ctx.onLeave(function () { u.classList.remove('go'); u.style.opacity = ''; });
   }
 });
-/* ---------------------------------------------------------------- 13b. NEW directly after #96 - a child's Google account (age 11, Qatar), then sign it in on the TV + shared computers
+/* ---------------------------------------------------------------- 13b. NEW directly after #97 (Kahf Kids) - a child's Google account (age 11, Qatar), then sign it in on the TV + shared computers
    Step 1 (left): create the child account (media/kid-google/create-account.webp), DOB -> 11 years old, location Qatar;
    [click] myaccount.google.com > Personal info: set the home address to Doha (personal-info.webp).
    [click] Step 2 (right): sign in on the TV and shared computers -> Search, YouTube feed and ads get clean. */
@@ -994,7 +994,7 @@ Deck.registerSlide(112, {
   var PIW = 540, PIH = Math.round(PIW * 985 / 916), CAW = 384, CAH = Math.round(CAW * 1408 / 958);
 
   Deck.insertSlide({
-    after: 96, id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
+    after: 97, id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
     notes: 'Step 1: create a Google account for your child as a child account (Google asks "Create a Google Account... you will help manage this account until your child is 13"). Set the date of birth so the account is 11 years old, and set the location to Qatar. ' +
       '[click] To change the location later, open myaccount.google.com > Personal info while signed in as the child and set the home address to Doha. The date of birth can be changed from Family Link. ' +
       '[click] Step 2: sign in with this account on the TV (YouTube app) and on every shared computer at home. Google now treats whoever is watching as a child: Google Search results are sanitised, the YouTube feed becomes much cleaner, and the ads on YouTube and Google become far cleaner too. Pair it with "train YouTube what not to show" from the previous slide.',
@@ -1053,7 +1053,7 @@ Deck.registerSlide(112, {
     unstep: function (el, i) { var r = el.__gk; if (r) r.classList.remove('s' + i); }
   });
 })();
-/* ---------------------------------------------------------------- 14. NEW after #96 - "How to keep Susan away" (WhatsApp privacy) */
+/* ---------------------------------------------------------------- 14. NEW after #97 - "How to keep Susan away" (WhatsApp privacy) */
 (function () {
   var S = 320 / 924;                                   // screenshot px -> card px (screenshots are 924 wide, cropped to 1560 tall)
   var CARDS = [
@@ -1092,7 +1092,7 @@ Deck.registerSlide(112, {
   var LOCK = '<svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>';
 
   Deck.insertSlide({
-    after: 96, id: 'wa-privacy', title: 'How to keep Susan away', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'],
+    after: 97, id: 'wa-privacy', title: 'How to keep Susan away', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'],
     notes: 'WhatsApp > Settings > Privacy. Last seen & online: Nobody. Profile picture: My contacts. Status: only share with the people you choose. Groups: My contacts (strangers cannot add your child to groups). Read receipts: Off, so a groomer cannot see when messages were read.',
     render: function (el, ctx) {
       var r = h('div', 'wa', el);
@@ -1422,5 +1422,80 @@ Deck.registerSlide(51, {
       r.classList.add('inst'); setAll(r, false); r.classList.remove('live', 'boom'); void r.offsetWidth; r.classList.remove('inst');
     }
   });
+})();
+
+/* ---------------------------------------------------------------- 15. #96 YouTube - train what not to show
+   the paragraph block becomes three numbered step cards + a monthly reminder; card 2 lights up when the
+   base build reveals the "Not interested" menu on the screenshot */
+(function () {
+  var css = [
+    '.pc96-t{position:absolute;left:170px;top:58px;margin:0;font:600 76px/1.05 var(--f-display);letter-spacing:-.02em;color:var(--ink);white-space:nowrap}',
+    '.pc96-t .yt{display:inline-flex;align-items:center;gap:.16em;color:#FF4D4D;text-shadow:0 0 30px rgba(255,40,40,.35)}',
+    '.pc96-t .yt svg{width:.9em;height:.64em;flex:none}',
+    '.pc96-t .not{position:relative;font-style:italic;color:var(--amber)}',
+    '.pc96-t .not svg{position:absolute;left:-2%;bottom:-.16em;width:104%;height:.3em;overflow:visible}',
+    '.pc96{position:absolute;left:1100px;top:214px;width:720px;display:flex;flex-direction:column;gap:22px}',
+    '.pc96 .cd{position:relative;display:flex;gap:28px;align-items:flex-start;padding:28px 34px 30px 30px;border-radius:26px;',
+    '  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1.5px solid rgba(255,255,255,.12);',
+    '  box-shadow:0 18px 50px rgba(0,0,0,.35);transition:border-color .5s,box-shadow .5s,transform .5s var(--ease)}',
+    '.pc96 .n{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font:700 34px/1 var(--f-display);',
+    '  color:#0B0F12;background:var(--cyan);box-shadow:0 0 24px rgba(34,211,238,.45)}',
+    '.pc96 .hd{font:600 42px/1.15 var(--f-body);color:var(--ink);letter-spacing:-.01em}',
+    '.pc96 .sb{margin-top:10px;font:400 29px/1.35 var(--f-body);color:var(--ink2)}',
+    '.pc96 .chip{display:inline-flex;align-items:center;gap:10px;padding:4px 18px 6px;border-radius:40px;background:rgba(255,255,255,.12);',
+    '  border:1.5px solid rgba(255,255,255,.22);font:600 32px/1.2 var(--f-body);vertical-align:middle;color:var(--ink)}',
+    '.pc96 .chip.dots{padding:4px 16px 6px;font-weight:800;letter-spacing:.04em}',
+    '.pc96 .chip svg{width:30px;height:30px}',
+    '.pc96 .ar{margin:0 10px;color:var(--muted)}',
+    '.pc96 .cd.hot{border-color:rgba(255,77,77,.75);box-shadow:0 0 0 1px rgba(255,77,77,.35),0 0 46px rgba(255,77,77,.28),0 18px 50px rgba(0,0,0,.35);transform:translateX(-10px)}',
+    '.pc96 .cd.hot .n{background:#FF4D4D;box-shadow:0 0 26px rgba(255,77,77,.6)}',
+    '.pc96 .cd.hot .chip.ni{background:rgba(255,77,77,.2);border-color:rgba(255,77,77,.7)}',
+    '.pc96 .rm{display:flex;gap:26px;align-items:center;margin-top:14px;padding:26px 34px 26px 30px;border-radius:26px;',
+    '  background:linear-gradient(120deg,rgba(255,176,32,.2),rgba(255,176,32,.06));border:1.5px solid rgba(255,176,32,.5)}',
+    '.pc96 .rm svg{flex:none;width:64px;height:64px}',
+    '.pc96 .rm b{display:block;font:700 40px/1.15 var(--f-body);color:var(--amber)}',
+    '.pc96 .rm span{display:block;margin-top:4px;font:400 29px/1.3 var(--f-body);color:var(--ink2)}',
+    '.pc96 > *,.pc96-t{opacity:1}',
+    '.pc96.pre > *,.pc96-t.pre{opacity:0}',
+    '.pc96.go > *{animation:pc96-in .8s var(--ease) both;animation-delay:var(--d)}',
+    '.pc96-t.go{animation:pc96-in .8s var(--ease) both}',
+    '@keyframes pc96-in{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}'
+  ].join('\n');
+  if (!document.getElementById('pc96-css')) { var st = document.createElement('style'); st.id = 'pc96-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var PLAY = '<svg viewBox="0 0 90 64"><rect width="90" height="64" rx="16" fill="#FF2A2A"/><path d="M36 18v28l24-14z" fill="#fff"/></svg>';
+  var BAN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>';
+  var CAL = '<svg viewBox="0 0 64 64" fill="none" stroke="#FFB020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="8" y="12" width="48" height="44" rx="8"/><path d="M8 26h48M22 6v12M42 6v12"/><path d="M40 40a8 8 0 1 1-2.3-5.7M40 32v4h-4"/></svg>';
+
+  function hot(el, on) { var c = el.__c2; if (c) c.classList.toggle('hot', !!on); }
+  Deck.registerSlide(96, {
+    keepBase: true,
+    render: function (el, ctx) {
+      hide(ctx, ['e2', 'e11']);
+      var anim = !ctx.static && !ctx.reduced && !cameBack;
+      var t = h('h2', 'pc96-t' + (anim ? ' pre' : ''), el,
+        'Train <span class="yt">' + PLAY + 'YouTube</span> what <span class="not">not' +
+        '<svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M2 8 C30 2 70 12 98 4" fill="none" stroke="#FFB020" stroke-width="3.5" stroke-linecap="round"/></svg></span> to show');
+      var p = h('div', 'pc96' + (anim ? ' pre' : ''), el,
+        '<div class="cd" style="--d:.25s"><div class="n">1</div><div><div class="hd">Scroll through the feed</div>' +
+          '<div class="sb">Spot anything you don’t want your child to see.</div></div></div>' +
+        '<div class="cd" style="--d:.4s"><div class="n">2</div><div><div class="hd"><span class="chip dots">⋮</span><span class="ar">→</span>' +
+          '<span class="chip ni">' + BAN + 'Not interested</span></div>' +
+          '<div class="sb">Tap the three dots on that video and choose it.</div></div></div>' +
+        '<div class="cd" style="--d:.55s"><div class="n">3</div><div><div class="hd">The AI learns</div>' +
+          '<div class="sb">YouTube stops recommending that kind of content.</div></div></div>' +
+        '<div class="rm" style="--d:.75s">' + CAL + '<div><b>Repeat once a month</b><span>to keep the AI on track.</span></div></div>');
+      el.__c2 = p.children[1];
+      if (anim) { el.__go = function () { t.classList.remove('pre'); p.classList.remove('pre'); t.classList.add('go'); p.classList.add('go'); }; }
+      if (ctx.static) hot(el, true);
+    },
+    enter: function (el, ctx) {
+      if (el.__go) { el.__go(); el.__go = null; }
+      hot(el, ctx.view.k >= 1);
+    }
+  });
+  // the base build (menu screenshot) is a base step, not a custom one: follow it via the deck's step event
+  Deck.on('step', function (k, v) { if (v && v.slide && v.slide.orig === 96 && v.custom) hot(v.custom, k >= 1); });
 })();
 })();
