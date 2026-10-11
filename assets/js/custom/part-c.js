@@ -832,7 +832,7 @@ Deck.registerSlide(97, {
     kkCount(el, ctx);
   }
 });
-/* 40,000+ and 300K+ count up from 0 (ease-out) each time the slide is entered */
+/* 40,000+ and 300K+ count up from 0 in four steps each time the slide is entered */
 function kkCount(el, ctx) {
   var ns = el.querySelectorAll('.kk-cnt');
   function put(n, v) { n.textContent = (+n.dataset.to >= 1000 ? Math.round(v).toLocaleString('en-US') : Math.round(v)) + n.dataset.k; }
@@ -842,7 +842,7 @@ function kkCount(el, ctx) {
   var done = false;
   ctx.tick(function (dt, t) {
     if (done) return;
-    var p = Math.min(1, Math.max(0, (t - 500) / 1900)), e = 1 - Math.pow(1 - p, 3);
+    var p = Math.min(1, Math.max(0, (t - 500) / 1900)), e = Math.ceil(p * 4) / 4;   // 4 jumps: 25% → 50% → 75% → 100%
     Array.prototype.forEach.call(ns, function (n) { put(n, e * n.dataset.to); });
     done = p === 1;
   });
@@ -1826,6 +1826,151 @@ Deck.registerSlide(51, {
     enter: function (el, ctx) { if (el.__go) { var g = el.__go; el.__go = null; ctx.timeout(function () { g(ctx); }, 700); } },
     step: function (el, i) { stage(el, i); },
     unstep: function (el, i) { stage(el, i - 1); }
+  });
+})();
+
+/* ---------------------------------------------------------------- 17. #91 / #94 browser comparison tables
+   replace the light screenshot tables with a native dark comparison; click spotlights the winner + scores */
+(function () {
+  var css = [
+    '.pc91-k{position:absolute;left:0;right:0;top:62px;text-align:center;font:800 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}',
+    '.pc91-t{position:absolute;left:0;right:0;top:100px;margin:0;text-align:center;font:600 88px/1.05 var(--f-display);letter-spacing:-.025em;color:var(--ink)}',
+    '.pc91-t em{font-style:italic;color:var(--cyan);text-shadow:0 0 40px rgba(77,208,255,.35)}',
+    '.pc91{position:absolute;border-radius:30px;',
+    '  background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1.5px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.45)}',
+    '.pc91-g{position:relative;display:grid}',
+    '.pc91-g>div{display:flex;align-items:center;justify-content:center;transition:opacity .6s var(--ease)}',
+    '.pc91 .p91hd{height:var(--hh);flex-direction:column;gap:12px;font:600 26px/1 var(--f-body);color:var(--ink)}',
+    '.pc91 .p91hd.p91lb{justify-content:flex-end;align-items:flex-start;padding:0 0 22px 44px;font:700 20px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}',
+    '.pc91 .p91lg{width:66px;height:66px;border-radius:20px;background-color:#F3F4F6;background-repeat:no-repeat;',
+    '  box-shadow:0 8px 24px rgba(0,0,0,.35)}',
+    '.pc91 .p91ft{height:var(--rh);justify-content:flex-start!important;padding-left:44px;font:500 31px/1.1 var(--f-body);color:var(--ink2);border-top:1px solid rgba(255,255,255,.07)}',
+    '.pc91 .p91cl{height:var(--rh);border-top:1px solid rgba(255,255,255,.07)}',
+    '.pc91 .p91cl svg{width:46px;height:46px}',
+    '.pc91 .p91sc{height:84px;border-top:1.5px solid rgba(255,255,255,.14);font:700 34px/1 var(--f-display);color:var(--muted)}',
+    '.pc91 .p91sc.p91lb{justify-content:flex-start!important;padding-left:44px;font:600 26px/1 var(--f-body);letter-spacing:.04em;color:var(--ink2)}',
+    '.pc91 .p91sc small{font:500 20px/1 var(--f-body);margin-left:4px;opacity:.7}',
+    '.pc91 .p91sc[data-c="0"]{color:var(--green);text-shadow:0 0 24px rgba(46,229,157,.5)}',
+    '.pc91 .p91sc{opacity:0}.pc91.hl .p91sc{opacity:1}',
+    '.pc91 .p91cl svg{transition:opacity .6s var(--ease)}',
+    '.pc91.hl .pc91-g>[data-c]:not([data-c="0"]):not(.p91cl),.pc91.hl .p91cl:not([data-c="0"]) svg{opacity:.32}',
+    '.pc91-bar{position:absolute;left:var(--fc);top:-14px;bottom:-14px;width:var(--cw);border-radius:26px;pointer-events:none;',
+    '  background:linear-gradient(180deg,rgba(46,229,157,.16),rgba(46,229,157,.05));border:2px solid rgba(46,229,157,.7);',
+    '  box-shadow:0 0 60px rgba(46,229,157,.3),inset 0 0 40px rgba(46,229,157,.08);opacity:0;transform:scale(.96);transition:opacity .7s var(--ease),transform .7s var(--ease)}',
+    '.pc91-pill{position:absolute;left:calc(var(--fc) + var(--cw) / 2);top:-34px;transform:translate(-50%,10px);white-space:nowrap;padding:9px 20px;border-radius:99px;',
+    '  background:var(--green);color:#06221A;font:800 18px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;box-shadow:0 0 30px rgba(46,229,157,.55);',
+    '  opacity:0;transition:opacity .6s var(--ease) .15s,transform .6s var(--ease) .15s}',
+    '.pc91.hl .pc91-bar{opacity:1;transform:none}.pc91.hl .pc91-pill{opacity:1;transform:translate(-50%,0)}',
+    '.pc91-lgd{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:44px;font:500 22px/1 var(--f-body);color:var(--muted)}',
+    '.pc91-lgd span{display:flex;align-items:center;gap:10px}.pc91-lgd svg{width:26px;height:26px}',
+    '.pc91 .p91rw.pre,.pc91-t.pre,.pc91-k.pre{opacity:0}',
+    '.pc91 .p91rw.go,.pc91-t.go,.pc91-k.go{animation:pc96-in .7s var(--ease) both}',
+    '.pc91.inst *{transition:none!important}'
+  ].join('\n');
+  if (!document.getElementById('pc91-css')) { var st = document.createElement('style'); st.id = 'pc91-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var GLYPH = {
+    y: '<svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="21" fill="rgba(46,229,157,.16)" stroke="#2EE59D" stroke-width="2.5"/><path d="M14 23.5l6 6 12-13" fill="none" stroke="#2EE59D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    p: '<svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="21" fill="rgba(255,176,32,.14)" stroke="#FFB020" stroke-width="2.5"/><path d="M15 23h16" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/></svg>',
+    n: '<svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="21" fill="rgba(255,77,77,.12)" stroke="#FF4D4D" stroke-width="2.5"/><path d="M16 16l14 14M30 16L16 30" stroke="#FF4D4D" stroke-width="4" stroke-linecap="round"/></svg>'
+  };
+  // logos are cropped from the original screenshot tables: [name, centre x, centre y] in the source image
+  var SRC158 = { src: 'media/image158.png', w: 2080, span: 100 }, SRC162 = { src: 'media/image162.png', w: 1946, span: 84 };
+  function logo(src, cx, cy) {
+    var k = 66 / src.span;
+    return 'background-image:url(' + src.src + ');background-size:' + Math.round(src.w * k) + 'px auto;background-position:' +
+      -Math.round((cx - src.span / 2) * k) + 'px ' + -Math.round((cy - src.span / 2) * k) + 'px';
+  }
+
+  function stage(el, k) { var r = el.__pc91; if (r) r.classList.toggle('hl', k >= 1); }
+
+  /* cfg: {orig, title, kicker, head, lead, pill, score, legend, notes, L, FC, CW, TOP, HH, RH, cols:[[name, style]], rows:[[label, 'ynp..']]} */
+  function browserTable(cfg) {
+    var n = cfg.cols.length, SH = 84;
+    if (byN[cfg.orig]) { byN[cfg.orig].steps = []; byN[cfg.orig].notes = cfg.notes; }
+    Deck.registerSlide(cfg.orig, {
+      title: cfg.title, steps: 1,
+      render: function (el, ctx) {
+        var anim = !ctx.static && !ctx.reduced && !cameBack, pre = anim ? ' pre' : '';
+        h('div', 'pc91-k' + pre, el, cfg.kicker);
+        h('h2', 'pc91-t' + pre, el, cfg.head);
+        var r = h('div', 'pc91 inst', el);
+        r.style.cssText = 'left:' + cfg.L + 'px;top:' + cfg.TOP + 'px;width:' + (cfg.FC + n * cfg.CW) + 'px;' +
+          '--fc:' + cfg.FC + 'px;--cw:' + cfg.CW + 'px;--hh:' + cfg.HH + 'px;--rh:' + cfg.RH + 'px';
+        h('div', 'pc91-bar', r);
+        h('div', 'pc91-pill', r, cfg.pill);
+        var s = '<div class="p91hd p91lb">' + cfg.lead + '</div>' + cfg.cols.map(function (b, c) {
+          return '<div class="p91hd" data-c="' + c + '"><div class="p91lg" style="' + b[1] + '"></div>' + b[0] + '</div>';
+        }).join('');
+        var score = cfg.cols.map(function () { return 0; });
+        cfg.rows.forEach(function (row) {
+          s += '<div class="p91ft p91rw' + pre + '">' + row[0] + '</div>';
+          row[1].split('').forEach(function (v, c) {
+            if (v === 'y') score[c]++;
+            s += '<div class="p91cl p91rw' + pre + '" data-c="' + c + '">' + GLYPH[v] + '</div>';
+          });
+        });
+        s += '<div class="p91sc p91lb">' + cfg.score + '</div>' + score.map(function (v, c) {
+          return '<div class="p91sc" data-c="' + c + '">' + v + '<small>/ ' + cfg.rows.length + '</small></div>';
+        }).join('');
+        var g = h('div', 'pc91-g', r, s);
+        g.style.gridTemplateColumns = cfg.FC + 'px repeat(' + n + ',' + cfg.CW + 'px)';
+        var lg = h('div', 'pc91-lgd', el, cfg.legend.map(function (k) {
+          return '<span>' + GLYPH[k] + { y: 'Blocked', p: 'Partial', n: 'Not blocked' }[k] + '</span>';
+        }).join(''));
+        lg.style.top = (cfg.TOP + cfg.HH + cfg.rows.length * cfg.RH + SH + 30) + 'px';
+        el.__pc91 = r;
+        stage(el, ctx.static ? 1 : 0);
+        void r.offsetWidth; r.classList.remove('inst');
+        if (anim) el.__go = function () {
+          var hd = el.querySelectorAll('.pc91-k.pre,.pc91-t.pre');
+          [].forEach.call(hd, function (e, i) { e.style.animationDelay = (i * 0.1) + 's'; e.classList.remove('pre'); e.classList.add('go'); });
+          [].forEach.call(r.querySelectorAll('.p91rw.pre'), function (e, i) {
+            e.style.animationDelay = (0.25 + Math.floor(i / (n + 1)) * 0.09 + (i % (n + 1)) * 0.025) + 's'; e.classList.remove('pre'); e.classList.add('go');
+          });
+        };
+      },
+      enter: function (el, ctx) { if (el.__go) { var g = el.__go; el.__go = null; ctx.timeout(g, 500); } },
+      step: function (el, i) { stage(el, i); },
+      unstep: function (el, i) { stage(el, i - 1); }
+    });
+  }
+
+  browserTable({
+    orig: 91, title: 'Choose the right browser', kicker: 'Built-in protection, no extensions',
+    head: 'Choose the right <em>browser</em>', lead: 'Built-in features', pill: 'Our pick', score: 'Fully protected', legend: ['y', 'p', 'n'],
+    L: 140, FC: 600, CW: 180, TOP: 238, HH: 132, RH: 76,
+    cols: [['Brave', 1017], ['Chrome', 1206], ['DDG', 1397], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; }),
+    rows: [
+      ['Invasive ads blocked', 'ypynnn'],
+      ['Cross-site trackers blocked', 'ynyppn'],
+      ['Cookies blocked', 'ynypyy'],
+      ['Fingerprinting blocked', 'ynpnpp'],
+      ['Malware &amp; phishing protection', 'yynyyy'],
+      ['Bounce-tracking protection', 'ynnnpn'],
+      ['Tor mode (anonymous routing)', 'ynnnnn']
+    ],
+    notes: 'Not all browsers protect your family equally. Here is what each one blocks out of the box, with no extensions: ' +
+      'invasive ads, cross-site trackers, cookies, fingerprinting, malware and phishing, bounce tracking, and anonymous Tor routing. ' +
+      'Chrome, the most popular browser, blocks almost nothing by default. ' +
+      '[click] Brave is the only one that ticks every box, so it is the browser we recommend installing on your children\'s devices.'
+  });
+
+  browserTable({
+    orig: 94, title: 'Kahf Browser vs other browsers', kicker: 'Built for family safety',
+    head: '<em>Kahf</em> Browser vs other browsers', lead: 'Family features', pill: 'Built for families', score: 'Family-safe', legend: ['y', 'n'],
+    L: 140, FC: 640, CW: 200, TOP: 250, HH: 140, RH: 92,
+    cols: [['Kahf', logo(SRC162, 758, 98)]].concat([['Chrome', 1206], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; })),
+    rows: [
+      ['Hides inappropriate images', 'ynnnn'],
+      ['Safe Search', 'ynnnn'],
+      ['Safe YouTube', 'ynnnn'],
+      ['Ads &amp; trackers blocked', 'ynnnn'],
+      ['Blocks harmful sites', 'ynnnn']
+    ],
+    notes: 'Privacy browsers like Brave stop ads and trackers, but none of the mainstream browsers protect children from what they actually see. ' +
+      'Kahf Browser does: it hides inappropriate images, forces Safe Search and a safe YouTube, blocks ads and trackers, and blocks harmful sites. ' +
+      '[click] Five out of five, against zero for Chrome, Edge, Firefox and Safari.'
   });
 })();
 })();
