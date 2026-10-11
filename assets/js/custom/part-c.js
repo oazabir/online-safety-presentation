@@ -1190,13 +1190,13 @@ Deck.registerSlide(112, {
     '.yr-question{position:absolute;left:106px;top:849px;margin:0;font:500 italic 42px/1.14 var(--f-display);color:#e9dfcb}',
     '.yr-lifetime{position:absolute;left:900px;top:300px;width:916px;padding-left:62px;border-left:1px solid #44544d}',
     '.yr-lifetime .hd{font-size:23px;letter-spacing:.065em;text-transform:uppercase;color:#bac7c6;font-weight:600}',
-    '.yr-years{margin:13px 0 0;font:600 217px/.98 var(--f-display);letter-spacing:-.045em;color:#ff927d;font-variant-numeric:tabular-nums;white-space:nowrap}.yr-years small{font:500 70px/1 var(--f-display);letter-spacing:-.025em;margin-left:18px}',
+    '.yr-years{margin:13px 0 0;font:600 164px/.98 var(--f-display);letter-spacing:-.045em;color:#ff927d;font-variant-numeric:tabular-nums;white-space:nowrap}.yr-years small{font:500 61px/1 var(--f-display);letter-spacing:-.025em;margin-left:18px}',
     '.yr-years i{font-style:normal}.yr-description{font-size:30px;margin:5px 0 0;color:var(--ink)}.yr-model{font-size:20px;color:#b8c7c1;margin-top:12px}',
-    '.yr-life{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin-top:36px;width:800px}',
-    '.yr-tile{position:relative;height:29px;border-radius:3px;background:#29403b;overflow:hidden}.yr-tile:after{content:"";position:absolute;inset:0;background:#ed8d77;transform:scaleX(0);transform-origin:left;transition:transform .65s cubic-bezier(.22,.8,.3,1) var(--delay,0s)}',
-    '.yr.a1 .yr-tile:after{transform:scaleX(var(--fill0))}.yr.s1 .yr-tile:after{transform:scaleX(var(--fill1));transition-delay:0s}',
-    '.yr-grid-note{display:flex;justify-content:space-between;width:800px;margin-top:14px;font-size:18px;color:#afbeb8}.yr-grid-note b{font-weight:600;color:#ffa18c}',
-    '.yr-cap{margin-top:29px;font:500 38px/1.18 var(--f-display);color:var(--ink)}.yr-cap em{font-style:normal;color:#ff9c89}',
+    '.yr-pie{position:relative;width:800px;height:337px;margin-top:4px}.yr-pie svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:opacity .8s ease,transform .9s cubic-bezier(.22,.8,.3,1)}',
+    '.yr-pie .pie0{opacity:1}.yr-pie .pie1{opacity:0;transform:translateY(8px)}.yr.s1 .yr-pie .pie0{opacity:0;transform:translateY(-8px)}.yr.s1 .yr-pie .pie1{opacity:1;transform:none}',
+    '.yr-pie .pie-slice{transform:translateY(0);transition:transform 1.1s cubic-bezier(.22,.8,.3,1)}.yr.a1 .yr-pie .pie-slice{transform:translateY(25px)}',
+    '.yr-pie .pie-percent{font:600 61px/1 var(--f-display);fill:#fff3e5;paint-order:stroke;stroke:#9b352d;stroke-width:1px}.yr-pie .pie-label{font:600 18px var(--f-body);letter-spacing:.13em;fill:#ffe1d3}',
+    '.yr-cap{margin-top:0;font:500 38px/1.18 var(--f-display);color:var(--ink)}.yr-cap em{font-style:normal;color:#ff9c89}',
     '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block}',
     '.yr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,10,12,.97);opacity:0;transition:opacity .75s ease;pointer-events:none;z-index:30;text-align:center}',
     '.yr.s2 .yr-end{opacity:1}.yr-end .eyebrow{font-size:23px;letter-spacing:.19em;text-transform:uppercase;color:#c7bfae;margin-bottom:48px}',
@@ -1211,21 +1211,42 @@ Deck.registerSlide(112, {
 
   function fmt(n, d) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
 
+  // Elliptical sectors with a solid extruded rim; both states use the exact modelled fraction.
+  var pieSerial = 0;
+  function lifePie(fraction, state) {
+    var uid = 'yr-pie-' + (++pieSerial), cx = 400, cy = 147, rx = 307, ry = 121;
+    var half = Math.PI * fraction, start = Math.PI / 2 - half, end = Math.PI / 2 + half;
+    function point(a) { return (cx + rx * Math.cos(a)).toFixed(3) + ' ' + (cy + ry * Math.sin(a)).toFixed(3); }
+    var wedge = 'M' + cx + ' ' + cy + ' L' + point(start) + ' A' + rx + ' ' + ry + ' 0 0 1 ' + point(end) + ' Z';
+    var rest = 'M' + cx + ' ' + cy + ' L' + point(end) + ' A' + rx + ' ' + ry + ' 0 1 1 ' + point(start) + ' Z';
+    var defs = '<defs>' +
+      '<linearGradient id="' + uid + '-blue" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#a2f1ed"/><stop offset=".38" stop-color="#50c4cc"/><stop offset="1" stop-color="#147b8b"/></linearGradient>' +
+      '<linearGradient id="' + uid + '-red" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#ffc18d"/><stop offset=".32" stop-color="#ff795c"/><stop offset="1" stop-color="#d63f40"/></linearGradient>' +
+      '<linearGradient id="' + uid + '-rim" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#104a56"/><stop offset=".5" stop-color="#236a72"/><stop offset="1" stop-color="#092f3a"/></linearGradient>' +
+      '<linearGradient id="' + uid + '-cut" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#8b272e"/><stop offset=".5" stop-color="#bd4540"/><stop offset="1" stop-color="#722331"/></linearGradient>' +
+      '<radialGradient id="' + uid + '-shadow"><stop stop-color="#000" stop-opacity=".65"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>';
+    function solid(path, top, side) {
+      var out = '';
+      for (var depth = 35; depth > 0; depth--) out += '<path d="' + path + '" transform="translate(0 ' + depth + ')" fill="url(#' + uid + '-' + side + ')"/>';
+      return out + '<path d="' + path + '" fill="url(#' + uid + '-' + top + ')" stroke="#fff" stroke-opacity=".2" stroke-width="1.2"/>';
+    }
+    return '<svg class="pie' + state + '" viewBox="0 0 800 360" focusable="false">' + defs +
+      '<ellipse cx="400" cy="284" rx="365" ry="73" fill="url(#' + uid + '-shadow)"/>' +
+      solid(rest, 'blue', 'rim') + '<g class="pie-slice">' + solid(wedge, 'red', 'cut') +
+      '<text class="pie-percent" x="400" y="236" text-anchor="middle">' + Math.round(fraction * 100) + '%</text>' +
+      '<text class="pie-label" x="400" y="262" text-anchor="middle">ONLINE</text></g></svg>';
+  }
+
   Deck.insertSlide({
     after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false, steps: 2,
     notes: 'Newest data: DataReportal Digital 2026 Global Overview (GWI survey, data up to Oct 2025). The average internet user aged 16+ spends 18 hours 36 minutes every week just on social media and online video, not counting Netflix or TV streaming. ' +
       'That is 970 hours a year, 1 in 6 of your waking hours. ' +
-      '[life grid fills by itself] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
+      '[the online slice pulls away from the life pie] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
       '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from Digital 2024, it grows to ' + fmt(TOT_Y, 1) + ' years: nearly 1 in 3 waking hours of your life on a screen. ' +
       '[click] This is not screen time. It is life time. ' +
       'Defending the numbers: 18.6 h x 52.14 weeks = 970 h a year. Lifetime: GWI hours/week by age band (mean of women and men) x 52.14 x years in band: 16-24 24.7h x 9, 25-34 20.9h x 10, 35-44 17.7h x 10, 45-54 15.7h x 10, 55-59 13.3h x 5 = ' + fmt(LIFE_H) + ' h; / (16 h x 365) = ' + fmt(FEED_Y, 1) + ' waking years = ' + fmt(PF * 100, 1) + '% of 60 x 365 x 16 waking hours. All online media (33.5 h/week, DataReportal) scaled by the same age profile = ' + fmt(ONL_Y, 1) + ' years (' + fmt(PO * 100, 1) + '%). All internet use 6h 40m/day (Digital 2024, slide 4) same way = ' + fmt(TOT_Y, 1) + ' years (' + fmt(PT * 100, 1) + '%).',
     render: function (el, ctx) {
       var r = document.createElement('div'); r.className = 'yr' + (ctx.static ? ' static a1' : '') + (ctx.reduced ? ' reduced' : ''); el.appendChild(r);
-      var tiles = '';
-      for (var k = 0; k < LIFE; k++) {
-        var f0 = Math.max(0, Math.min(1, ONL_Y - k)), f1 = Math.max(0, Math.min(1, TOT_Y - k));
-        tiles += '<span class="yr-tile" style="--fill0:' + f0.toFixed(4) + ';--fill1:' + f1.toFixed(4) + ';--delay:' + (k * .018).toFixed(3) + 's"></span>';
-      }
       r.innerHTML =
         '<div class="yr-k rv" style="--d:.05s">The cost of “just one more”</div>' +
         '<h1 class="yr-t rv" style="--d:.15s">A little scrolling. <em>A lot of life.</em></h1>' +
@@ -1239,8 +1260,7 @@ Deck.registerSlide(112, {
           '<div class="yr-years yr-sw"><i class="v0">' + fmt(ONL_Y, 1) + '</i><i class="v1">' + fmt(TOT_Y, 1) + '</i><small>years</small></div>' +
           '<div class="yr-description">of waking life spent online.</div>' +
           '<div class="yr-model yr-sw"><span class="v0">All online media · modelled estimate</span><span class="v1">All internet use · modelled estimate</span></div>' +
-          '<div class="yr-life" aria-hidden="true">' + tiles + '</div>' +
-          '<div class="yr-grid-note"><span>Each tile = one waking-year equivalent</span><b class="yr-sw"><span class="v0">' + Math.round(PO * 100) + '% online</span><span class="v1">' + Math.round(PT * 100) + '% online</span></b></div>' +
+          '<div class="yr-pie" aria-hidden="true">' + lifePie(PO, 0) + lifePie(PT, 1) + '</div>' +
           '<div class="yr-cap yr-sw"><span class="v0">More than <em>1 in 5</em> waking hours.</span><span class="v1">Nearly <em>1 in 3</em> waking hours.</span></div></div>' +
         '<div class="yr-end"><div class="eyebrow">There is no replay button.</div><p>This isn’t <em>screen</em> time.<strong>It’s <em>life</em> time.</strong></p><span class="last-line">And you never get it back.</span></div>' +
         '<div class="yr-src">GWI Q2 2025, via DataReportal Digital 2026. Model: 60-year life; 16 waking hours/day; nothing counted before age 16; age-specific usage rates. All online media: 33.5 h/week (2026). All internet use: 6h 40m/day (2024), scaled by the same age profile.</div>';
@@ -1252,7 +1272,7 @@ Deck.registerSlide(112, {
     },
     enter: function (el, ctx) {
       var r = el.__yr; if (!r) return;
-      r.classList.add('a1');                                // the life grid fills by itself
+      r.classList.add('a1');                                // pull the online slice forward
       if (ctx.reduced) return;
       var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), DUR = 1800, JUMPS = 5, TOTAL = 18 * 60 + 36;
       n.textContent = '0'; m.textContent = '00';
