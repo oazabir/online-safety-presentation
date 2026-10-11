@@ -5,7 +5,7 @@
    Sections: 0 helpers/css . 1 removals + data patches . 2 typewriter slides (#28, #57)
              3 game headlines (#39-#43) . 4 Lost Screen Memorial scroll (#45) . 5 single picture (#55)
              6 Meet Susan narrative (#58) . 7 auto-advance (#59) . 8 dimming (#56, #64) . 9 toggles (#71)
-             10 website screenshots (#88, #92) . 11 Kahf Kids carousel (#97) . 12 chart line reveal (#106-109)
+             10 website screenshots (#88, #92) . 11 Kahf Kids hero (#97) . 12 chart line reveal (#106-109)
              13 closing video (#112) . 14 NEW WhatsApp privacy (after #96)
    ============================================================================ */
 (function () {
@@ -90,6 +90,26 @@ var CSS = [
 '.pc-win .url{margin-left:22px;flex:1;max-width:560px;height:28px;border-radius:14px;background:rgba(255,255,255,.08);color:#c9d1d6;font:500 17px/28px var(--f-body);padding:0 16px;display:flex;gap:8px;align-items:center}',
 '.pc-win .url b{color:#7ee2a8;font-weight:600}',
 '.pc-win img{display:block;width:100%}',
+/* #105 checklist page + QR */
+'.pc-ck{position:absolute;inset:0}',
+'.pc-ck .ck-qrp{position:absolute;left:1440px;top:0;width:440px;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}',
+'.pc-ck .ck-ttl{font:700 46px/1.05 var(--f-display);color:#F4F1EA;letter-spacing:-.01em;margin:0 0 10px}',
+'.pc-ck .ck-ttl b{color:#F2C14E;font-weight:700}',
+'.pc-ck .ck-scan{display:flex;align-items:center;gap:12px;font:700 22px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#9fe3bd;margin:0 0 30px}',
+'.pc-ck .ck-scan svg{width:30px;height:30px}',
+'.pc-ck .ck-qc{position:relative;width:380px;height:380px;padding:26px;box-sizing:border-box;border-radius:34px;background:#fff;box-shadow:0 0 0 6px rgba(242,193,78,.9),0 30px 70px -18px rgba(0,0,0,.8),0 0 90px rgba(242,193,78,.35)}',
+'.pc-ck .ck-qc img{display:block;width:100%;height:100%;image-rendering:pixelated}',
+'.pc-ck .ck-qc .ck-halo{position:absolute;inset:-6px;border-radius:38px;box-shadow:0 0 0 4px rgba(242,193,78,.8);opacity:0;pointer-events:none}',
+'.pc-ck .ck-qc .ck-ln{position:absolute;left:18px;right:18px;top:26px;height:4px;border-radius:4px;background:#2EE59D;box-shadow:0 0 18px 4px rgba(46,229,157,.7);opacity:0;pointer-events:none}',
+'.pc-ck .ck-link{margin-top:34px;padding:14px 30px;border-radius:999px;font:800 40px/1 var(--f-body);letter-spacing:-.01em;color:#0b2a1b;background:linear-gradient(180deg,#ffd978,#F2C14E);box-shadow:0 14px 34px -10px rgba(242,193,78,.6)}',
+'.pc-ck .ck-hint{margin-top:18px;font:500 21px/1.35 var(--f-body);color:#b9c7bf}',
+'.pc-ck.go .ck-qc .ck-halo{animation:pc-ck-halo 2.4s ease-out 1.2s infinite}',
+'.pc-ck.go .ck-qc .ck-ln{animation:pc-ck-ln 2.4s ease-in-out 1.2s infinite}',
+'.pc-ck.go .ck-qrp{animation:pc-ck-in .9s cubic-bezier(.3,1.4,.5,1) .5s both}',
+'@keyframes pc-ck-halo{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}',
+'@keyframes pc-ck-ln{0%{opacity:0;transform:translateY(0)}10%{opacity:1}50%{opacity:1;transform:translateY(322px)}60%,100%{opacity:0;transform:translateY(322px)}}',
+'@keyframes pc-ck-in{from{opacity:0;transform:translateX(60px) scale(.9)}to{opacity:1;transform:none}}',
+'@media (prefers-reduced-motion:reduce){.pc-ck.go .ck-qc .ck-halo,.pc-ck.go .ck-qc .ck-ln,.pc-ck.go .ck-qrp{animation:none}}',
 '.pc-wglow{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(var(--wc),.40),transparent);filter:blur(20px);pointer-events:none;animation:pc-breathe 6s ease-in-out infinite}',
 '@keyframes pc-breathe{0%,100%{opacity:.6}50%{opacity:1}}',
 '.pc-rise{animation:pc-rise 1.1s cubic-bezier(.2,.8,.25,1) .1s both}',
@@ -97,17 +117,44 @@ var CSS = [
 '.pc-bob{animation:pc-bob 9s ease-in-out 1.2s infinite alternate}',
 '@keyframes pc-bob{from{transform:translateY(0)}to{transform:translateY(-10px)}}',
 
-/* Kahf Kids carousel */
-'.pc-kk{position:absolute;inset:0;overflow:hidden;background:#f6f4fb}',
-'.pc-kk .bg{position:absolute;left:0;top:0;width:1920px;height:1080px;display:block}',
-'.pc-kk .scr{position:absolute;overflow:hidden;background:#fff}',
-'.pc-kk .trk{position:absolute;left:0;top:0;height:100%;display:flex;will-change:transform}',
-'.pc-kk .trk img{flex:none;height:100%;object-fit:cover;object-position:center top;display:block}',
-'.pc-kk .cap{position:absolute;height:50px;transform:translateX(-50%);border-radius:999px;box-shadow:0 10px 26px rgba(33,28,55,.14);transition:opacity .45s ease,transform .45s ease}',
-'.pc-kk .cap.out{opacity:0;transform:translate(-50%,-10px)}.pc-kk .cap.in0{opacity:0;transform:translate(-50%,10px)}',
-'.pc-kk .dots{position:absolute;display:flex;align-items:center;transform:translate(-50%,-50%)}',
-'.pc-kk .dots i{display:block;width:10.8px;height:10.8px;margin:0 4.2px;border-radius:99px;background:rgba(33,28,55,.18);transition:width .45s ease,background .45s ease}',
-'.pc-kk .dots i.on{width:28.8px;background:#5A63D8}',
+/* Kahf Kids hero (kahfkids.com, rebuilt in the site's own css px, scaled x1.4) */
+"@font-face{font-family:'KK Nunito';src:url(assets/fonts/nunito-latin.woff2) format('woff2');font-weight:400 900;font-display:block}",
+"@font-face{font-family:'KK Baloo';src:url(assets/fonts/baloo-da-2-latin.woff2) format('woff2');font-weight:500 800;font-display:block}",
+'.pc-kk{position:absolute;inset:0;overflow:hidden;background:#f6f4ff;color:#211C37;font-family:"KK Nunito",system-ui,sans-serif}',
+'.pc-kk .kk-stg{position:absolute;left:0;top:0;width:1371.43px;height:771.43px;transform:scale(1.4);transform-origin:0 0;display:flex;align-items:center}',
+'.pc-kk .kk-hero{position:relative;box-sizing:border-box;width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.3fr .7fr;gap:40px;align-items:start}',
+'.pc-kk .kk-blob{position:absolute;border-radius:50%;pointer-events:none}',
+'.pc-kk .kk-art{grid-column:2;grid-row:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}',
+'.pc-kk .kk-frame{position:relative;width:100%;max-width:290px}',
+'.pc-kk .kk-glow{position:absolute;inset:-4% 8%;background:radial-gradient(58% 52% at 50% 45%,rgba(90,99,216,.30),rgba(41,182,234,.14) 46%,transparent 72%);z-index:0;pointer-events:none}',
+'.pc-kk .kk-scr{position:relative;z-index:1;overflow:hidden;aspect-ratio:1394/2756}',
+'.pc-kk .kk-trk{position:absolute;inset:0;display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1)}',
+'.pc-kk .kk-trk div{flex:0 0 100%;width:100%;height:100%}',
+'.pc-kk .kk-trk img{width:100%;height:100%;object-fit:contain;display:block}',
+'.pc-kk .kk-arw{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid rgba(33,28,55,.06);cursor:pointer;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);box-shadow:0 10px 24px rgba(33,28,55,.16);color:#5A63D8;font:21px/1 "KK Nunito",sans-serif;display:flex;align-items:center;justify-content:center;z-index:6;padding:0}',
+'.pc-kk .kk-dots{display:flex;justify-content:center;gap:7px;margin-top:15px}',
+'.pc-kk .kk-dots button{width:24px;height:24px;margin:0 -7.5px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;padding:0}',
+'.pc-kk .kk-dots span{display:block;width:9px;height:9px;border-radius:999px;transition:.4s;background:rgba(33,28,55,.18)}',
+'.pc-kk .kk-dots .kk-on span{width:26px;background:#5A63D8}',
+'.pc-kk .kk-copy{grid-column:1;grid-row:1;position:relative;max-width:720px}',
+'.pc-kk .kk-brand{display:flex;align-items:center;gap:14px;margin:0 0 20px}',
+'.pc-kk .kk-brand img{width:58px;height:58px;border-radius:15px;background:#fff;box-shadow:0 8px 22px rgba(90,99,216,.22),0 0 0 1px rgba(33,28,55,.06);display:block}',
+'.pc-kk .kk-brand b{display:block;font:700 30px/1 "KK Baloo",sans-serif;color:#211C37;letter-spacing:-.3px}',
+'.pc-kk .kk-brand small{display:block;margin-top:5px;font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#5A63D8}',
+'.pc-kk h1{font:600 54px/1.04 "KK Baloo",sans-serif;letter-spacing:-1.2px;margin:0 0 18px;max-width:600px;color:#211C37}',
+'.pc-kk h1 span{color:#EF4136}',
+'.pc-kk .kk-sub{font-size:19px;line-height:1.5;color:#5b5470;font-weight:500;margin:0 0 26px;max-width:560px}',
+'.pc-kk .kk-stats{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;align-items:end;gap:20px 44px;margin:4px 0 30px}',
+'.pc-kk .kk-stat{border-left:5px solid;padding-left:20px}',
+'.pc-kk .kk-num{font:700 58px/.95 "KK Baloo",sans-serif;color:#211C37;letter-spacing:-1px}',
+'.pc-kk .kk-lbl{font-weight:800;font-size:15px;letter-spacing:.6px;text-transform:uppercase;color:#6f6888;margin-top:8px}',
+'.pc-kk .kk-stars{color:#FFB400;font-size:20px;letter-spacing:1px;margin-bottom:4px}',
+'.pc-kk .kk-cta{display:flex;align-items:center;gap:10px}',
+'.pc-kk .kk-cta a{text-decoration:none;display:inline-flex;align-items:center;gap:9px;background:#211C37;color:#fff;padding:11px 16px;border-radius:14px;white-space:nowrap;box-shadow:0 10px 24px rgba(33,28,55,.2)}',
+'.pc-kk .kk-cta a>span{line-height:1.05;text-align:left}',
+'.pc-kk .kk-cta small{display:block;font-size:10px;opacity:.75;font-weight:700}',
+'.pc-kk .kk-cta b{font:500 18px "KK Baloo",sans-serif}',
+'.pc-kk .kk-trial{margin-top:14px;color:#6a6385;font-weight:700;font-size:14.5px}',
 
 /* chart line reveal */
 '.pc-lines{position:absolute;left:0;top:0;width:100%;height:100%;display:block;clip-path:inset(0 100% 0 0)}',
@@ -116,6 +163,23 @@ var CSS = [
 /* closing video */
 '.pc-close{position:absolute;inset:0;background:#0d3b2a;overflow:hidden}',
 '.pc-close video,.pc-close img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
+/* kahf.co call-out under the stats (clear of the moving phones): pops in, gold shine runs across the text, halo pulses */
+'.pc-url{position:absolute;left:1152px;top:1004px;transform:translateY(-50%);transform-origin:left center;z-index:3}',
+'.pc-url .pill{position:relative;display:flex;align-items:center;gap:18px;padding:12px 38px 12px 14px;border-radius:999px;background:linear-gradient(180deg,rgba(18,58,38,.92),rgba(9,38,24,.92));box-shadow:inset 0 0 0 2px rgba(242,193,78,.75),0 0 0 8px rgba(242,193,78,.10),0 24px 60px -12px rgba(0,0,0,.7),0 0 70px rgba(242,193,78,.28)}',
+'.pc-url .ic{width:62px;height:62px;border-radius:50%;flex:none;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe7a3,#F2C14E 55%,#c9902a);box-shadow:0 6px 18px rgba(242,193,78,.45)}',
+'.pc-url .ic svg{width:36px;height:36px}',
+'.pc-url .t{font:800 66px/1 var(--f-body);letter-spacing:-.02em;background:linear-gradient(100deg,#F2C14E 0%,#F2C14E 38%,#fff6d8 50%,#F2C14E 62%,#F2C14E 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 14px rgba(0,0,0,.45))}',
+'.pc-url .t i{font-style:normal;color:#fff;-webkit-text-fill-color:#F4F1EA}',
+'.pc-url .halo{position:absolute;inset:-6px;border-radius:999px;box-shadow:0 0 0 3px rgba(242,193,78,.7);opacity:0;pointer-events:none}',
+'.pc-url.go{animation:pc-url-in .9s cubic-bezier(.3,1.5,.5,1) both}',
+'.pc-url.go .t{animation:pc-url-shine 3.6s ease-in-out 1s infinite}',
+'.pc-url.go .halo{animation:pc-url-halo 2.4s ease-out 1.1s infinite}',
+'.pc-url.go .ic{animation:pc-url-bob 2.4s ease-in-out 1.1s infinite}',
+'@keyframes pc-url-in{from{opacity:0;transform:translateY(-50%) scale(.4)}to{opacity:1;transform:translateY(-50%) scale(1)}}',
+'@keyframes pc-url-shine{0%{background-position:100% 0}55%,100%{background-position:0% 0}}',
+'@keyframes pc-url-halo{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.18,1.6)}}',
+'@keyframes pc-url-bob{0%,100%{transform:scale(1)}12%{transform:scale(1.12)}24%{transform:scale(1)}}',
+'@media (prefers-reduced-motion:reduce){.pc-url.go,.pc-url.go .t,.pc-url.go .halo,.pc-url.go .ic{animation:none}}',
 
 /* Meet Susan */
 '.p58{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA}',
@@ -684,49 +748,113 @@ function website(n, src, iw, ih, url, rgb) {
 website(88, 'media/kahfguard-hero.webp', 1382, 829, 'kahfguard.com', '46,229,157');
 website(92, 'media/kahfbrowser-hero.webp', 1491, 978, 'kahfbrowser.com', '168,85,247');
 
-/* ---------------------------------------------------------------- 11. #97 slide 66 - kahfkids.com first view, live carousel */
-var KK = { k: 1.2, n: 9, hold: 3600, slide: 650,              // site captured at 1600x900 css px (x1.2 = slide px)
-  scr: { x: 988.08, y: 211.75, w: 264, h: 572, r: 36 }, capY: 812.75, capX: 1120, capH: 41.75, dotsY: 881.5,
-  capW: [462, 364, 396, 464, 474, 482, 388, 434, 418] };       // caption image widths (2x)
+/* #105 - the kahf.co/checklist page (tall screenshot, slowly scrolls inside a fixed browser frame) with a big QR code to scan */
+Deck.registerSlide(105, {
+  keepBase: false, loop: ['orbs'],
+  render: function (el, ctx) {
+    var r = h('div', 'pc-ck', el), w = 1322, vh = 914, x = 70, y = (H - (vh + 46)) / 2, ih = w * 2000 / 1586;   // frame size unchanged; page is 1586x2000
+    var gl = h('div', 'pc-wglow', r); gl.style.cssText = 'left:' + (x - 140) + 'px;top:' + (y - 100) + 'px;width:' + (w + 280) + 'px;height:' + (H - 2 * y + 200) + 'px;--wc:46,229,157';
+    var wrap = h('div', ctx.static ? '' : 'pc-rise', r); wrap.style.cssText = 'position:absolute;inset:0';
+    var win = h('div', 'pc-win', wrap, '<div class="bar"><i></i><i></i><i></i><div class="url"><b>&#128274;</b>kahf.co/checklist</div></div>');
+    win.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;--wc:46,229,157';
+    var vp = h('div', '', win); vp.style.cssText = 'position:relative;height:' + vh + 'px;overflow:hidden';
+    var im = h('img', '', vp); im.src = 'media/checklist/kahf-checklist.webp'; im.alt = 'kahf.co/checklist: Is your family safe online? checklist'; im.style.height = ih + 'px';
+    el.__ckImg = im; el.__ckTravel = ih - vh;
+    h('div', 'ck-qrp', r,
+      '<div class="ck-ttl">Online Safety<br><b>Checklist</b></div>' +
+      '<div class="ck-scan"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><rect x="13" y="4" width="22" height="40" rx="5"/><path d="M21 38h6"/></svg>Scan with your phone</div>' +
+      '<div class="ck-qc"><img src="media/checklist/qr-kahf-co-checklist.svg" alt="QR code: https://kahf.co/checklist"><span class="ck-halo"></span><span class="ck-ln"></span></div>' +
+      '<div class="ck-link">kahf.co/checklist</div>' +
+      '<div class="ck-hint">18 steps &middot; about 20 minutes</div>');
+    el.__ck = r;
+  },
+  enter: function (el, ctx) {
+    var r = el.__ck; if (!r || ctx.reduced) return;
+    r.classList.remove('go'); void r.offsetWidth; r.classList.add('go');
+    var d = -el.__ckTravel, top = 'translateY(0)', bot = 'translateY(' + d + 'px)';   // hold top 3s, scroll down 10s, hold 5s, back up 10s
+    var an = el.__ckImg.animate([{ transform: top, offset: 0 }, { transform: top, offset: 3 / 28, easing: 'ease-in-out' }, { transform: bot, offset: 13 / 28 },
+      { transform: bot, offset: 18 / 28, easing: 'ease-in-out' }, { transform: top, offset: 1 }], { duration: 28000, iterations: Infinity, easing: 'linear' });
+    ctx.onLeave(function () { r.classList.remove('go'); try { an.cancel(); } catch (e) {} });
+  }
+});
+
+/* ---------------------------------------------------------------- 11. #97 slide 66 - kahfkids.com hero section only (no promo bar / menu)
+   Rebuilt from the live site's markup; phone carousel autoplays like the site: slide every 4.5 s (0.55 s ease),
+   rewinding from the last image to the first. Arrows and dots work too. */
+var KK = { imgs: ['hero-1-videos', 'hero-2-menu', 'hero-3-parental'], every: 4500 };
+var KK_APPLE = '<svg viewBox="0 0 384 512" width="22" height="22" fill="#fff"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C71.3 141.1 16 184.5 16 271.9c0 25.8 4.7 52.4 14.1 79.7 12.6 36.1 58 124.6 105.4 123.1 24.8-.6 42.3-17.6 74.6-17.6 31.3 0 47.5 17.6 74.6 17.6 47.8-.7 88.8-81.1 100.8-117.3-64.1-30.2-60.8-88.5-60.8-89.7zm-43.4-180.3c20.9-24.8 19-47.4 18.4-55.5-18.5 1.1-39.9 12.6-52.1 26.8-13.4 15.3-21.3 34.2-19.6 55.1 20 1.5 38.2-8.8 53.3-26.4z"/></svg>';
+var KK_PLAY = '<svg viewBox="0 0 512 512" width="20" height="22"><path fill="#fff" d="M47 32C36 38 28 49 28 64v384c0 15 8 26 19 32l228-224L47 32zm274 220l52-51-189-109c-12-7-24-6-33-1l170 161zm0 8L151 421c9 5 21 6 33-1l189-109-52-51zm46-27l54-31c18-10 18-39 0-49l-54-31-57 56 57 56z"/></svg>';
+var KK_AMAZON = '<svg viewBox="0 0 48 48" width="24" height="24" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"><path d="M6 30c10 7 26 8 36 1" stroke="#FF9900" stroke-width="3.4"/><path d="M36 27l6 4-2 7" stroke="#FF9900" stroke-width="3.4"/><path d="M30 22V12.5c0-3.5-2.6-5.5-6.3-5.5-3.2 0-5.7 1.6-6.4 4.2M30 15.5c-8.5 0-13 2-13 6.2 0 3 2.2 4.6 5.1 4.6 4.1 0 7.9-3.2 7.9-7.6" stroke-width="3.4"/></svg>';
+var KK_ATV = '<svg viewBox="0 0 48 48" width="24" height="24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="40" height="26" rx="4"/><path d="M17 41h14M24 34v7"/><path d="M16.5 27a7.5 7.5 0 0 1 15 0z" fill="#3DDC84" stroke="#3DDC84" stroke-width="1.5"/><path d="M18.5 17.5l2 3M29.5 17.5l-2 3" stroke="#3DDC84" stroke-width="2"/></svg>';
+function kkStat(c, num, lbl, stars, to, k) {
+  if (to) num = '<span class="kk-cnt" data-to="' + to + '" data-k="' + (k || '') + '">' + num + '</span>';
+  return '<div class="kk-stat" style="border-color:' + c + '">' + (stars ? '<div class="kk-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' : '') +
+    '<div class="kk-num">' + num + '+</div><div class="kk-lbl">' + lbl + '</div></div>';
+}
 Deck.registerSlide(97, {
   keepBase: false, loop: false,
   render: function (el, ctx) {
-    var k = KK.k, box = h('div', 'pc-kk', el);
-    var bg = h('img', 'bg', box); bg.src = 'media/kahfkids/hero-bg.webp'; bg.alt = 'kahfkids.com';
-    var scr = h('div', 'scr', box);
-    scr.style.cssText = 'left:' + KK.scr.x * k + 'px;top:' + KK.scr.y * k + 'px;width:' + KK.scr.w * k + 'px;height:' + KK.scr.h * k + 'px;border-radius:' + KK.scr.r * k + 'px';
-    var trk = h('div', 'trk', scr), sw = KK.scr.w * k;
-    for (var i = 0; i <= KK.n; i++) { var im = h('img', '', trk); im.src = 'media/kahfkids/slide-' + (i % KK.n + 1) + '.webp'; im.style.width = sw + 'px'; im.alt = ''; }
-    var caps = [];
-    for (var c = 0; c < 2; c++) { var ci = h('img', 'cap', box); ci.style.top = KK.capY * k + 'px'; ci.style.left = KK.capX * k + 'px'; caps.push(ci); }
-    var dots = h('div', 'dots', box); dots.style.left = KK.capX * k + 'px'; dots.style.top = KK.dotsY * k + 'px';
-    for (var d = 0; d < KK.n; d++) h('i', '', dots);
-    el.__kk = { trk: trk, sw: sw, caps: caps, dots: dots.children, cur: 0, capOn: 0 };
-    showKK(el.__kk, 0, true);
+    var box = h('div', 'pc-kk', el), stg = h('div', 'kk-stg', box), hero = h('div', 'kk-hero', stg);
+    h('div', 'kk-blob', hero).style.cssText = 'top:-24px;left:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(41,182,234,.18),transparent 70%)';
+    h('div', 'kk-blob', hero).style.cssText = 'bottom:-118px;right:10%;width:260px;height:260px;background:radial-gradient(circle,rgba(177,79,208,.16),transparent 70%)';
+    var art = h('div', 'kk-art', hero), fr = h('div', 'kk-frame', art);
+    h('div', 'kk-glow', fr);
+    var trk = h('div', 'kk-trk', h('div', 'kk-scr', fr));
+    KK.imgs.forEach(function (n) { var im = h('img', '', h('div', '', trk)); im.src = 'media/kahfkids/' + n + '.webp'; im.alt = ''; im.decoding = 'async'; });
+    var prev = h('button', 'kk-arw', fr, '&lsaquo;'), next = h('button', 'kk-arw', fr, '&rsaquo;');
+    prev.style.left = next.style.right = '-16px'; prev.setAttribute('aria-label', 'Previous image'); next.setAttribute('aria-label', 'Next image');
+    var dots = h('div', 'kk-dots', art);
+    KK.imgs.forEach(function (n, i) { h('button', '', dots, '<span></span>').setAttribute('aria-label', 'Go to slide ' + (i + 1)); });
+    h('div', 'kk-copy', hero,
+      '<div class="kk-brand"><img src="media/kahfkids/app-icon.png" alt="Kahf Kids logo"><span><b>Kahf Kids</b><small>Safe Entertainment and Parental Control app</small></span></div>' +
+      '<h1>Safe and Islamic Content for Kids <span>with</span> <span>Parental Control</span></h1>' +
+      '<p class="kk-sub">Screen-time limits, app blocking, and 40,000+ mufti-approved kids videos in one app. The safer and halal screen time Muslim families trust.</p>' +
+      '<div class="kk-stats">' + kkStat('#29B6EA', '40,000', 'Safe Videos', 0, 40000) + kkStat('#FFB400', '4.5', 'Rating', true) + kkStat('#2BB673', '300K', 'Families Trust Us', 0, 300, 'K') + '</div>' +
+      '<div class="kk-cta"><a>' + KK_APPLE + '<span><small>Download on the</small><b>App Store</b></span></a>' +
+      '<a>' + KK_PLAY + '<span><small>GET IT ON</small><b>Google Play</b></span></a>' +
+      '<a>' + KK_AMAZON + '<span><small>Available on</small><b>Amazon Fire TV</b></span></a>' +
+      '<a>' + KK_ATV + '<span><small>GET IT ON</small><b>Android TV</b></span></a></div>' +
+      '<div class="kk-trial">&#10003; 7-day free trial &middot; no card needed</div>');
+    var s = el.__kk = { trk: trk, dots: dots.children, prev: prev, next: next, i: 0 };
+    if (ctx.static) trk.style.transition = 'none';
+    kkGo(s, 0);
   },
   enter: function (el, ctx) {
-    var s = el.__kk; if (!s || ctx.reduced) return;
-    ctx.interval(function () {
-      var nx = s.cur + 1;
-      s.trk.style.transition = 'transform ' + KK.slide + 'ms cubic-bezier(.65,0,.35,1)';
-      s.trk.style.transform = 'translate3d(' + (-nx * s.sw) + 'px,0,0)';
-      showKK(s, nx % KK.n, false);
-      s.cur = nx;
-      if (nx === KK.n) ctx.timeout(function () { s.trk.style.transition = 'none'; s.trk.style.transform = 'translate3d(0,0,0)'; s.cur = 0; }, KK.slide + 30);
-    }, KK.hold + KK.slide);
+    var s = el.__kk; if (!s) return;
+    var gen = 0;
+    function arm() { var g = ++gen; if (!ctx.reduced) ctx.timeout(function () { if (g === gen) { kkGo(s, (s.i + 1) % KK.imgs.length); arm(); } }, KK.every); }
+    function jump(i) { kkGo(s, (i + KK.imgs.length) % KK.imgs.length); arm(); }
+    s.prev.onclick = function (e) { e.stopPropagation(); jump(s.i - 1); };
+    s.next.onclick = function (e) { e.stopPropagation(); jump(s.i + 1); };
+    Array.prototype.forEach.call(s.dots, function (d, i) { d.onclick = function (e) { e.stopPropagation(); jump(i); }; });
+    ctx.onLeave(function () { gen++; });
+    arm();
+    kkCount(el, ctx);
   }
 });
-function showKK(s, i, instant) {
-  var a = s.caps[s.capOn], b = s.caps[1 - s.capOn], w = KK.capW[i] / 2 * KK.k;
-  b.src = 'media/kahfkids/cap-' + (i + 1) + '.png'; b.style.width = w + 'px'; b.style.height = KK.capH * KK.k + 'px';
-  if (instant) { a.className = 'cap out'; b.className = 'cap'; }
-  else { b.className = 'cap in0'; void b.offsetWidth; a.className = 'cap out'; b.className = 'cap'; }
-  s.capOn = 1 - s.capOn;
-  Array.prototype.forEach.call(s.dots, function (d, j) { d.classList.toggle('on', j === i); });
+/* 40,000+ and 300K+ count up from 0 (ease-out) each time the slide is entered */
+function kkCount(el, ctx) {
+  var ns = el.querySelectorAll('.kk-cnt');
+  function put(n, v) { n.textContent = (+n.dataset.to >= 1000 ? Math.round(v).toLocaleString('en-US') : Math.round(v)) + n.dataset.k; }
+  Array.prototype.forEach.call(ns, function (n) { put(n, +n.dataset.to); n.parentNode.style.minWidth = n.parentNode.offsetWidth + 'px'; });
+  if (ctx.reduced) return;
+  Array.prototype.forEach.call(ns, function (n) { put(n, 0); });
+  var done = false;
+  ctx.tick(function (dt, t) {
+    if (done) return;
+    var p = Math.min(1, Math.max(0, (t - 500) / 1900)), e = 1 - Math.pow(1 - p, 3);
+    Array.prototype.forEach.call(ns, function (n) { put(n, e * n.dataset.to); });
+    done = p === 1;
+  });
+}
+function kkGo(s, i) {
+  s.i = i; s.trk.style.transform = 'translateX(' + (-100 * i) + '%)';
+  Array.prototype.forEach.call(s.dots, function (d, j) { d.classList.toggle('kk-on', j === i); });
 }
 
 /* ---------------------------------------------------------------- 12. charts (slides 69-72): instant chart, data lines draw themselves */
-function lineChart(n, picId, name, extra) {
+var LINE_MS = 350 + 3400;                                       // delay + duration of the line reveal
+function lineChart(n, picId, name, extra, prep) {
   Deck.registerSlide(n, {
     keepBase: true, loop: ['orbs'],
     render: function (el, ctx) {
@@ -734,11 +862,13 @@ function lineChart(n, picId, name, extra) {
       img.src = 'media/charts/' + name + '-base.png';
       var ln = h('img', 'pc-lines' + (ctx.static ? ' full' : ''), p.querySelector('.in')); ln.src = 'media/charts/' + name + '-lines.png'; ln.alt = '';
       el.__ln = ln;
+      if (prep) prep(el, ctx);
     },
     enter: function (el, ctx) {
       var ln = el.__ln; if (!ln) return;
-      if (extra) extra(ctx);
-      if (cameBack || ctx.reduced) { ln.classList.add('full'); return; }
+      var instant = cameBack || ctx.reduced;
+      if (extra) extra(ctx, instant);
+      if (instant) { ln.classList.add('full'); return; }
       var an = ln.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 3400, delay: 350, easing: 'cubic-bezier(.45,.05,.55,.95)', fill: 'forwards' });
       ctx.onLeave(function () { try { an.cancel(); } catch (e) {} });
     }
@@ -747,11 +877,32 @@ function lineChart(n, picId, name, extra) {
 lineChart(106, 'e1026', 'image181');
 lineChart(107, 'e5122', 'image182');
 lineChart(108, 'e3074', 'image183');
-lineChart(109, 'e3074', 'image183', function (ctx) {          // keep the social-app icons bobbing (was part-b's loop)
-  ['e1028', 'e1030', 'e1032', 'e1034'].forEach(function (id, i) {
+/* #109 - the social-app icons stay hidden until the lines finish drawing, then pop in one after another and keep bobbing */
+var SOC109 = ['e1028', 'e1030', 'e1032', 'e1034'];
+function soc109(ctx) { return SOC109.map(function (id) { var e = ctx.view.map[id]; return e && (e.querySelector('.in') || e); }).filter(Boolean); }
+lineChart(109, 'e3074', 'image183', function (ctx, instant) {
+  SOC109.forEach(function (id, i) {                             // bob (was part-b's loop); the pop runs on the inner node so transforms don't clash
     var e = ctx.view.map[id]; if (!e) return;
     e.style.setProperty('--t', (6 + i * 1.7) + 's'); e.style.setProperty('--d', (-i * 2.3) + 's'); e.classList.add('pb-float');
   });
+  var ins = soc109(ctx), anims = [];
+  if (instant) { ins.forEach(function (n) { n.style.opacity = ''; }); return; }
+  ins.forEach(function (n, i) {
+    n.style.opacity = '0';
+    ctx.timeout(function () {
+      n.style.opacity = '';
+      anims.push(n.animate([{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1.18)', offset: .6 }, { opacity: 1, transform: 'scale(1)' }],
+        { duration: 560, easing: 'cubic-bezier(.3,1.4,.5,1)' }));
+    }, LINE_MS + 150 + i * 260);
+  });
+  ctx.onLeave(function () { anims.forEach(function (a) { try { a.cancel(); } catch (e) {} }); ins.forEach(function (n) { n.style.opacity = ''; }); });
+}, function (el, ctx) {
+  SOC109.forEach(function (id) {                                // no dark card frame behind the icons, just the icons
+    var e = ctx.view.map[id]; if (!e) return;
+    e.classList.remove('card'); e.style.background = 'none'; e.style.boxShadow = 'none';
+    var n = e.querySelector('.in'); if (n) { n.style.background = 'none'; n.style.boxShadow = 'none'; n.style.outline = 'none'; }
+  });
+  if (!ctx.static) soc109(ctx).forEach(function (n) { n.style.opacity = '0'; });
 });
 
 /* ---------------------------------------------------------------- 13. #112 closing slide - company.kahf.to hero recording (4K) */
@@ -759,17 +910,25 @@ Deck.registerSlide(112, {
   keepBase: false, loop: false, calm: true,
   render: function (el, ctx) {
     var box = h('div', 'pc-close', el);
+    var u = h('div', 'pc-url', el, '<div class="pill"><span class="halo"></span><span class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#0b2a1b" stroke-width="3.6" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c6.5 6 6.5 30 0 36M24 6c-6.5 6-6.5 30 0 36"/></svg></span><span class="t">kahf<i>.</i>co</span></div>');
+    el.__u = u;
     if (ctx.static) { var im = h('img', '', box); im.src = 'media/kahf-company-hero-poster.jpg'; im.alt = 'company.kahf.to'; return; }
     var v = h('video', '', box);
     v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto'; v.poster = 'media/kahf-company-hero-poster.jpg';
     v.src = 'media/kahf-company-hero-4k.mp4';
     el.__v = v;
   },
-  enter: function (el, ctx) { var v = el.__v; if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } }
+  enter: function (el, ctx) {
+    var v = el.__v; if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    var u = el.__u; if (!u || ctx.reduced) return;
+    u.classList.remove('go'); u.style.opacity = '0';
+    ctx.timeout(function () { u.style.opacity = ''; void u.offsetWidth; u.classList.add('go'); }, 1200);
+    ctx.onLeave(function () { u.classList.remove('go'); u.style.opacity = ''; });
+  }
 });
 /* ---------------------------------------------------------------- 13b. NEW directly after #96 - a child's Google account (age 11, Qatar), then sign it in on the TV + shared computers
    Step 1 (left): create the child account (media/kid-google/create-account.webp), DOB -> 11 years old, location Qatar;
-   [click] Family Link > Account settings lets the parent change DOB/location later (family-link.webp).
+   [click] myaccount.google.com > Personal info: set the home address to Doha (personal-info.webp).
    [click] Step 2 (right): sign in on the TV and shared computers -> Search, YouTube feed and ads get clean. */
 (function () {
   var CSSG = [
@@ -808,6 +967,8 @@ Deck.registerSlide(112, {
     '.gk .out p{margin:0;font:600 25px/1.25 var(--f-body);color:#c9d2d6}',
     '.gk .out p b{display:block;font:800 31px/1.1 var(--f-body);color:#F4F1EA}',
     '.gk .out p b span{color:rgb(var(--oc))}',
+    '.gk .url{position:absolute;display:inline-flex;align-items:center;gap:12px;height:46px;padding:0 20px;border-radius:99px;font:600 24px/1 var(--f-mono);color:#bfe9ff;text-decoration:none;background:rgba(34,211,238,.12);box-shadow:inset 0 0 0 1.5px rgba(34,211,238,.55)}',
+    '.gk .url svg{width:24px;height:24px}',
     '.gk .bb,.gk .p2{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.25,1)}',
     '.gk.s1 .bb,.gk.s2 .p2{opacity:1;transform:none}',
     '.gk .p2 .out{opacity:0;transform:translateX(40px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.25,1)}',
@@ -826,15 +987,16 @@ Deck.registerSlide(112, {
   var YT = '<svg viewBox="0 0 48 48"><rect x="3" y="10" width="42" height="28" rx="9" fill="#FF3B4E"/><path d="M20 18v12l11-6z" fill="#fff"/></svg>';
   var AD = SVG('0 0 48 48', '<rect x="5" y="9" width="38" height="30" rx="6"/><path d="M13 31l5-14 5 14M15 26h6M29 17v14h3a6 6 0 0 0 0-14z"/>', 'rgb(46,229,157)');
   var zig = 'M0 0H22'; for (var k = 0; k < 9; k++) zig += 'L30 ' + ((k + .5) * 26 / 9).toFixed(2) + 'L22 ' + ((k + 1) * 26 / 9).toFixed(2);
+  var GLOBE = SVG('0 0 48 48', '<circle cx="24" cy="24" r="19"/><path d="M5 24h38M24 5c6 6 6 32 0 38M24 5c-6 6-6 32 0 38"/>', '#7fe8f5');
   var QATAR = '<svg class="qa" viewBox="0 0 66 26" preserveAspectRatio="none"><rect width="66" height="26" fill="#8A1538"/><path d="' + zig + 'H0z" fill="#fff"/></svg>';
 
-  /* Family Link screenshot is 1446x1316; the "Date of birth" card is x 630-1432, y 525-722 */
-  var FLW = 660, FLH = Math.round(FLW * 1316 / 1446), CAW = 384, CAH = Math.round(CAW * 1408 / 958);
+  /* Personal info screenshot is 916x1186, shown down to y 985 (end of "Other addresses"); the "Home address" row is y 488-657 */
+  var PIW = 540, PIH = Math.round(PIW * 985 / 916), CAW = 384, CAH = Math.round(CAW * 1408 / 958);
 
   Deck.insertSlide({
     after: 96, id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
     notes: 'Step 1: create a Google account for your child as a child account (Google asks "Create a Google Account... you will help manage this account until your child is 13"). Set the date of birth so the account is 11 years old, and set the location to Qatar. ' +
-      '[click] Already have one? In Family Link, open the child > Controls > Account settings: you can change the date of birth there, and the location as well. ' +
+      '[click] To change the location later, open myaccount.google.com > Personal info while signed in as the child and set the home address to Doha. The date of birth can be changed from Family Link. ' +
       '[click] Step 2: sign in with this account on the TV (YouTube app) and on every shared computer at home. Google now treats whoever is watching as a child: Google Search results are sanitised, the YouTube feed becomes much cleaner, and the ads on YouTube and Google become far cleaner too. Pair it with "train YouTube what not to show" from the previous slide.',
     render: function (el, ctx) {
       var r = h('div', 'gk' + (ctx.static ? ' static s1 s2' : ''), el);
@@ -850,12 +1012,15 @@ Deck.registerSlide(112, {
       var f2 = h('div', 'fld', p1, PIN + '<div><small>Location</small><b>Qatar</b></div>' + QATAR); f2.style.cssText = 'left:30px;top:714px;width:' + CAW + 'px';
 
       var bx = 30 + CAW + 36;
-      var b = h('div', 'shot bb', p1); b.style.cssText = 'left:' + bx + 'px;top:112px;width:' + FLW + 'px;height:' + FLH + 'px';
-      var bi = h('img', '', b); bi.src = 'media/kid-google/family-link.webp'; bi.alt = 'Family Link: Account settings with date of birth'; bi.decoding = 'async';
+      var url = h('a', 'url bb pe', p1, GLOBE + 'https://myaccount.google.com/');
+      url.href = 'https://myaccount.google.com/'; url.target = '_blank'; url.rel = 'noopener'; url.setAttribute('data-noadvance', '');
+      url.style.cssText = 'left:' + bx + 'px;top:112px';
+      var b = h('div', 'shot bb', p1); b.style.cssText = 'left:' + bx + 'px;top:176px;width:' + PIW + 'px;height:' + PIH + 'px';
+      var bi = h('img', '', b); bi.src = 'media/kid-google/personal-info.webp'; bi.alt = 'Google Account: Personal info with home address Doha'; bi.decoding = 'async';
       var ring = h('div', 'ring', b);
-      ring.style.cssText = 'left:' + (630 / 1446 * 100) + '%;top:' + (525 / 1316 * 100) + '%;width:' + (802 / 1446 * 100) + '%;height:' + (197 / 1316 * 100) + '%';
-      var cap = h('div', 'cap bb', p1, '<b>Change date of birth &amp; location</b> any time<br><span class="path">Family Link &rsaquo; Controls &rsaquo; Account settings</span>');
-      cap.style.cssText = 'left:' + bx + 'px;top:' + (112 + FLH + 20) + 'px;width:' + FLW + 'px';
+      ring.style.cssText = 'left:2%;width:96%;top:' + (488 / 985 * 100) + '%;height:' + (169 / 985 * 100) + '%';
+      var cap = h('div', 'cap bb', p1, '<b>Change the location any time:</b><br>Personal info &rsaquo; Home address = <b>Doha</b>');
+      cap.style.cssText = 'left:' + bx + 'px;top:' + (176 + PIH + 18) + 'px;width:' + PIW + 'px';
 
       /* ---- step 2: sign in everywhere */
       var p2 = h('div', 'pnl p2', r); p2.style.cssText = 'left:1222px;width:642px;--rc:255,176,32';
@@ -1165,4 +1330,97 @@ Deck.registerSlide(51, {
     if (!ctx.static && !cameBack) { void t.offsetWidth; t.classList.add('go'); }
   }
 });
+
+/* ---------------------------------------------------------------- #110 - red brush-stroke cross over the child alone at night */
+(function () {
+  if (!document.getElementById('pc110-css')) {
+    var st = document.createElement('style'); st.id = 'pc110-css';
+    st.textContent = [
+      '.pc110{position:absolute;inset:0;pointer-events:none}',
+      '.pc110 .vig{position:absolute;inset:0;opacity:0;transition:opacity .6s ease-out;background:radial-gradient(ellipse 72% 70% at 50% 50%,transparent 55%,rgba(200,0,24,.30) 82%,rgba(120,0,14,.55))}',
+      '.pc110 svg{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible}',
+      '.pc110 .mk{stroke-dasharray:1 1.2;stroke-dashoffset:1.1;transition:stroke-dashoffset .38s cubic-bezier(.6,0,.85,.55)}',
+      '.pc110 .glow{opacity:0;transition:opacity .4s ease-out}',
+      '.pc110 .drop{transform-box:fill-box;transform-origin:50% 50%;transform:scale(0);transition:transform .3s cubic-bezier(.2,1.6,.4,1)}',
+      '.pc110 .shock{position:absolute;left:966px;top:540px;width:360px;height:360px;margin:-180px 0 0 -180px;border-radius:50%;border:10px solid rgba(255,60,75,.9);',
+      '  box-shadow:0 0 40px rgba(255,30,50,.8),inset 0 0 40px rgba(255,30,50,.6);opacity:0;transform:scale(.15)}',
+      '.pc110.a1 .mk1,.pc110.a2 .mk2{stroke-dashoffset:0}',
+      '.pc110.i1 .d1,.pc110.i2 .d2{transform:scale(1)}',
+      '.pc110.i2 .vig{opacity:1}',
+      '.pc110.i2 .glow{opacity:.4}',
+      '.pc110.i2.live .glow{animation:pc110-pulse 1.5s ease-in-out .5s infinite}',
+      '.pc110.i2.live .vig{animation:pc110-vig 1.5s ease-in-out .5s infinite}',
+      '.pc110.boom .shock{animation:pc110-ring .9s cubic-bezier(.15,.7,.3,1) both}',
+      '.pc110.inst *{transition:none!important}',
+      '@keyframes pc110-pulse{0%,100%{opacity:.4}50%{opacity:.15}}',
+      '@keyframes pc110-vig{0%,100%{opacity:1}50%{opacity:.55}}',
+      '@keyframes pc110-ring{0%{opacity:1;transform:scale(.15)}100%{opacity:0;transform:scale(3.2)}}',
+      '@media (prefers-reduced-motion:reduce){.pc110 .glow,.pc110 .vig{animation:none!important}}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+  var P1 = 'M590 172 C 800 380, 1100 640, 1358 908', P2 = 'M1368 166 C 1140 400, 860 680, 582 918';
+  function stroke(k, d) {
+    return '<mask id="pc110-m' + k + '" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">' +
+        '<path class="mk mk' + k + '" d="' + d + '" pathLength="1" fill="none" stroke="#fff" stroke-width="170" stroke-linecap="round"/></mask>' +
+      '<g class="m' + k + '" mask="url(#pc110-m' + k + ')" fill="none" stroke-linecap="round">' +
+        '<path d="' + d + '" stroke="rgba(0,0,0,.35)" stroke-width="70" transform="translate(6 10)" filter="url(#pc110-soft)"/>' +
+        '<path class="glow" d="' + d + '" stroke="#ff3a50" stroke-width="100" filter="url(#pc110-blur)"/>' +
+        '<g filter="url(#pc110-rough)" opacity=".92">' +
+          '<path d="' + d + '" stroke="url(#pc110-g' + k + ')" stroke-width="58"/>' +
+          '<path d="' + d + '" stroke="#a3172a" stroke-width="8" opacity=".35" transform="translate(10 -8)"/>' +
+          '<path d="' + d + '" stroke="#ffc2c8" stroke-width="5" opacity=".3" transform="translate(-12 7)"/>' +
+          '<path d="' + d + '" stroke="#ff8a96" stroke-width="4" opacity=".3" transform="translate(-3 -18)"/>' +
+        '</g></g>';
+  }
+  function drops(cls, pts) {
+    return pts.map(function (p) { return '<circle class="drop ' + cls + '" cx="' + p[0] + '" cy="' + p[1] + '" r="' + p[2] + '" fill="#e0102a" filter="url(#pc110-rough)"/>'; }).join('');
+  }
+  var SVG = '<svg viewBox="0 0 1920 1080"><defs>' +
+      '<linearGradient id="pc110-g1" gradientUnits="userSpaceOnUse" x1="590" y1="172" x2="1358" y2="908"><stop offset="0" stop-color="#ff6b7a"/><stop offset=".55" stop-color="#ec2d45"/><stop offset="1" stop-color="#c41a33"/></linearGradient>' +
+      '<linearGradient id="pc110-g2" gradientUnits="userSpaceOnUse" x1="1368" y1="166" x2="582" y2="918"><stop offset="0" stop-color="#ff6b7a"/><stop offset=".55" stop-color="#ec2d45"/><stop offset="1" stop-color="#c41a33"/></linearGradient>' +
+      '<filter id="pc110-rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".032" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="9"/><feGaussianBlur stdDeviation="1.6"/></filter>' +
+      '<filter id="pc110-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter>' +
+      '<filter id="pc110-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>' +
+      '</defs>' + stroke(1, P1) + stroke(2, P2) +
+      drops('d1', [[1398, 944, 13], [1420, 900, 7], [1330, 968, 9], [1446, 968, 5], [1380, 990, 4]]) +
+      drops('d2', [[548, 954, 13], [526, 906, 7], [606, 976, 8], [508, 980, 5], [570, 1000, 4], [1000, 560, 6], [930, 500, 4]]) +
+      '</svg>';
+  var uid = 0;
+  function setAll(r, on) { ['a1', 'i1', 'a2', 'i2'].forEach(function (c) { r.classList.toggle(c, on); }); }
+  function shake(ctx, nodes, amp) {
+    if (ctx.reduced) return;
+    var k = [0, 1, -1, .7, -.5, .3, 0].map(function (f, i) { return { transform: 'translate(' + (f * amp) + 'px,' + ((i % 2 ? -.6 : .6) * f * amp) + 'px)' }; });
+    nodes.forEach(function (n) { if (n) n.animate(k, { duration: 380, easing: 'ease-out' }); });
+  }
+  if (byN[110]) byN[110].steps = [];                    // the cross is now one custom build, not the two ink wipes
+  Deck.registerSlide(110, {
+    keepBase: true, steps: 1,
+    render: function (el, ctx) {
+      hide(ctx, ['e6', 'e7']);                             // the old amber ink strokes
+      var u = 'pc110-' + (++uid) + '-';                    // unique svg ids: thumbnails + live slide coexist
+      var r = h('div', 'pc110', el, '<div class="vig"></div>' + SVG.replace(/pc110-/g, u) + '<div class="shock"></div>');
+      el.__r = r; el.__gen = 0;
+      if (ctx.static) { r.classList.add('inst'); setAll(r, true); }
+    },
+    enter: function () {},
+    step: function (el, i, ctx) {
+      var r = el.__r; if (!r) return;
+      var gen = ++el.__gen;
+      if (ctx.reduced || cameBack) {                         // instant when landing on the built slide (Back)
+        r.classList.add('inst'); setAll(r, true); if (!ctx.reduced) r.classList.add('live'); void r.offsetWidth; r.classList.remove('inst'); return;
+      }
+      r.classList.remove('inst');
+      var nodes = [ctx.view.els, r], at = function (ms, fn) { ctx.timeout(function () { if (el.__gen === gen) fn(); }, ms); };
+      r.classList.add('a1');
+      at(380, function () { r.classList.add('i1'); shake(ctx, nodes, 9); });
+      at(620, function () { r.classList.add('a2'); });
+      at(1000, function () { r.classList.add('i2', 'live', 'boom'); shake(ctx, nodes, 18); });
+    },
+    unstep: function (el) {
+      var r = el.__r; if (!r) return; el.__gen++;
+      r.classList.add('inst'); setAll(r, false); r.classList.remove('live', 'boom'); void r.offsetWidth; r.classList.remove('inst');
+    }
+  });
+})();
 })();
