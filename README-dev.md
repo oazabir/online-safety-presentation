@@ -26,7 +26,7 @@ Clicks on `button, a, input, select, label, .pe, [data-noadvance]` do not advanc
 (`el` itself ignores the pointer, give interactive nodes class `pe`). Keys: set `Deck.keyHook = ev => handled?`.
 
 ## Useful API
-`Deck.next/prev/first/last()`, `Deck.goto(origIndexOrId)`, `Deck.cur` (slide), `Deck.view` (live DOM/state), `Deck.order()`,
+`Deck.next/prev/first/last()`, `Deck.goto(origIndexOrId)`, `Deck.gotoNumber(n)` (n-th visible slide; what typed digits + Enter use), `Deck.number(slide)`, `Deck.cur` (slide), `Deck.view` (live DOM/state), `Deck.order()`,
 `Deck.toast(msg)`, `Deck.lightbox(src)`, `Deck.on('enter'|'leave'|'step'|'show'|'state', fn)`,
 `Deck.renderStatic(slide, container)`. Slide object: `{n, orig, key, id, hidden, section, tr, notes, calm, loop, els, steps}`.
 Debug: `#/N` opens slide N; `Loops.assign(slide)` shows the loops chosen.

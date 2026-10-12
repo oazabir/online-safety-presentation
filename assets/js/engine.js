@@ -53,6 +53,9 @@ function buildList() {
 }
 Deck.order = function () { return Deck.slides.filter(function (s) { return !s.hidden; }); };
 Deck.find = function (k) { return Deck.byKey[String(k)] || null; };
+/** Sequential on-screen number (1..N over the visible order). Hidden slides have none (0). */
+Deck.number = function (s) { return Deck.order().indexOf(s) + 1; };
+Deck.byNumber = function (n) { return Deck.order()[(parseInt(n, 10) || 0) - 1] || null; };
 Deck.isCalm = function (s) { var sp = s.spec; return sp && sp.calm !== undefined ? !!sp.calm : !!s.calm; };
 
 /* ---------------------------------------------------------------- 3. element renderers */
@@ -581,6 +584,10 @@ Deck.goto = function (key, opts) {
   var s = typeof key === 'object' ? key : Deck.find(key); if (!s) { Deck.toast && Deck.toast('No slide ' + key); return; }
   if (trans) trans.end();
   Deck.show(s, Object.assign({ dir: (Deck.cur && s.pos < Deck.cur.pos) ? -1 : 1, builtAll: Deck.cur && s.pos < Deck.cur.pos }, opts || {}));
+};
+Deck.gotoNumber = function (n, opts) {
+  var s = Deck.byNumber(n); if (!s) { Deck.toast && Deck.toast('No slide ' + n); return; }
+  Deck.goto(s, opts);
 };
 Deck.state = function () { return { key: Deck.cur && Deck.cur.key, step: Deck.view ? Deck.view.k : 0, includeHidden: Deck.includeHidden }; };
 Deck.position = function () {   // {i, n} within active order

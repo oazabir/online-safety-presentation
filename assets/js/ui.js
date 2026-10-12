@@ -18,7 +18,7 @@ function updateHud() {
   if (!Deck.cur) return;
   var p = Deck.position(); prog = prog || $('#progress i'); counter = counter || $('#counter');
   prog.style.width = (100 * p.i / p.n) + '%';
-  counter.textContent = (Deck.cur.orig ? '#' + Deck.cur.orig + '  ·  ' : '') + p.i + ' / ' + p.n + (Deck.cur.hidden ? '  ·  hidden' : '');
+  counter.textContent = p.i + ' / ' + p.n + (Deck.cur.hidden ? '  ·  hidden' : '');
 }
 function flashCounter() {
   counter = counter || $('#counter'); counter.classList.add('show');
@@ -116,7 +116,7 @@ Ov.open = function () {
   Deck.slides.forEach(function (s, i) {
     if (s.section !== last) { last = s.section; var hh = h('h3', '', el); hh.textContent = secNames[s.section]; grid = h('div', '', el); grid.id = i ? '' : 'ovgrid'; grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px'; }
     var t = h('div', 'thumb' + (s.hidden ? ' hid' : '') + (s === Deck.cur ? ' cur' : ''), grid); t.dataset.i = i;
-    var tn = h('span', 'tn', t); tn.textContent = (s.orig || '★') + (s.hidden ? '  hidden' : '');
+    var tn = h('span', 'tn', t); tn.textContent = s.hidden ? 'hidden' : String(Deck.number(s));
     if (s.hidden) { var ey = h('span', 'eye', t); ey.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10.6 6.1A10 10 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.8M6.6 6.7C3.9 8.5 2.5 12 2.5 12s3.5 6 9.5 6a9 9 0 0 0 4-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>'; }
     t.addEventListener('click', function () { Ov.close(); Deck.goto(s); });
     Ov.thumbs.push({ el: t, slide: s, rendered: false });
@@ -165,7 +165,7 @@ function recv(m) {
   if (m.type === 'cmd') {
     switch (m.cmd) {
       case 'next': Deck.next(); break; case 'prev': Deck.prev(); break; case 'first': Deck.first(); break; case 'last': Deck.last(); break;
-      case 'goto': Deck.goto(m.key); break;
+      case 'goto': Deck.goto(m.key); break; case 'gotoNumber': Deck.gotoNumber(m.key); break;
     }
   } else if (m.type === 'hello') pushState();
 }
@@ -212,7 +212,7 @@ Pres.update = function (m) {
     fillBox($('#pc'), s, m.step); fillBox($('#pn'), (m.step < m.total ? s : nx), m.step < m.total ? m.step + 1 : 0);
     $('#pnotes').textContent = s.notes || '(no speaker notes for this slide)';
     $('#pst').textContent = m.total ? 'Build step ' + m.step + ' / ' + m.total : 'No builds on this slide';
-    $('#ppos').textContent = 'Slide ' + (s.orig ? '#' + s.orig : 'new') + '  ·  ' + (o.indexOf(s) + 1) + ' of ' + o.length;
+    $('#ppos').textContent = 'Slide ' + (s.hidden ? 'hidden' : (o.indexOf(s) + 1) + ' of ' + o.length);
   }
 };
 function fillBox(box, slide, step) {
@@ -245,7 +245,7 @@ addEventListener('keydown', function (ev) {
     ev.preventDefault(); return;
   }
   if (/^[0-9]$/.test(k)) { numBuf += k; Deck.toast('Go to slide: ' + numBuf, 2400); clearTimeout(numT); numT = setTimeout(function () { numBuf = ''; }, 3000); return; }
-  if (K === 'Enter' && numBuf) { var n = numBuf; numBuf = ''; ev.preventDefault(); if (pres) send({ type: 'cmd', cmd: 'goto', key: n }); else Deck.goto(n); return; }
+  if (K === 'Enter' && numBuf) { var n = numBuf; numBuf = ''; ev.preventDefault(); if (pres) send({ type: 'cmd', cmd: 'gotoNumber', key: n }); else Deck.gotoNumber(n); return; }
   if (K === 'Escape') { if (numBuf) { numBuf = ''; return; } if (Mag.zoomed) { Mag.reset(); return; } if (Mag.on) { Mag.toggle(); return; } if (!pres) Ov.toggle(); return; }
   switch (K) {
     case 'ArrowRight': case 'PageDown': case 'ArrowDown': act('next', Deck.next); break;
