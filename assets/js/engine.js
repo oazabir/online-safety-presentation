@@ -365,7 +365,7 @@ function warm(slide) {
 /* ---------------------------------------------------------------- 7. stage fit */
 var stage, viewport, zoomState = null;
 function fit() {
-  var vw = innerWidth, vh = innerHeight, s = Math.min(vw / W, vh / H);
+  var vw = innerWidth, vh = (viewport && viewport.clientHeight) || innerHeight, s = Math.min(vw / W, vh / H);   // viewport may leave room for the topic bar
   Deck.scale = s; Deck.offX = (vw - W * s) / 2; Deck.offY = (vh - H * s) / 2;
   if (zoomState) return;
   stage.style.transform = 'translate(' + Deck.offX + 'px,' + Deck.offY + 'px) scale(' + s + ')';

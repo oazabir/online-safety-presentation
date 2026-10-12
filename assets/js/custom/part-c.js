@@ -180,6 +180,24 @@ var CSS = [
 '@keyframes pc-url-halo{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.18,1.6)}}',
 '@keyframes pc-url-bob{0%,100%{transform:scale(1)}12%{transform:scale(1.12)}24%{transform:scale(1)}}',
 '@media (prefers-reduced-motion:reduce){.pc-url.go,.pc-url.go .t,.pc-url.go .halo,.pc-url.go .ic{animation:none}}',
+/* @kahfsafe social handle, shown with the kahf.co badge: overlapping Instagram / X / Facebook discs + handle; pops in just after the badge */
+'.pc-soc{position:absolute;top:1004px;transform:translateY(-50%);z-index:3}',
+'.pc-soc .pill{display:flex;align-items:center;gap:18px;padding:10px 32px 10px 12px;border-radius:999px;background:linear-gradient(180deg,rgba(16,26,32,.86),rgba(8,14,18,.86));box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.16),0 24px 60px -12px rgba(0,0,0,.7);backdrop-filter:blur(8px)}',
+'.pc-soc .ics{display:flex}',
+'.pc-soc .s{width:58px;height:58px;border-radius:50%;flex:none;display:grid;place-items:center;box-shadow:0 0 0 4px #0d151a,0 6px 16px rgba(0,0,0,.45)}',
+'.pc-soc .s+.s{margin-left:-12px}',
+'.pc-soc .s svg{width:30px;height:30px}',
+'.pc-soc .ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}',
+'.pc-soc .x{background:#000;box-shadow:0 0 0 4px #0d151a,inset 0 0 0 1.5px rgba(255,255,255,.28),0 6px 16px rgba(0,0,0,.45)}',
+'.pc-soc .fb{background:#1877F2}',
+'.pc-soc .t{font:800 44px/1 var(--f-body);letter-spacing:-.015em;color:#F4F1EA}',
+'.pc-soc .t i{font-style:normal;color:#F2C14E}',
+'.pc-soc.go{animation:pc-soc-in .8s cubic-bezier(.3,1.4,.5,1) .3s both}',
+'.pc-soc.go .s{animation:pc-soc-ic .6s cubic-bezier(.3,1.6,.5,1) both}',
+'.pc-soc.go .ig{animation-delay:.55s}.pc-soc.go .x{animation-delay:.67s}.pc-soc.go .fb{animation-delay:.79s}',
+'@keyframes pc-soc-in{from{opacity:0;transform:translateY(-50%) translateY(24px)}to{opacity:1;transform:translateY(-50%)}}',
+'@keyframes pc-soc-ic{from{opacity:0;transform:scale(.2) rotate(-40deg)}to{opacity:1;transform:none}}',
+'@media (prefers-reduced-motion:reduce){.pc-soc.go,.pc-soc.go .s{animation:none}}',
 
 /* Meet Susan */
 '.p58{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA}',
@@ -297,6 +315,23 @@ function twRun(chars, ms, alive, done) {
 D.slides.forEach(function (s) { if (s.orig === 4) s.hidden = true; });
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
+/* topic structure (matches TOPICS in topic-bar.js):
+   - 54 divider is retitled "Drugs, Grooming and Suicide"
+   - 45 (Lost Screen Memorial) is moved to sit right after 55, inside that topic
+   - 66-105 all belong to "Practical Protection" (the section drives overview headings + accent colours) */
+if (byN[54]) {
+  var t54 = elData(54, 'e2');             // longer title: slightly smaller + wider box so it stays on one line
+  t54.paras[0].runs = [{ t: 'Drugs, Grooming and Suicide', sz: 108, c: '#F4F1EA' }];
+  t54.w = 80;
+}
+(function () {
+  var from = D.slides.indexOf(byN[45]), to = D.slides.indexOf(byN[55]);
+  if (from < 0 || to < 0) return;
+  var s = D.slides.splice(from, 1)[0];
+  D.slides.splice(D.slides.indexOf(byN[55]) + 1, 0, s);
+  s.section = 'grooming';
+})();
+D.slides.forEach(function (s) { if (s.orig >= 66 && s.orig <= 105) s.section = 'protect'; });
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
@@ -911,8 +946,8 @@ Deck.registerSlide(112, {
   keepBase: false, loop: false, calm: true,
   render: function (el, ctx) {
     var box = h('div', 'pc-close', el);
-    var u = h('div', 'pc-url', el, '<div class="pill"><span class="halo"></span><span class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#0b2a1b" stroke-width="3.6" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c6.5 6 6.5 30 0 36M24 6c-6.5 6-6.5 30 0 36"/></svg></span><span class="t">kahf<i>.</i>co</span></div>');
-    el.__u = u;
+    el.__u = [kahfUrl(el), kahfSocial(el)];
+    el.__u[1].style.left = '106px';                          /* under the stats, on the hero text column */
     if (ctx.static) { var im = h('img', '', box); im.src = 'media/kahf-company-hero-poster.jpg'; im.alt = 'company.kahf.to'; return; }
     var v = h('video', '', box);
     v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto'; v.poster = 'media/kahf-company-hero-poster.jpg';
@@ -921,12 +956,28 @@ Deck.registerSlide(112, {
   },
   enter: function (el, ctx) {
     var v = el.__v; if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-    var u = el.__u; if (!u || ctx.reduced) return;
-    u.classList.remove('go'); u.style.opacity = '0';
-    ctx.timeout(function () { u.style.opacity = ''; void u.offsetWidth; u.classList.add('go'); }, 1200);
-    ctx.onLeave(function () { u.classList.remove('go'); u.style.opacity = ''; });
+    kahfUrlEnter(el.__u, ctx);
   }
 });
+/* the animated kahf.co badge (.pc-url) and @kahfsafe social handle (.pc-soc): built in render, popped in 1.2 s after entering
+   (also used by the At-Tahrim 66:6 slide). kahfUrlEnter takes one node or a list. */
+function kahfUrl(parent) {
+  return h('div', 'pc-url', parent, '<div class="pill"><span class="halo"></span><span class="ic"><svg viewBox="0 0 48 48" fill="none" stroke="#0b2a1b" stroke-width="3.6" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c6.5 6 6.5 30 0 36M24 6c-6.5 6-6.5 30 0 36"/></svg></span><span class="t">kahf<i>.</i>co</span></div>');
+}
+function kahfSocial(parent) {
+  return h('div', 'pc-soc', parent, '<div class="pill"><span class="ics">' +
+    '<span class="s ig" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1.1" fill="#fff" stroke="none"/></svg></span>' +
+    '<span class="s x" title="X"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.2-8.3L1.8 3h6.3l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg></span>' +
+    '<span class="s fb" title="Facebook"><svg viewBox="0 0 24 24" fill="#fff"><path d="M13.6 21.5v-8.2h2.8l.4-3.3h-3.2V7.9c0-.9.3-1.6 1.6-1.6h1.7V3.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.3V10H7.5v3.3h2.8v8.2h3.3z"/></svg></span>' +
+    '</span><span class="t"><i>@</i>kahfsafe</span></div>');
+}
+function kahfUrlEnter(u, ctx) {
+  var us = [].concat(u).filter(Boolean);
+  if (!us.length || ctx.reduced) return;
+  us.forEach(function (n) { n.classList.remove('go'); n.style.opacity = '0'; });
+  ctx.timeout(function () { us.forEach(function (n) { n.style.opacity = ''; void n.offsetWidth; n.classList.add('go'); }); }, 1200);
+  ctx.onLeave(function () { us.forEach(function (n) { n.classList.remove('go'); n.style.opacity = ''; }); });
+}
 /* ---------------------------------------------------------------- 13b. NEW directly after #97 (Kahf Kids) - a child's Google account (age 11, Qatar), then sign it in on the TV + shared computers
    Step 1 (left): create the child account (media/kid-google/create-account.webp), DOB -> 11 years old, location Qatar;
    [click] myaccount.google.com > Personal info: set the home address to Doha (personal-info.webp).
@@ -1186,7 +1237,8 @@ Deck.registerSlide(112, {
     '.yr-big{font:600 157px/1.05 var(--f-display);letter-spacing:-.035em;margin:20px 0 3px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#f4ce8f}.yr-big small{font-size:.46em;letter-spacing:0}',
     '.yr-l .what{font-size:35px;font-weight:500;color:var(--ink)}.yr-l .who{font-size:21px;color:#adb9b8;margin-top:12px}',
     '.yr-rows{position:absolute;left:108px;top:614px;width:615px;display:flex;gap:44px}.yr-row{flex:1;border-top:1px solid #52605b;padding-top:19px}.yr-row b{display:block;font:600 61px/1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--ink)}.yr-row span{display:block;margin-top:12px;font-size:24px;color:#bdc9c5;line-height:1.35}',
-    '.yr-lifetime{position:absolute;left:900px;top:300px;width:916px;padding-left:62px;border-left:1px solid #44544d}',
+    '.yr-lifetime{position:absolute;left:900px;top:300px;width:916px;padding-left:62px;border-left:1px solid #44544d;opacity:0;transform:translateX(56px);transition:opacity .8s ease,transform .9s cubic-bezier(.22,.8,.3,1)}',
+    '.yr.r1 .yr-lifetime,.yr.static .yr-lifetime,.yr.reduced .yr-lifetime{opacity:1;transform:none}',
     '.yr-lifetime .hd{font-size:23px;letter-spacing:.065em;text-transform:uppercase;color:#bac7c6;font-weight:600}',
     '.yr-years{margin:13px 0 0;font:600 164px/.98 var(--f-display);letter-spacing:-.045em;color:#ff927d;font-variant-numeric:tabular-nums;white-space:nowrap}.yr-years small{font:500 61px/1 var(--f-display);letter-spacing:-.025em;margin-left:18px}',
     '.yr-years i{font-style:normal}.yr-description{font-size:30px;margin:5px 0 0;color:var(--ink)}.yr-model{font-size:20px;color:#b8c7c1;margin-top:12px}',
@@ -1236,10 +1288,10 @@ Deck.registerSlide(112, {
   }
 
   Deck.insertSlide({
-    after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false, steps: 2,
+    after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 3,
     notes: 'Newest data: DataReportal Digital 2026 Global Overview (GWI survey, data up to Oct 2025). The average internet user aged 16+ spends 18 hours 36 minutes every week just on social media and online video, not counting Netflix or TV streaming. ' +
       'That is 970 hours a year, 1 in 6 of your waking hours. ' +
-      '[the online slice pulls away from the life pie] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
+      '[click: the 60-year view slides in and the online slice pulls away from the life pie] Now take a 60-year life, only the hours you are awake, and nothing before age 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in 5 of all your waking hours, spent online. ' +
       '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from Digital 2024, it grows to ' + fmt(TOT_Y, 1) + ' years: nearly 1 in 3 waking hours of your life on a screen. ' +
       '[click] This is not screen time. It is life time. ' +
       'Defending the numbers: 18.6 h x 52.14 weeks = 970 h a year. Lifetime: GWI hours/week by age band (mean of women and men) x 52.14 x years in band: 16-24 24.7h x 9, 25-34 20.9h x 10, 35-44 17.7h x 10, 45-54 15.7h x 10, 55-59 13.3h x 5 = ' + fmt(LIFE_H) + ' h; / (16 h x 365) = ' + fmt(FEED_Y, 1) + ' waking years = ' + fmt(PF * 100, 1) + '% of 60 x 365 x 16 waking hours. All online media (33.5 h/week, DataReportal) scaled by the same age profile = ' + fmt(ONL_Y, 1) + ' years (' + fmt(PO * 100, 1) + '%). All internet use 6h 40m/day (Digital 2024, slide 4) same way = ' + fmt(TOT_Y, 1) + ' years (' + fmt(PT * 100, 1) + '%).',
@@ -1252,7 +1304,7 @@ Deck.registerSlide(112, {
           '<div class="yr-big rv" style="--d:.4s"><span class="n">18</span><small>h</small> <span class="m">36</span><small>m</small></div>' +
           '<div class="what rv" style="--d:.5s">every single week.</div><div class="who rv" style="--d:.5s">Average internet user, aged 16+</div></div>' +
         '<div class="yr-rows rv" style="--d:.7s"><div class="yr-row"><b>' + fmt(HY) + ' h</b><span>every year</span></div><div class="yr-row"><b>1 in 6</b><span>of your waking hours</span></div></div>' +
-        '<div class="yr-lifetime rv" style="--d:.7s"><div class="hd">Zoom out to a 60-year life</div>' +
+        '<div class="yr-lifetime"><div class="hd">Zoom out to a 60-year life</div>' +
           '<div class="yr-years yr-sw"><i class="v0">' + fmt(ONL_Y, 1) + '</i><i class="v1">' + fmt(TOT_Y, 1) + '</i><small>years</small></div>' +
           '<div class="yr-description">of waking life spent online.</div>' +
           '<div class="yr-model yr-sw"><span class="v0">All online media · modelled estimate</span><span class="v1">All internet use · modelled estimate</span></div>' +
@@ -1268,7 +1320,6 @@ Deck.registerSlide(112, {
     },
     enter: function (el, ctx) {
       var r = el.__yr; if (!r) return;
-      r.classList.add('a1');                                // pull the online slice forward
       if (ctx.reduced) return;
       var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), DUR = 1800, JUMPS = 5, TOTAL = 18 * 60 + 36;
       n.textContent = '0'; m.textContent = '00';
@@ -1281,8 +1332,19 @@ Deck.registerSlide(112, {
         })(i);
       }
     },
-    step: function (el, i) { var r = el.__yr; if (r) r.classList.add('s' + i); },
-    unstep: function (el, i) { var r = el.__yr; if (r) r.classList.remove('s' + i); }
+    // click 1 reveals the right-hand life view, then the online slice pulls out of the pie;
+    // click 2 swaps to all internet use (class s1), click 3 shows the closing card (class s2)
+    step: function (el, i, ctx) {
+      var r = el.__yr; if (!r) return;
+      if (i === 1) {
+        r.classList.add('r1');
+        if (ctx && ctx.timeout && !ctx.reduced) ctx.timeout(function () { r.classList.add('a1'); }, 900); else r.classList.add('a1');
+      } else r.classList.add('s' + (i - 1));
+    },
+    unstep: function (el, i) {
+      var r = el.__yr; if (!r) return;
+      if (i === 1) r.classList.remove('r1', 'a1'); else r.classList.remove('s' + (i - 1));
+    }
   });
 })();
 
@@ -1944,6 +2006,101 @@ Deck.registerSlide(51, {
     notes: 'Privacy browsers like Brave stop ads and trackers, but none of the mainstream browsers protect children from what they actually see. ' +
       'Kahf Browser does: it hides inappropriate images, forces Safe Search and a safe YouTube, blocks ads and trackers, and blocks harmful sites. ' +
       '[click] Five out of five, against zero for Chrome, Edge, Firefox and Safari.'
+  });
+})();
+
+/* ---------------------------------------------------------------- 17. NEW just before the closing slide (#112) - Surah At-Tahrim 66:6
+   The whole verse in Arabic sits on top; each click reveals one English phrase and lights up its Arabic phrase.
+   A low ember glow rises with "fuelled by people and stones". kahf.co badge pops in bottom-right once the full translation is shown (same animation as #112). */
+(function () {
+  var CSST = [
+    /* bundled Quran font (relative to index.html, since this <style> lives in the document) */
+    '@font-face{font-family:"Deck Uthmanic Hafs";src:url(assets/fonts/kfgqpc-uthmanic-script-hafs.otf) format("opentype");font-display:block}',
+    '.tq{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA;overflow:hidden}',
+    '.tq .glow{position:absolute;left:-10%;right:-10%;bottom:-40%;height:80%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,110,40,.30),rgba(255,59,78,.10) 45%,rgba(255,59,78,0) 70%);opacity:0;transition:opacity 1.6s ease;pointer-events:none}',
+    '.tq.k2 .glow{opacity:1}',
+    '.tq .kick{position:absolute;left:0;right:0;top:64px;text-align:center;font:700 24px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--amber)}',
+    '.tq .kick span{color:#9AA7AD;font-weight:600}',
+    '.tq .ar{position:absolute;left:150px;right:150px;top:118px;text-align:center;direction:rtl;font:400 66px/1.85 "Deck Uthmanic Hafs","KFGQPC Uthmanic Script HAFS","Amiri Quran","Geeza Pro",serif;color:#e9e4d6}',
+    '.tq .ar .br{color:var(--amber);opacity:.7}',
+    '.tq .ar .seg{opacity:.5;transition:opacity .9s ease,color .9s ease,text-shadow .9s ease}',
+    '.tq .ar .seg.past{opacity:.85}',
+    '.tq .ar .seg.cur{opacity:1;color:#ffe9b8;text-shadow:0 0 34px rgba(242,193,78,.55)}',
+    '.tq .rule{position:absolute;left:50%;top:478px;width:520px;height:2px;margin-left:-260px;background:linear-gradient(90deg,rgba(242,193,78,0),rgba(242,193,78,.7),rgba(242,193,78,0))}',
+    '.tq .en{position:absolute;left:190px;right:190px;top:530px;text-align:center}',
+    '.tq .ln{margin:0 0 30px;font:italic 500 54px/1.24 var(--f-display);letter-spacing:-.005em;text-shadow:0 4px 30px rgba(2,6,9,.85);opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s var(--ease),color .9s ease}',
+    '.tq .ln.on{opacity:1;transform:none}',
+    '.tq .ln.past{opacity:.55}',
+    '.tq .ln em{font-style:italic;color:var(--amber)}',
+    '.tq .ln.l2 em{color:#ff8a5c}',
+    '.tq .ln.l3{font-size:48px}',
+    '.tq .pc-url{left:auto;right:56px;top:1000px;transform-origin:right center}',
+    '.tq .pc-soc{left:56px;top:1000px}',
+    '.tq.static .ln,.tq.static .ar .seg{transition:none}',
+    '@media (prefers-reduced-motion:reduce){.tq .ln,.tq .glow,.tq .ar .seg{transition:none}}'
+  ];
+  var st = document.createElement('style'); st.id = 'part-c-tahrim-css'; st.textContent = CSST.join('\n'); document.head.appendChild(st);
+
+  /* KFGQPC Hafs (Madinah mushaf) Uthmani text, as encoded for the KFGQPC Uthmanic Script HAFS font */
+  var AR = [
+    'يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ قُوٓاْ أَنفُسَكُمۡ وَأَهۡلِيكُمۡ نَارٗا',
+    'وَقُودُهَا ٱلنَّاسُ وَٱلۡحِجَارَةُ',
+    'عَلَيۡهَا مَلَٰٓئِكَةٌ غِلَاظٞ شِدَادٞ لَّا يَعۡصُونَ ٱللَّهَ مَآ أَمَرَهُمۡ وَيَفۡعَلُونَ مَا يُؤۡمَرُونَ'
+  ];
+  var EN = [
+    'Believers, guard <em>yourselves and your families</em> against a Fire',
+    'fuelled by <em>people and stones</em>,',
+    'over which stand angels, <em>stern and strong</em>; angels who never disobey God&rsquo;s commands to them, but do as they are ordered.'
+  ];
+
+  /* k = number of English phrases shown (0..3); the newest one is "current" */
+  function show(r, k) {
+    var segs = r.__segs, lns = r.__lns;
+    for (var i = 0; i < 3; i++) {
+      segs[i].classList.toggle('cur', i === k - 1);
+      segs[i].classList.toggle('past', i < k - 1);
+      lns[i].classList.toggle('on', i < k);
+      lns[i].classList.toggle('past', i < k - 1);
+    }
+    r.classList.toggle('k2', k >= 2);
+  }
+  /* kahf.co badge + @kahfsafe: hidden until the full translation is on screen, then pop in (same animation as #112) */
+  function badge(el, ctx, on) {
+    var us = el.__u, tok = el.__ub = (el.__ub || 0) + 1;
+    us.forEach(function (n) { n.classList.remove('go'); n.style.opacity = '0'; });
+    if (!on) return;
+    if (ctx.reduced) { us.forEach(function (n) { n.style.opacity = ''; }); return; }
+    ctx.timeout(function () {
+      if (el.__ub !== tok) return;
+      us.forEach(function (n) { n.style.opacity = ''; void n.offsetWidth; n.classList.add('go'); });
+    }, 1000);
+  }
+
+  Deck.insertSlide({
+    after: 110, id: 'tahrim-66-6', title: 'Guard yourselves and your families', section: 'evidence',
+    tr: { type: 'slide', ms: 900 }, loop: false, calm: true, steps: 3,
+    notes: 'Surah At-Tahrim 66:6. The whole verse in Arabic is on screen; recite it first. ' +
+      '[click] "Believers, guard yourselves and your families against a Fire" ' +
+      '[click] "fuelled by people and stones," ' +
+      '[click] "over which stand angels, stern and strong; angels who never disobey God’s commands to them, but do as they are ordered." ' +
+      'Protecting our families is not optional; it is a command. (Translation: M.A.S. Abdel Haleem.)',
+    render: function (el, ctx) {
+      var r = h('div', 'tq' + (ctx.static ? ' static' : ''), el);
+      h('div', 'glow', r);
+      h('div', 'kick', r, 'Surah At-Tahrim <span>&middot; 66:6</span>');
+      var ar = h('div', 'ar', r); ar.lang = 'ar';
+      r.__segs = AR.map(function (t, i) { var s = h('span', 'seg', ar, t); ar.appendChild(document.createTextNode(' ')); return s; });
+      h('span', 'br', ar, '٦');
+      h('div', 'rule', r);
+      var en = h('div', 'en', r);
+      r.__lns = EN.map(function (t, i) { return h('p', 'ln l' + (i + 1), en, t); });
+      el.__tq = r;
+      el.__u = [kahfUrl(r), kahfSocial(r)];
+      if (!ctx.static) el.__u.forEach(function (n) { n.style.opacity = '0'; });
+      show(r, ctx.static ? 3 : 0);
+    },
+    step: function (el, i, ctx) { show(el.__tq, i); if (i === 3) badge(el, ctx, true); },
+    unstep: function (el, i, ctx) { show(el.__tq, i - 1); if (i === 3) badge(el, ctx, false); }
   });
 })();
 })();

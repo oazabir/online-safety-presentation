@@ -22,6 +22,7 @@ assets/js/sky.js            background night-sky canvas
 assets/js/custom/part-a.js  hand-built slides for original #1–47 (+ inserted live counter, calculator)
 assets/js/custom/part-b.js  hand-built slides for original #48–112 (+ closing slide "shepherd")
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
+assets/js/custom/topic-bar.js  bottom topic progress bar (6 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ ink/ kahfkids/ posters/ whatsapp/ subfolders
 .claude/launch.json         local preview server config

@@ -233,7 +233,7 @@ function sync() {
 function staticFrame() { g.setTransform(DPR, 0, 0, DPR, 0, 0); if (reduced) { fade = fadeT; draw(0, 3); } }
 
 function resize() {
-  var w = innerWidth || 1920, h = innerHeight || 1080;
+  var vp = document.getElementById('viewport'), w = innerWidth || 1920, h = (vp && vp.clientHeight) || innerHeight || 1080;
   DPR = Math.min(window.devicePixelRatio || 1, 1.5);
   VW = w; VH = h;
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR);

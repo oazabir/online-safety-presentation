@@ -96,7 +96,7 @@ Deck.clickHook = function (ev) {
 var HELP = [['Next / build', '→  Space  PgDn  click'], ['Previous', '←  PgUp  Shift+Space'], ['First / last', 'Home / End'],
   ['Jump to slide', 'type number + Enter'], ['Overview grid', 'O  or  Esc'], ['Presenter window', 'P'],
   ['Fullscreen', 'F'], ['Blackout', 'B'], ['Laser pointer', 'L'], ['Spotlight (wheel = size)', 'S'], ['Magnifier (click)', 'Z'],
-  ['Zoom picture', 'click a picture'], ['Video controls', 'hover the video'], ['This help', '?']];
+  ['Topic bar on/off', 'T'], ['Zoom picture', 'click a picture'], ['Video controls', 'hover the video'], ['This help', '?']];
 function toggleHelp() {
   var he = $('#help'), box = $('.box', he);
   if (!box.firstChild) {
@@ -111,7 +111,7 @@ var Ov = { on: false, sel: 0, io: null, thumbs: [] };
 Ov.toggle = function () { Ov.on ? Ov.close() : Ov.open(); };
 Ov.open = function () {
   var el = $('#overview'); el.innerHTML = ''; Ov.thumbs = [];
-  var secNames = { problem: 'The problem · the numbers', why: 'Why it is addictive', treat: 'How to treat', grooming: 'Grooming & suicide', protect: 'Practical protection', evidence: 'Evidence & close' };
+  var secNames = { problem: 'The problem · the numbers', why: 'Why it is addictive', treat: 'How to treat', grooming: 'Drugs, grooming & suicide', protect: 'Practical protection', evidence: 'Evidence & close' };
   var last = null, grid = null;
   Deck.slides.forEach(function (s, i) {
     if (s.section !== last) { last = s.section; var hh = h('h3', '', el); hh.textContent = secNames[s.section]; grid = h('div', '', el); grid.id = i ? '' : 'ovgrid'; grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px'; }
