@@ -16,7 +16,7 @@ var TOPICS = [
   { from: 48,  label: 'How to Treat It',   color: 'var(--amber)'  },   // the child is the victim; we let it happen
   { from: 54,  label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial (45), grooming, Susan
   { from: 66,  label: 'Practical Protection', color: 'var(--green)'  },   // tech-free zones, slow phones, games, parental controls, browsers, YouTube, checklist (66-105)
-  { from: 106, label: 'Evidence & Close', color: 'var(--ink)'    }    // research charts, close
+  { from: 106, label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
 
 var css = [
