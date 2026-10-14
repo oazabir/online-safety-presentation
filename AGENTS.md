@@ -22,9 +22,11 @@ assets/js/sky.js            background night-sky canvas
 assets/js/custom/part-a.js  hand-built slides for original #1–47 (+ inserted live counter, calculator)
 assets/js/custom/part-b.js  hand-built slides for original #48–112 (+ closing slide "shepherd")
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
+assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7 (orig #7 Gallup chart, #8 hours x 365, #10 hour tiles)
 assets/js/custom/topic-bar.js  bottom topic progress bar (6 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
-media/                      images, mp4 videos, plus charts/ ink/ kahfkids/ posters/ whatsapp/ subfolders
+media/                      images, mp4 videos, plus charts/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
+                            (hours/ = Codex-generated tile photos for #10)
 .claude/launch.json         local preview server config
 ```
 
@@ -81,7 +83,9 @@ the default run. Inserted slides get their own `id` as key (`#/my-slide`).
   (overview/presenter thumbnails render with no timers).
 - Use `ctx.timeout / ctx.interval / ctx.tick / ctx.onLeave` instead of raw `setTimeout`/`rAF` so everything is
   cleaned up on slide exit.
-- Interactive nodes need class `pe` (or be a `button/a/input/select/label`) or clicks will advance the deck.
+- Interactive nodes need class `pe` to receive pointer events at all, **and** `data-noadvance` (or be an
+  `a/button/input/select/textarea`) or the click also advances the deck (`onStageClick` in `engine.js`).
+- Don't use `all:unset` on buttons without re-adding `pointer-events:auto`: it inherits `none` from `.custom`.
 - New script file: create `assets/js/custom/<name>.js` and add a `<script>` tag in `index.html` **before the
   `<!-- CUSTOM-SCRIPTS-END -->` marker** (and therefore before `boot.js`). Order = override priority.
 

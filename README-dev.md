@@ -22,8 +22,8 @@ Insert order: several inserts with the same `after` keep call order; `after` may
 `ctx`: `{deck, slide, el, root, n, id, section, step, steps, static, W, H, reduced}` plus helpers
 `ctx.onLeave(fn)`, `ctx.timeout(fn,ms)`, `ctx.interval(fn,ms)`, `ctx.tick((dt,t)=>..)` (rAF, auto-stopped), `ctx.q/qa(sel)`, `ctx.elapsed()`.
 `ctx.static` is true when rendered as overview/presenter thumbnail: draw the end state, no timers.
-Clicks on `button, a, input, select, label, .pe, [data-noadvance]` do not advance the deck; everything else in `el` does
-(`el` itself ignores the pointer, give interactive nodes class `pe`). Keys: set `Deck.keyHook = ev => handled?`.
+Clicks on `a, button, input, select, textarea, video, .chip, [data-noadvance]` do not advance the deck; everything else in `el` does
+(`el` itself ignores the pointer: give interactive nodes class `pe` so they get events, plus `data-noadvance` if they are not one of those tags). Keys: set `Deck.keyHook = ev => handled?`.
 
 ## Useful API
 `Deck.next/prev/first/last()`, `Deck.goto(origIndexOrId)`, `Deck.gotoNumber(n)` (n-th visible slide; what typed digits + Enter use), `Deck.number(slide)`, `Deck.cur` (slide), `Deck.view` (live DOM/state), `Deck.order()`,
