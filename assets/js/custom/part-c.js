@@ -321,7 +321,7 @@ function twRun(chars, ms, alive, done) {
 }
 
 /* ---------------------------------------------------------------- 1. removals + data patches */
-D.slides.forEach(function (s) { if (s.orig === 4) s.hidden = true; });
+D.slides.forEach(function (s) { if (s.orig === 4 || s.orig === 2) s.hidden = true; });
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
 /* topic structure (matches TOPICS in topic-bar.js):
@@ -2155,7 +2155,7 @@ Deck.registerSlide(51, {
 
 /* ---------------------------------------------------------------- 17. NEW just before the closing slide (#112) - Surah At-Tahrim 66:6
    The whole verse in Arabic sits on top; each click reveals one English phrase and lights up its Arabic phrase.
-   A low ember glow rises with "fuelled by people and stones". kahf.co badge pops in bottom-right once the full translation is shown (same animation as #112). */
+   Embers and ash drift up from a flickering fire bed that builds with "a Fire" and "fuelled by people and stones". kahf.co badge pops in bottom-right once the full translation is shown (same animation as #112). */
 (function () {
   var CSST = [
     /* bundled Quran font (relative to index.html, since this <style> lives in the document) */
@@ -2163,6 +2163,12 @@ Deck.registerSlide(51, {
     '.tq{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA;overflow:hidden}',
     '.tq .glow{position:absolute;left:-10%;right:-10%;bottom:-40%;height:80%;background:radial-gradient(50% 50% at 50% 50%,rgba(255,110,40,.30),rgba(255,59,78,.10) 45%,rgba(255,59,78,0) 70%);opacity:0;transition:opacity 1.6s ease;pointer-events:none}',
     '.tq.k2 .glow{opacity:1}',
+    /* fire bed: a hotter, flickering layer under the soft glow; faint from "a Fire", full from "fuelled by" */
+    '.tq .flame{position:absolute;left:-6%;right:-6%;bottom:-22%;height:66%;background:linear-gradient(0deg,rgba(255,96,32,.4),rgba(220,50,20,.14) 30%,rgba(220,50,20,0) 52%),radial-gradient(72% 58% at 50% 78%,rgba(255,150,50,.55),rgba(255,80,30,.32) 35%,rgba(200,30,20,.12) 60%,rgba(200,30,20,0) 75%);transform-origin:50% 100%;opacity:0;transition:opacity 1.6s ease;pointer-events:none}',
+    '.tq.k1 .flame{opacity:.35}.tq.k2 .flame{opacity:1}',
+    '.tq .flame{animation:tq-flame 2.6s ease-in-out infinite alternate}',
+    '@keyframes tq-flame{0%{transform:scale(1,1)}23%{transform:scale(1.02,1.07)}41%{transform:scale(.99,.97)}68%{transform:scale(1.03,1.1)}100%{transform:scale(1,1.02)}}',
+    '.tq .fx{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}',
     '.tq .kick{position:absolute;left:0;right:0;top:64px;text-align:center;font:700 24px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--amber)}',
     '.tq .kick span{color:#9AA7AD;font-weight:600}',
     '.tq .ar{position:absolute;left:150px;right:150px;top:118px;text-align:center;direction:rtl;font:400 66px/1.85 "Deck Uthmanic Hafs","KFGQPC Uthmanic Script HAFS","Amiri Quran","Geeza Pro",serif;color:#e9e4d6}',
@@ -2180,9 +2186,71 @@ Deck.registerSlide(51, {
     '.tq .ln.l3{font-size:48px}',
     '.tq .pc-url{left:auto;right:56px;top:1000px;transform-origin:right center}',
     '.tq .pc-soc{left:56px;top:1000px}',
-    '.tq.static .ln,.tq.static .ar .seg{transition:none}',
-    '@media (prefers-reduced-motion:reduce){.tq .ln,.tq .glow,.tq .ar .seg{transition:none}}'
+    '.tq.static .ln,.tq.static .ar .seg,.tq.static .flame{transition:none;animation:none}',
+    '@media (prefers-reduced-motion:reduce){.tq .ln,.tq .glow,.tq .flame,.tq .ar .seg{transition:none;animation:none}}'
   ];
+
+  /* rising embers and drifting ash on a canvas behind the text. Heat (0..1) follows the build: a little smoke
+     before the verse is read, more with "a Fire", full with "fuelled by people and stones". */
+  var HEAT = [.25, .55, 1, 1];
+  function sprite(core, mid) {
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var g = c.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, core); gr.addColorStop(.18, mid); gr.addColorStop(.45, mid.replace(/[\d.]+\)$/, '.25)')); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c;
+  }
+  function fire(r) {
+    var cv = h('canvas', 'fx', r); cv.width = 1920; cv.height = 1080;
+    var g = cv.getContext('2d'), E = [], A = [], heat = 0, t = 0, owe = 0, oweA = 0;
+    var SPR = [sprite('rgba(255,250,220,1)', 'rgba(255,200,90,.9)'), sprite('rgba(255,220,150,1)', 'rgba(255,130,40,.85)'), sprite('rgba(255,170,110,1)', 'rgba(230,60,20,.8)')];
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    function ember() {
+      E.push({ x: rnd(-80, 2000), y: rnd(1085, 1140), vy: rnd(70, 230), s: rnd(5, 17) * (Math.random() < .12 ? 1.8 : 1),
+        life: 0, max: rnd(3.5, 8), ph: rnd(0, 6.3), f: rnd(.6, 2.2), sw: rnd(12, 55), fl: rnd(6, 16) });
+    }
+    function ash() {
+      A.push({ x: rnd(-80, 2000), y: rnd(1085, 1160), vx: rnd(-14, 14), vy: rnd(18, 70), s: rnd(2.5, 7.5), q: rnd(.35, .8),
+        rot: rnd(0, 6.3), vr: rnd(-2, 2), life: 0, max: rnd(9, 16), ph: rnd(0, 6.3), a: rnd(.22, .55), hot: Math.random() < .3 });
+    }
+    function update(dt) {
+      t += dt;
+      heat += ((r.__heat || 0) - heat) * Math.min(1, dt * 1.2);
+      var wind = Math.sin(t * .17) * 22 + Math.sin(t * .43 + 1) * 10;
+      owe += dt * heat * 120; while (owe >= 1 && E.length < 420) { ember(); owe--; }
+      oweA += dt * heat * 30; while (oweA >= 1 && A.length < 160) { ash(); oweA--; }
+      E = E.filter(function (p) {
+        p.life += dt; p.y -= p.vy * dt; p.vy *= 1 - dt * .08;
+        p.x += (wind + Math.sin(t * p.f + p.ph) * p.sw) * dt;
+        return p.life < p.max && p.y > -40;
+      });
+      A = A.filter(function (p) {
+        p.life += dt; p.y -= p.vy * dt; p.x += (p.vx + wind * 1.4 + Math.sin(t * .7 + p.ph) * 18) * dt; p.rot += p.vr * dt;
+        return p.life < p.max && p.y > -40;
+      });
+    }
+    function draw() {
+      g.clearRect(0, 0, 1920, 1080);
+      g.globalCompositeOperation = 'source-over';
+      A.forEach(function (p) {
+        var k = p.life / p.max, a = p.a * Math.min(1, p.life * 1.5) * (1 - k * k);
+        g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.scale(1, p.q * (.6 + .4 * Math.abs(Math.sin(t * 1.3 + p.ph))));
+        g.fillStyle = p.hot && k < .5 ? 'rgba(255,120,60,' + a + ')' : 'rgba(160,150,146,' + a + ')';
+        g.fillRect(-p.s, -p.s * .6, p.s * 2, p.s * 1.2); g.restore();
+      });
+      g.globalCompositeOperation = 'lighter';
+      E.forEach(function (p) {
+        var k = p.life / p.max, fl = .65 + .35 * Math.sin(t * p.fl + p.ph * 3);
+        var a = Math.min(1, p.life * 3) * (1 - k) * fl, s = p.s * (1 - k * .55);
+        if (a <= 0) return;
+        g.globalAlpha = a; g.drawImage(SPR[k < .25 ? 0 : k < .6 ? 1 : 2], p.x - s, p.y - s, s * 2, s * 2);
+      });
+      g.globalAlpha = 1;
+    }
+    r.__fire = {
+      warm: function (sec) { heat = r.__heat || 0; for (var i = 0; i < sec * 30; i++) update(1 / 30); draw(); },
+      frame: function (ms) { update(Math.min(ms, 50) / 1000); draw(); }
+    };
+  }
   var st = document.createElement('style'); st.id = 'part-c-tahrim-css'; st.textContent = CSST.join('\n'); document.head.appendChild(st);
 
   /* KFGQPC Hafs (Madinah mushaf) Uthmani text, as encoded for the KFGQPC Uthmanic Script HAFS font */
@@ -2206,7 +2274,9 @@ Deck.registerSlide(51, {
       lns[i].classList.toggle('on', i < k);
       lns[i].classList.toggle('past', i < k - 1);
     }
+    r.classList.toggle('k1', k >= 1);
     r.classList.toggle('k2', k >= 2);
+    r.__heat = HEAT[k];
   }
   /* kahf.co badge + @kahfsafe: hidden until the full translation is on screen, then pop in (same animation as #112) */
   function badge(el, ctx, on) {
@@ -2231,6 +2301,8 @@ Deck.registerSlide(51, {
     render: function (el, ctx) {
       var r = h('div', 'tq' + (ctx.static ? ' static' : ''), el);
       h('div', 'glow', r);
+      h('div', 'flame', r);
+      fire(r);
       h('div', 'kick', r, 'Surah At-Tahrim <span>&middot; 66:6</span>');
       var ar = h('div', 'ar', r); ar.lang = 'ar';
       r.__segs = AR.map(function (t, i) { var s = h('span', 'seg', ar, t); ar.appendChild(document.createTextNode(' ')); return s; });
@@ -2242,6 +2314,12 @@ Deck.registerSlide(51, {
       el.__u = [kahfUrl(r), kahfSocial(r)];
       if (!ctx.static) el.__u.forEach(function (n) { n.style.opacity = '0'; });
       show(r, ctx.static ? 3 : 0);
+      if (ctx.static) r.__fire.warm(8);
+    },
+    enter: function (el, ctx) {
+      var fx = el.__tq.__fire;
+      fx.warm(ctx.reduced ? 8 : 3);
+      if (!ctx.static && !ctx.reduced) ctx.tick(function (dt) { fx.frame(dt); });
     },
     step: function (el, i, ctx) { show(el.__tq, i); if (i === 3) badge(el, ctx, true); },
     unstep: function (el, i, ctx) { show(el.__tq, i - 1); if (i === 3) badge(el, ctx, false); }
@@ -2429,6 +2507,129 @@ Deck.registerSlide(51, {
     },
     step: function (el, i) { if (el.__s19) level(el.__s19, i); },
     unstep: function (el, i) { if (el.__s19) level(el.__s19, i - 1); }
+  });
+})();
+/* ---------------------------------------------------------------- 20. NEW agenda as a journey (after #2)
+   A fresh take on the agenda: one painted night landscape (media/agenda/journey.webp, generated with Codex),
+   a lantern trail that draws itself along the footpath, and the six topics of the topic bar lighting up as
+   stops along the way: from the phone-lit swamp, over the ravine, up to the lit home. No clicks. */
+(function () {
+  var CSSJ = [
+    '.aj{position:absolute;inset:0;overflow:hidden;background:#070d18;font-family:var(--f-body);color:var(--ink)}',
+    '.aj-world{position:absolute;inset:0;transform-origin:72% 42%}',
+    '.aj.go .aj-world{animation:aj-push 38s cubic-bezier(.2,.6,.3,1) forwards}',
+    '@keyframes aj-push{from{transform:scale(1.001)}to{transform:scale(1.055)}}',
+    '.aj-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.05)}',
+    '.aj-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 62% at 0% 0%,rgba(4,8,16,.82),rgba(4,8,16,.45) 48%,rgba(4,8,16,0) 75%),linear-gradient(0deg,rgba(4,8,16,.35),rgba(4,8,16,0) 22%)}',
+    '.aj-trail{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}',
+    '.aj-trail path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:1}',
+    '.aj-trail .glow{stroke:#ffb940;stroke-width:26;opacity:.45;filter:url(#aj-blur)}',
+    '.aj-trail .core{stroke:url(#aj-grad);stroke-width:6;stroke-dasharray:.006 .012;stroke-dashoffset:0}',
+    '.aj-trail .mask-line{stroke:#fff;stroke-width:40;stroke-dasharray:1 1;stroke-dashoffset:1}',
+    '.aj.go .aj-trail .glow,.aj.go .aj-trail .mask-line{transition:stroke-dashoffset var(--tt) cubic-bezier(.45,.05,.4,1) var(--t0);stroke-dashoffset:0}',
+    '.aj.static .aj-trail .glow,.aj.static .aj-trail .mask-line,.aj.reduced .aj-trail .glow,.aj.reduced .aj-trail .mask-line{transition:none;stroke-dashoffset:0}',
+    /* stops */
+    '.aj-mk{position:absolute;width:0;height:0}',
+    '.aj-mk i{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:800 22px/1 var(--f-body);color:#08101c;background:var(--c);box-shadow:0 0 0 4px rgba(8,16,28,.85),0 0 30px var(--c),0 0 70px var(--c);transform:scale(0);opacity:0}',
+    '.aj-mk b{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;border:3px solid var(--c);opacity:0}',
+    '.aj.go .aj-mk i{animation:aj-pop .7s cubic-bezier(.2,1.6,.4,1) var(--d) forwards}',
+    '.aj.go .aj-mk b{animation:aj-ring 2.8s ease-out calc(var(--d) + .2s) infinite}',
+    '@keyframes aj-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}',
+    '@keyframes aj-ring{0%{transform:scale(1);opacity:.9}70%,100%{transform:scale(2.4);opacity:0}}',
+    '.aj-card{position:absolute;white-space:nowrap;padding:14px 24px 15px 20px;border-radius:14px;background:rgba(5,10,20,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);',
+    '  box-shadow:inset 4px 0 0 var(--c),inset 0 0 0 1px rgba(255,255,255,.08),0 18px 40px -14px rgba(0,0,0,.9);opacity:0;transform:translateY(16px)}',
+    '.aj-card.rt{text-align:right;box-shadow:inset -4px 0 0 var(--c),inset 0 0 0 1px rgba(255,255,255,.08),0 18px 40px -14px rgba(0,0,0,.9);padding:14px 20px 15px 24px}',
+    '.aj-card .t{display:block;font:600 34px/1.1 var(--f-display);letter-spacing:-.01em;color:#fff}',
+    '.aj-card .t em{font-style:normal;color:var(--c);font:700 20px/1 var(--f-body);letter-spacing:.14em;margin-right:12px;vertical-align:4px}',
+    '.aj-card .s{display:block;margin-top:6px;font:500 20px/1.25 var(--f-body);color:#b9c3c9}',
+    '.aj.go .aj-card{animation:aj-card .8s cubic-bezier(.2,.9,.25,1) calc(var(--d) + .15s) forwards}',
+    '@keyframes aj-card{to{opacity:1;transform:none}}',
+    /* heading */
+    '.aj-hd{position:absolute;left:96px;top:84px}',
+    '.aj-k{font:700 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--amber)}',
+    '.aj-t{margin:22px 0 0;font:600 98px/1.02 var(--f-display);letter-spacing:-.025em;color:#fff;text-shadow:0 6px 40px rgba(0,0,0,.7)}',
+    '.aj-t em{font-style:italic;color:#ffcf73;text-shadow:0 0 40px rgba(255,176,32,.45)}',
+    '.aj-t .gl{color:#8fe9ff;text-shadow:0 0 34px rgba(34,211,238,.55)}',
+    '.aj-hd .rv2{opacity:0;transform:translateY(22px)}',
+    '.aj.go .aj-hd .rv2{animation:aj-card .9s cubic-bezier(.2,.9,.25,1) var(--d) forwards}',
+    '.aj.static .aj-mk i,.aj.reduced .aj-mk i,.aj.static .aj-card,.aj.reduced .aj-card,.aj.static .aj-hd .rv2,.aj.reduced .aj-hd .rv2{animation:none;opacity:1;transform:none}',
+    '.aj.static .aj-mk b,.aj.reduced .aj-mk b,.aj.reduced .aj-world{animation:none}'
+  ];
+  var st = document.createElement('style'); st.id = 'part-c-agenda-css'; st.textContent = CSSJ.join('\n'); document.head.appendChild(st);
+
+  /* footpath centre line in stage px (traced on the 1920x1080 painting), bottom-left to the front door */
+  var PATH = [[300, 1095], [420, 965], [560, 893], [690, 846], [770, 795], [760, 752], [850, 716], [960, 683],
+    [1060, 650], [1230, 612], [1395, 578], [1480, 545], [1550, 495], [1560, 455], [1590, 405], [1660, 360], [1712, 322], [1722, 296]];
+  /* stops: index into PATH, topic (same order and colours as the topic bar), card position */
+  var STOPS = [
+    { at: 2,  c: 'var(--cyan)',   t: 'The Problem',                 s: 'Where our children’s hours really go',     x: 600,  y: 905 },
+    { at: 4,  c: 'var(--orange)', t: 'Why It’s Addictive',          s: 'Dopamine, endless feeds, game design',      x: 820,  y: 780 },
+    { at: 7,  c: 'var(--amber)',  t: 'How to Treat It',             s: 'The child is the victim, not the culprit',  x: 930,  y: 520, rt: true },
+    { at: 9,  c: 'var(--red)',    t: 'Drugs, Grooming and Suicide', s: 'The dangers hiding behind the screen',      x: 1150, y: 690 },
+    { at: 12, c: 'var(--green)',  t: 'Practical Protection',        s: 'Zones, controls, browsers, a checklist',    x: 1505, y: 420, rt: true },
+    { at: 15, c: '#F4F1EA',       t: 'Disturbing Trends',           s: 'What the research shows, and the way home', x: 1625, y: 255, rt: true }
+  ];
+  var T0 = .9, TT = 5.2;
+
+  function smoothPath(P) { /* Catmull-Rom through every point -> cubic Beziers */
+    var d = 'M' + P[0][0] + ' ' + P[0][1];
+    for (var i = 0; i < P.length - 1; i++) {
+      var p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+      d += 'C' + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + ' ' + p2[0] + ' ' + p2[1];
+    }
+    return d;
+  }
+  /* fraction of the trail travelled when it reaches PATH[k] (polyline estimate; the trail eases in/out like the CSS curve) */
+  function frac(k) {
+    var tot = 0, upto = 0;
+    for (var i = 1; i < PATH.length; i++) { var l = Math.hypot(PATH[i][0] - PATH[i - 1][0], PATH[i][1] - PATH[i - 1][1]); tot += l; if (i <= k) upto += l; }
+    return upto / tot;
+  }
+  function eased(f) { /* rough inverse of cubic-bezier(.45,.05,.4,1): time at which progress f is reached */
+    var lo = 0, hi = 1;
+    for (var n = 0; n < 30; n++) { var t = (lo + hi) / 2, u = 1 - t, y = 3 * u * u * t * .05 + 3 * u * t * t + t * t * t, x = 3 * u * u * t * .45 + 3 * u * t * t * .4 + t * t * t;
+      if (y < f) lo = t; else hi = t; }
+    var tt = (lo + hi) / 2, uu = 1 - tt; return 3 * uu * uu * tt * .45 + 3 * uu * tt * tt * .4 + tt * tt * tt;
+  }
+
+  Deck.insertSlide({
+    after: 2, id: 'agenda-journey', title: 'Tonight’s journey', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false,
+    notes: 'Here is where we are going tonight. We start down here, in the swamp of glowing phones, with the problem itself: where our children’s hours really go. ' +
+      'Then why it is so addictive: dopamine, feeds and how games are built. Then how to treat it, remembering that the child is the victim. ' +
+      'Then the ravine: drugs, grooming and suicide, the dangers hiding behind the screen. We cross that bridge into practical protection: what you can do at home tomorrow. ' +
+      'And finally the research on where things are heading, and the way back home to a family that is together.',
+    render: function (el, ctx) {
+      var r = h('div', 'aj' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
+      r.style.setProperty('--t0', T0 + 's'); r.style.setProperty('--tt', TT + 's');
+      var w = h('div', 'aj-world', r);
+      var img = h('img', 'aj-img', w); img.src = 'media/agenda/journey.webp'; img.alt = 'A night landscape: a footpath leads from a swamp of glowing phones, over a bridge across a red ravine, up to a warmly lit family home';
+      h('div', 'aj-shade', w);
+      var d = smoothPath(PATH);
+      w.insertAdjacentHTML('beforeend', '<svg class="aj-trail" viewBox="0 0 1920 1080" aria-hidden="true" focusable="false"><defs>' +
+        '<linearGradient id="aj-grad" gradientUnits="userSpaceOnUse" x1="300" y1="1095" x2="1722" y2="296"><stop offset="0" stop-color="#8fe9ff"/><stop offset=".55" stop-color="#ffd27a"/><stop offset="1" stop-color="#fff2c4"/></linearGradient>' +
+        '<filter id="aj-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="9"/></filter>' +
+        '<mask id="aj-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><path class="mask-line" d="' + d + '" pathLength="1"/></mask></defs>' +
+        '<path class="glow" d="' + d + '" pathLength="1"/>' +
+        '<path class="core" d="' + d + '" pathLength="1" mask="url(#aj-mask)"/></svg>');
+      STOPS.forEach(function (s, i) {
+        var p = PATH[s.at], dl = (T0 + eased(frac(s.at)) * TT).toFixed(2) + 's';
+        var m = h('div', 'aj-mk', w, '<b></b><i>' + (i + 1) + '</i>');
+        m.style.left = p[0] + 'px'; m.style.top = p[1] + 'px'; m.style.setProperty('--c', s.c); m.style.setProperty('--d', dl);
+        var c = h('div', 'aj-card' + (s.rt ? ' rt' : ''), w, '<span class="t"><em>0' + (i + 1) + '</em>' + s.t + '</span><span class="s">' + s.s + '</span>');
+        c.style.top = s.y + 'px'; c.style.setProperty('--c', s.c); c.style.setProperty('--d', dl);
+        if (s.rt) c.style.right = (1920 - s.x) + 'px'; else c.style.left = s.x + 'px';
+      });
+      h('div', 'aj-hd', r,
+        '<div class="aj-k rv2" style="--d:.15s">Tonight’s journey</div>' +
+        '<h1 class="aj-t rv2" style="--d:.3s">From the <span class="gl">glow</span>…<br><em>back home.</em></h1>');
+      el.__aj = r;
+    },
+    enter: function (el, ctx) {
+      var r = el.__aj; if (!r || ctx.static || ctx.reduced) return;
+      r.classList.remove('go'); void r.offsetWidth; r.classList.add('go');
+    },
+    leave: function (el) { if (el.__aj) el.__aj.classList.remove('go'); }
   });
 })();
 })();
