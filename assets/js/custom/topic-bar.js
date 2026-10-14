@@ -12,11 +12,11 @@
 
 var TOPICS = [
   { from: 1,   label: 'The Problem',       color: 'var(--cyan)'   },   // life lost to screens, sleep, family, signs of addiction
-  { from: 27,  label: 'Why It’s Addictive',     color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
-  { from: 48,  label: 'How to Treat It',   color: 'var(--amber)'  },   // the child is the victim; we let it happen
-  { from: 54,  label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial (45), grooming, Susan
-  { from: 66,  label: 'Practical Protection', color: 'var(--green)'  },   // tech-free zones, slow phones, games, parental controls, browsers, YouTube, checklist (66-105)
-  { from: 106, label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
+  { from: 'why-intro', label: 'Why It’s Addictive', color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
+  { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose (71-74)
+  { from: 'harm-intro', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial (45), grooming, Susan
+  { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist (66-105)
+  { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
 
 var css = [

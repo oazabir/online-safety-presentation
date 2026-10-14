@@ -324,10 +324,12 @@ function twRun(chars, ms, alive, done) {
 D.slides.forEach(function (s) { if (s.orig === 4 || s.orig === 2) s.hidden = true; });
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
+if (byN[48]) byN[48].hidden = true;   // "How to treat device addiction?" title: the treat-intro chapter slide replaces it
 /* topic structure (matches TOPICS in topic-bar.js):
    - 54 divider is retitled "Drugs, Grooming and Suicide"
    - 45 (Lost Screen Memorial) is moved to sit right after 55, inside that topic
-   - 66-105 all belong to "Practical Protection" (the section drives overview headings + accent colours) */
+   - 66-105 all belong to "Practical Protection" (the section drives overview headings + accent colours),
+     except 71-74, which move to the end of "How to Treat It" */
 if (byN[54]) {
   var t54 = elData(54, 'e2');             // longer title: slightly smaller + wider box so it stays on one line
   t54.paras[0].runs = [{ t: 'Drugs, Grooming and Suicide', sz: 108, c: '#F4F1EA' }];
@@ -341,6 +343,16 @@ if (byN[54]) {
   s.section = 'grooming';
 })();
 D.slides.forEach(function (s) { if (s.orig >= 66 && s.orig <= 105) s.section = 'protect'; });
+// 71-74 (make devices boring, top 10 games, violence-free games) close "How to Treat It": moved to right after 51
+(function () {
+  var at = D.slides.indexOf(byN[51]);
+  [71, 72, 73, 74].forEach(function (n, i) {
+    var s = byN[n]; if (!s || at < 0) return;
+    D.slides.splice(D.slides.indexOf(s), 1);
+    D.slides.splice(D.slides.indexOf(byN[51]) + 1 + i, 0, s);
+    s.section = 'treat';
+  });
+})();
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
@@ -2630,6 +2642,215 @@ Deck.registerSlide(51, {
       r.classList.remove('go'); void r.offsetWidth; r.classList.add('go');
     },
     leave: function (el) { if (el.__aj) el.__aj.classList.remove('go'); }
+  });
+
+  /* ---------------------------------------------------------------- 21. NEW chapter intros for topics 2-6
+     Each topic opens by returning to the agenda painting: the camera pushes in from the full map to that topic's
+     stop, the trail (already lit up to the previous stop) walks on to it, then the title and what is coming. No clicks. */
+  var CSSC = [
+    '.ach{position:absolute;inset:0;overflow:hidden;background:#070d18;font-family:var(--f-body);color:var(--ink)}',
+    '.ach-world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}',
+    '.ach.go .ach-world{animation:ach-push 1.1s cubic-bezier(.6,0,.2,1) both}',
+    '.ach.static .ach-world,.ach.reduced .ach-world{transform:var(--zoom)}',
+    '@keyframes ach-push{from{transform:none}to{transform:var(--zoom)}}',
+    '.ach-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.05)}',
+    '.ach-shade{position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(90deg,rgba(4,8,16,.92),rgba(4,8,16,.78) 34%,rgba(4,8,16,0) 64%),linear-gradient(0deg,rgba(4,8,16,.55),rgba(4,8,16,0) 30%)}',
+    '.ach.go .ach-shade{animation:ach-in .8s ease .4s forwards}',
+    '.ach-trail{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible;pointer-events:none}',
+    '.ach-trail path{fill:none;stroke-linecap:round;stroke-linejoin:round}',
+    '.ach-trail .ahead{stroke:rgba(255,236,196,.42);stroke-width:5;stroke-dasharray:.006 .012}',
+    '.ach-trail .glow{stroke:#ffb940;stroke-width:26;opacity:.45;filter:url(#ach-blur)}',
+    '.ach-trail .core{stroke:url(#ach-grad);stroke-width:6;stroke-dasharray:.006 .012}',
+    '.ach-trail .mask-line{stroke:#fff;stroke-width:40}',
+    '.ach-trail .glow,.ach-trail .mask-line{stroke-dasharray:1 1;stroke-dashoffset:var(--from)}',
+    '.ach.go .ach-trail .glow,.ach.go .ach-trail .mask-line{stroke-dashoffset:var(--to);transition:stroke-dashoffset .7s cubic-bezier(.45,.05,.4,1) .5s}',
+    '.ach.static .ach-trail .glow,.ach.static .ach-trail .mask-line,.ach.reduced .ach-trail .glow,.ach.reduced .ach-trail .mask-line{stroke-dashoffset:var(--to)}',
+    /* stops: passed ones small and dim, this one pops in with a ring, later ones hollow */
+    '.ach-mk{position:absolute;width:0;height:0}',
+    '.ach-mk i{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:800 22px/1 var(--f-body);color:#08101c;background:var(--c);box-shadow:0 0 0 4px rgba(8,16,28,.85),0 0 24px var(--c)}',
+    '.ach-mk.past i{transform:scale(.72);opacity:.7}',
+    '.ach-mk.next i{background:rgba(8,16,28,.75);color:rgba(255,255,255,.6);box-shadow:inset 0 0 0 3px rgba(255,255,255,.45);transform:scale(.72)}',
+    '.ach-mk.cur i{box-shadow:0 0 0 4px rgba(8,16,28,.85),0 0 30px var(--c),0 0 70px var(--c);transform:scale(0);opacity:0}',
+    '.ach-mk.cur b{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;border:3px solid var(--c);opacity:0}',
+    '.ach.go .ach-mk.cur i{animation:aj-pop .4s cubic-bezier(.2,1.6,.4,1) 1.1s forwards}',
+    '.ach.go .ach-mk.cur b{animation:aj-ring .7s ease-out 1.3s}',
+    '.ach-here{position:absolute;white-space:nowrap;padding:10px 18px 11px;border-radius:999px;font:700 19px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;',
+    '  color:#08101c;background:var(--c);box-shadow:0 12px 30px -10px rgba(0,0,0,.9),0 0 30px -4px var(--c);opacity:0;transform:translateY(12px)}',
+    '.ach.go .ach-here{animation:aj-card .5s cubic-bezier(.2,.9,.25,1) 1.3s forwards}',
+    /* heading + what is coming */
+    '.ach-hd{position:absolute;left:110px;top:200px;width:860px}',
+    '.ach-k{font:700 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--c)}',
+    '.ach-k em{font-style:normal;color:#7f8b93;margin-left:.5em}',
+    '.ach-t{margin:26px 0 0;font:600 124px/.98 var(--f-display);letter-spacing:-.03em;color:#fff;text-shadow:0 6px 40px rgba(0,0,0,.7)}',
+    '.ach-t em{font-style:italic;color:var(--c);text-shadow:0 0 44px color-mix(in srgb,var(--c) 45%,transparent)}',
+    '.ach-s{margin:30px 0 0;font:500 34px/1.35 var(--f-body);color:#c6d0d5;max-width:760px}',
+    '.ach-ls{margin:52px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,max-content);gap:16px 22px}',
+    '.ach-ls li{display:flex;align-items:center;gap:14px;padding:14px 26px 15px 22px;border-radius:14px;font:600 27px/1 var(--f-body);color:#eef3f5;white-space:nowrap;',
+    '  background:rgba(5,10,20,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),0 16px 34px -16px rgba(0,0,0,.9)}',
+    '.ach-ls li b{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 14px var(--c)}',
+    '.ach .rv3{opacity:0;transform:translateY(22px)}',
+    '.ach.go .rv3{animation:aj-card var(--du,.7s) cubic-bezier(.2,.9,.25,1) var(--d) forwards}',
+    '@keyframes ach-in{to{opacity:1}}',
+    '.ach.static .rv3,.ach.reduced .rv3,.ach.static .ach-here,.ach.reduced .ach-here,.ach.static .ach-mk.cur i,.ach.reduced .ach-mk.cur i{animation:none;opacity:1;transform:none}',
+    '.ach.static .ach-shade,.ach.reduced .ach-shade{animation:none;opacity:1}',
+    '.ach.static .ach-mk b,.ach.reduced .ach-mk b{animation:none}',
+    /* .rt: the stop sits on the left of the frame, so the text goes right */
+    '.ach.rt .ach-shade{background:linear-gradient(270deg,rgba(4,8,16,.92),rgba(4,8,16,.78) 34%,rgba(4,8,16,0) 64%),linear-gradient(0deg,rgba(4,8,16,.55),rgba(4,8,16,0) 30%)}',
+    '.ach.rt .ach-hd{left:auto;right:110px;text-align:right}',
+    '.ach.rt .ach-s{margin-left:auto}',
+    '.ach.rt .ach-ls{justify-content:end}'
+  ];
+  var stc = document.createElement('style'); stc.id = 'part-c-chapter-css'; stc.textContent = CSSC.join('\n'); document.head.appendChild(stc);
+
+  /* stop: STOPS index; S: zoom; X,Y: where the stop lands on screen (S*1920 must still cover the frame); rt: text on the right */
+  var CHAPTERS = [
+    { stop: 1, after: 24, id: 'why-intro', section: 'why', S: 1.5, X: 600, Y: 700, rt: true,
+      t: 'Why it’s<br><em>Addictive</em>', s: 'Why our children can’t put them down.',
+      items: ['Device vs drug addiction', 'What screens do to the brain', 'Videos made for toddlers', 'How games are made addictive', 'Fortnite and Roblox', 'Two rules before any game'],
+      notes: 'That is the problem. Now the question every parent asks: why can’t they put it down? We will compare device addiction with drug addiction, ' +
+        'look at what screens do to a child’s brain and at the videos made for toddlers, then at how games are deliberately built to hook children, ' +
+        'including Fortnite and Roblox. And two rules to check before you give your child any game.' },
+    { stop: 2, after: 44, id: 'treat-intro', section: 'treat', S: 1.5, X: 1380, Y: 620,
+      t: 'How to<br><em>Treat It</em>', s: 'It starts with us, not with them.',
+      items: ['Your child is the victim', 'Children aren’t born addicts', 'We let it happen', 'A screen to make them eat', 'Make devices boring', 'Choose safer games'],
+      notes: 'So what do we do about it? Before any tool or setting, it starts with how we see it. Your child is the victim, not the culprit. ' +
+        'Children are not born addicts: we let it happen, often with good intentions, like a phone at the table to get them to eat. ' +
+        'Then two first steps: make their devices boring, black and white with the sound off, and choose their games carefully: which popular games to avoid, and what to give them instead.' },
+    { stop: 3, after: 74, id: 'harm-intro', section: 'grooming', S: 1.5, X: 1380, Y: 600, tsz: 104,
+      t: 'Drugs, Grooming<br><em>and Suicide</em>', s: 'The dangers hiding behind the screen.',
+      items: ['What the numbers say', 'The Lost Screen Memorial', 'How grooming works', 'Kayleigh’s story', 'Meet “Susan”', 'Never alone online'],
+      notes: 'Now we come to the ravine, the darkest part of tonight, so please be prepared. We will look at the numbers, at children who lost their lives, ' +
+        'and at how grooming works, through Kayleigh’s story and a groomer called Susan. A child with a device in their room is never alone.' },
+    { stop: 4, after: 64, id: 'protect-intro', section: 'protect', S: 1.5, X: 1380, Y: 600,
+      t: 'Practical<br><em>Protection</em>', s: 'What you can do at home, starting tomorrow.',
+      items: ['Tech-free zones', 'The first phone', 'Parental controls', 'Safe browsers', 'WhatsApp privacy', 'A family checklist'],
+      notes: 'We have walked through the ravine: drugs, grooming and suicide. That is the darkest part of tonight. Now we cross the bridge. ' +
+        'This part is practical: what you can do at home, starting tomorrow. Tech-free zones, what the first phone should be, ' +
+        'the parental controls already on your child’s device, safe browsers, WhatsApp privacy settings, and a checklist you can take home.' },
+    { stop: 5, after: 105, id: 'trends-intro', section: 'evidence', S: 1.5, X: 1560, Y: 500,
+      t: 'Disturbing<br><em>Trends</em>', s: 'What the research shows, and the way home.',
+      items: ['Teen depression', 'Self-harm admissions', 'Suicide, ages 10–14', 'One change at home', 'Guard your families'],
+      notes: 'Finally, where things are heading. The research on teenage depression, self-harm and suicide since smartphones arrived. ' +
+        'Then the one change you need to make at home, and the verse that reminds us whose responsibility this is. And then, the way home.' }
+  ];
+
+  CHAPTERS.forEach(function (CH) { Deck.insertSlide({
+    after: CH.after, id: CH.id, title: STOPS[CH.stop].t, section: CH.section, tr: { type: 'fade', ms: 900 }, loop: false, notes: CH.notes,
+    render: function (el, ctx) {
+      var s = STOPS[CH.stop], p = PATH[s.at];
+      var tx = CH.X - CH.S * p[0], ty = CH.Y - CH.S * p[1];
+      var r = h('div', 'ach' + (CH.rt ? ' rt' : '') + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
+      r.style.setProperty('--c', s.c);
+      r.style.setProperty('--zoom', 'translate(' + tx + 'px,' + ty + 'px) scale(' + CH.S + ')');
+      r.style.setProperty('--from', String(1 - frac(STOPS[CH.stop - 1].at)));
+      r.style.setProperty('--to', String(1 - frac(s.at)));
+      var w = h('div', 'ach-world', r);
+      var img = h('img', 'ach-img', w); img.src = 'media/agenda/journey.webp'; img.alt = 'The night landscape from the agenda, zoomed in on stop ' + (CH.stop + 1) + ' of the footpath: ' + s.t;
+      var d = smoothPath(PATH);
+      w.insertAdjacentHTML('beforeend', '<svg class="ach-trail" viewBox="0 0 1920 1080" aria-hidden="true" focusable="false"><defs>' +
+        '<linearGradient id="ach-grad" gradientUnits="userSpaceOnUse" x1="300" y1="1095" x2="1722" y2="296"><stop offset="0" stop-color="#8fe9ff"/><stop offset=".55" stop-color="#ffd27a"/><stop offset="1" stop-color="#fff2c4"/></linearGradient>' +
+        '<filter id="ach-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="9"/></filter>' +
+        '<mask id="ach-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><path class="mask-line" d="' + d + '" pathLength="1"/></mask></defs>' +
+        '<path class="ahead" d="' + d + '" pathLength="1"/>' +
+        '<path class="glow" d="' + d + '" pathLength="1"/>' +
+        '<path class="core" d="' + d + '" pathLength="1" mask="url(#ach-mask)"/></svg>');
+      STOPS.forEach(function (t, i) {
+        var q = PATH[t.at], m = h('div', 'ach-mk ' + (i < CH.stop ? 'past' : i > CH.stop ? 'next' : 'cur'), w, (i === CH.stop ? '<b></b>' : '') + '<i>' + (i + 1) + '</i>');
+        m.style.left = q[0] + 'px'; m.style.top = q[1] + 'px'; m.style.setProperty('--c', t.c);
+      });
+      var here = h('div', 'ach-here', r, 'We are here'); here.style.left = (CH.X + 54) + 'px'; here.style.top = (CH.Y + 20) + 'px';
+      h('div', 'ach-shade', r);
+      h('div', 'ach-hd', r,
+        '<div class="ach-k rv3" style="--d:.5s">Part 0' + (CH.stop + 1) + '<em>of 0' + STOPS.length + '</em></div>' +
+        '<h1 class="ach-t rv3" style="--d:.6s' + (CH.tsz ? ';font-size:' + CH.tsz + 'px' : '') + '">' + CH.t + '</h1>' +
+        '<p class="ach-s rv3" style="--d:.75s">' + CH.s + '</p>' +
+        '<ul class="ach-ls">' + CH.items.map(function (c, i) {
+          return '<li class="rv3" style="--du:.6s;--d:' + (1 + i * .08).toFixed(2) + 's"><b></b>' + c + '</li>';
+        }).join('') + '</ul>');
+      el.__ach = r;
+    },
+    enter: function (el, ctx) {
+      var r = el.__ach; if (!r || ctx.static || ctx.reduced) return;
+      r.classList.remove('go'); void r.offsetWidth; r.classList.add('go');
+    },
+    leave: function (el) { if (el.__ach) el.__ach.classList.remove('go'); }
+  }); });
+})();
+
+/* ---------------------------------------------------------------- 22. NEW three things to tackle (after #51, before #71)
+   Sets up "Make devices boring" and the games slides: fast motion content, colour and sound are what make a
+   screen so stimulating. One card per click, each with a small live visual. */
+(function () {
+  var css = [
+    '.t3{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink)}',
+    '.t3-k{position:absolute;left:0;right:0;top:118px;text-align:center;font:700 26px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--amber)}',
+    '.t3-t{position:absolute;left:0;right:0;top:166px;margin:0;text-align:center;font:600 104px/1 var(--f-display);letter-spacing:-.03em;color:#fff}',
+    '.t3-t em{font-style:italic;color:var(--amber);text-shadow:0 0 44px rgba(255,176,32,.4)}',
+    '.t3-row{position:absolute;left:150px;top:372px;width:1620px;display:grid;grid-template-columns:repeat(3,1fr);gap:60px}',
+    '.t3-cd{position:relative;height:580px;border-radius:30px;padding:22px 22px 34px;box-sizing:border-box;display:flex;flex-direction:column;',
+    '  background:linear-gradient(180deg,rgba(var(--c),.16),rgba(255,255,255,.03) 62%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 30px 60px -30px rgba(0,0,0,.9);',
+    '  transition:opacity .5s ease,transform .6s cubic-bezier(.2,1,.3,1)}',
+    '.t3-cd.off{opacity:0;transform:translateY(34px) scale(.98)}',
+    '.t3.inst .t3-cd{transition:none}',
+    '.t3-viz{position:relative;height:250px;border-radius:20px;overflow:hidden;background:rgba(2,6,12,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}',
+    '.t3-no{position:absolute;left:16px;top:16px;z-index:2;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:800 22px/1 var(--f-body);color:#08101c;background:rgb(var(--c));box-shadow:0 0 24px rgba(var(--c),.6)}',
+    '.t3-hd{margin:30px 8px 0;font:600 44px/1.05 var(--f-display);letter-spacing:-.02em;color:#fff;white-space:nowrap}',
+    '.t3-sb{margin:14px 8px 0;font:500 27px/1.35 var(--f-body);color:#b9c3c9}',
+    '.t3-fx{margin:auto 8px 0;align-self:flex-start;display:flex;align-items:center;gap:12px;padding:12px 22px 13px 16px;border-radius:999px;font:700 25px/1 var(--f-body);color:rgb(var(--c));background:rgba(var(--c),.12);box-shadow:inset 0 0 0 1px rgba(var(--c),.4)}',
+    '.t3-fx b{font:700 26px/1 var(--f-body)}',
+    /* 1. fast motion: streaks racing past a fast-forward glyph */
+    '.t3-mo i{position:absolute;left:0;height:4px;border-radius:4px;width:var(--w);background:linear-gradient(90deg,rgba(var(--c),0),rgb(var(--c)));transform:translateX(var(--x));animation:t3-streak var(--t) linear var(--dl) infinite}',
+    '@keyframes t3-streak{from{transform:translateX(-120%)}to{transform:translateX(560px)}}',
+    '.t3-mo svg,.t3-so svg{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;color:#fff;filter:drop-shadow(0 0 18px rgba(var(--c),.8))}',
+    /* 2. colour: a saturated wheel that never stops turning */
+    '.t3-co b{position:absolute;left:50%;top:50%;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;',
+    '  background:conic-gradient(#ff3b3b,#ffb020,#f5ff3b,#2ee59d,#22d3ee,#5b6bff,#ff3bd4,#ff3b3b);animation:t3-spin 5s linear infinite}',
+    '.t3-co b.bl{filter:blur(38px);opacity:.7;transform:scale(1.25)}',
+    '.t3-co b.bl{animation-name:t3-spin-bl}',
+    '@keyframes t3-spin{to{transform:rotate(360deg)}}',
+    '@keyframes t3-spin-bl{from{transform:scale(1.25) rotate(0)}to{transform:scale(1.25) rotate(360deg)}}',
+    /* 3. sound: an equalizer around a speaker */
+    '.t3-so .eq{position:absolute;left:24px;right:24px;bottom:30px;height:150px;display:flex;align-items:flex-end;justify-content:space-between}',
+    '.t3-so .eq i{width:14px;height:100%;border-radius:7px;background:linear-gradient(0deg,rgba(var(--c),.35),rgb(var(--c)));transform-origin:50% 100%;transform:scaleY(var(--h));animation:t3-eq var(--t) ease-in-out var(--dl) infinite alternate}',
+    '.t3-so .eq i.mid{opacity:0}',
+    '@keyframes t3-eq{from{transform:scaleY(.12)}to{transform:scaleY(var(--h))}}',
+    '.t3.still .t3-viz *{animation:none!important}'
+  ].join('\n');
+  if (!document.getElementById('pc-t3-css')) { var st = document.createElement('style'); st.id = 'pc-t3-css'; st.textContent = css; document.head.appendChild(st); }
+
+  var rr = (function () { var s = 7; return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; }; })();   // seeded: same render every time
+  var streaks = ''; for (var i = 0; i < 11; i++) streaks += '<i style="top:' + (14 + i * 21 + rr() * 8).toFixed(0) + 'px;--w:' + (90 + rr() * 170).toFixed(0) + 'px;--x:' + (rr() * 420).toFixed(0) + 'px;--t:' + (.45 + rr() * .5).toFixed(2) + 's;--dl:-' + rr().toFixed(2) + 's"></i>';
+  var bars = ''; for (var j = 0; j < 17; j++) bars += '<i class="' + (j >= 6 && j <= 10 ? 'mid' : '') + '" style="--h:' + (.35 + rr() * .65).toFixed(2) + ';--t:' + (.25 + rr() * .35).toFixed(2) + 's;--dl:-' + rr().toFixed(2) + 's"></i>';
+  var SV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+  var CARDS = [
+    { c: '34,211,238', hd: 'Fast Motion Content', sb: 'Rapid cuts and non-stop action keep the brain craving more.', fx: 'Slow, simple games',
+      viz: '<div class="t3-viz t3-mo">' + streaks + SV + '<path d="M3 6l8 6-8 6zM12 6l8 6-8 6z" fill="currentColor"/></svg></div>' },
+    { c: '255,59,212', hd: 'Color', sb: 'Bright, saturated screens overstimulate young eyes.', fx: 'Black &amp; white screen',
+      viz: '<div class="t3-viz t3-co"><b class="bl"></b><b></b></div>' },
+    { c: '255,176,32', hd: 'Sound', sb: 'Music loops and sound effects pull them back in.', fx: 'Sound off',
+      viz: '<div class="t3-viz t3-so"><div class="eq">' + bars + '</div>' + SV + '<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></div>' }
+  ];
+  function show(el, k) { (el.__t3 || []).forEach(function (n, i) { n.classList.toggle('off', i >= k); }); }
+
+  Deck.insertSlide({
+    after: 51, id: 'three-things', title: 'Tackle three things', section: 'treat', tr: { type: 'fade', ms: 800 }, loop: false, steps: 3,
+    notes: 'To curb the addiction, we need to tackle the three things that make a screen so stimulating. [click] One: fast motion content, ' +
+      'rapid cuts and non-stop action. [click] Two: colour, bright saturated screens. [click] Three: sound, music loops and sound effects. ' +
+      'Take these away and the device becomes boring, which is exactly what we want. Let’s see how.',
+    render: function (el, ctx) {
+      var r = h('div', 't3 inst' + (ctx.static || ctx.reduced ? ' still' : ''), el);
+      h('div', 't3-k', r, 'To curb device addiction');
+      h('h2', 't3-t', r, 'Tackle <em>three</em> things');
+      var row = h('div', 't3-row', r, CARDS.map(function (c, i) {
+        return '<div class="t3-cd off" style="--c:' + c.c + '">' + c.viz.replace('">', '"><div class="t3-no">' + (i + 1) + '</div>') +
+          '<div class="t3-hd">' + c.hd + '</div><div class="t3-sb">' + c.sb + '</div><div class="t3-fx"><b>→</b>' + c.fx + '</div></div>';
+      }).join(''));
+      el.__t3 = [].slice.call(row.children);
+      if (ctx.static) show(el, 3);
+      void r.offsetWidth; r.classList.remove('inst');
+    },
+    step: function (el, i) { show(el, i); },
+    unstep: function (el, i) { show(el, i - 1); }
   });
 })();
 })();
