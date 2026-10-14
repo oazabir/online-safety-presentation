@@ -9,6 +9,9 @@
      3. #10 [7]  What those hours could become: six photo tiles (generated with Codex,
                  media/hours/*.webp). Clicks 1-5 reveal tiles 2-6; tap a tile to add or drop it
                  from the "years of screen time" bar.
+     4. #44 [33] Two things a game must not have: stranger chat and stranger-built worlds. Two photo
+                 cards (Codex, media/games/*.webp). Click 1 reveals card 2; tap a card or its question
+                 to tick it on the pre-install checklist.
    The hours-per-day value is shared: move the slider on [5] and [7] follows (S.hpd).
    ============================================================================ */
 (function () {
@@ -56,6 +59,11 @@ if (byOrig[10]) byOrig[10].notes = 'If you can stop your kids from wasting time 
   '[click] learn programming, [click] become a martial art expert, [click] and build a real body of creative work. \n\n' +
   'Interactive: tap any tile to drop it from (or add it back to) the bar at the bottom, which shows how many years of today’s screen time the plan takes. ' +
   '\n\nThe solution to this problem is easy. You don’t need to take devices away. I will show you later what you can do.';
+if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sure these two are not there. First: there must not be any chat feature ' +
+  'where your kids can chat with random people anywhere in the world. Text, voice, friend requests: that is the biggest threat to your children. ' +
+  '[click] Secondly, check that random people do not create the game levels or environments inside that game. For example, in Roblox, people create games ' +
+  'and environments, and then kids go into those environments. That is where the harm is. \n\n' +
+  'Interactive: tap a card or its question to tick it off. Only when both are clear is the game worth considering.';
 
 /* ================================================================ 1. #7 [4] Gallup chart, live */
 (function () {
@@ -484,6 +492,122 @@ if (byOrig[10]) byOrig[10].notes = 'If you can stop your kids from wasting time 
     },
     step: function (el, i, ctx) { var r = el.__b10; if (r) setTile(r, i, true, true, ctx); },
     unstep: function (el, i) { var r = el.__b10; if (r) setTile(r, i, false, false); }
+  });
+})();
+
+/* ================================================================ 4. #44 [33] two things a game must not have */
+(function () {
+  var CARDS = [
+    { img: 'chat',   c: '255,77,77',  hd: 'No chat with strangers',
+      sb: 'Text, voice or friend requests from anyone, anywhere in the world. This is the biggest threat to your child.',
+      ask: 'Can a stranger message or talk to my child?' },
+    { img: 'worlds', c: '255,176,32', hd: 'No worlds built by strangers',
+      sb: 'In games like Roblox, other players build the levels your child walks into. That is where the harm hides.',
+      ask: 'Can a stranger build the places my child plays?' }
+  ];
+  var X0 = 100, Y0 = 262, CW = 840, CH = 560, GAP = 40;
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  addCss('pd-g44-css', [
+    '.g44{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink);overflow:hidden;background:radial-gradient(ellipse 800px 560px at 520px 560px,rgba(255,77,77,.07),transparent 70%),radial-gradient(ellipse 800px 560px at 1400px 560px,rgba(255,176,32,.06),transparent 70%)}',
+    '.g44 *{box-sizing:border-box}',
+    '.g44 .rv{opacity:0}.g44.go .rv{animation:g44-rise .8s cubic-bezier(.22,.8,.3,1) var(--d,0s) both}',
+    '@keyframes g44-rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}',
+    '.g44-k{position:absolute;left:104px;top:62px;font:700 24px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:#eac583}',
+    '.g44-t{position:absolute;left:98px;top:98px;width:1730px;margin:0;font:600 76px/1.05 var(--f-display);letter-spacing:-.035em;white-space:nowrap}',
+    '.g44-t em{font-style:italic;color:#ff6b6b}',
+    /* cards */
+    '.g44-card{position:absolute;width:' + CW + 'px;height:' + CH + 'px;border-radius:28px;overflow:hidden;background:#0E171C;box-shadow:0 26px 60px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.1)}',
+    '.g44-card.on{cursor:pointer}',
+    '.g44-card .ph{position:absolute;inset:0}',
+    '.g44-card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.12);transition:transform 1.8s cubic-bezier(.22,.8,.3,1)}',
+    '.g44-card.on .ph img{transform:scale(1)}',
+    '.g44-card.on:hover .ph img{transform:scale(1.04);transition-duration:.8s}',
+    '.g44-card .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,11,.6) 0%,rgba(5,8,11,0) 26%,rgba(5,8,11,0) 42%,rgba(5,8,11,.95) 100%)}',
+    '.g44-card .rg{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 3px rgb(var(--c)),inset 0 0 50px rgba(var(--c),.3);opacity:.55;transition:box-shadow .4s ease,opacity .4s ease}',
+    '.g44-card.sel .rg{opacity:1;box-shadow:inset 0 0 0 3px #2ee59d,inset 0 0 50px rgba(46,229,157,.3)}',
+    '.g44-card .no{position:absolute;left:28px;top:24px;display:flex;align-items:center;gap:16px}',
+    '.g44-card .no b{font:700 64px/1 var(--f-display);letter-spacing:-.03em;color:rgb(var(--c));text-shadow:0 2px 22px rgba(0,0,0,.7),0 0 26px rgba(var(--c),.35)}',
+    '.g44-card .no span{padding:9px 16px;border-radius:99px;font:700 19px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(var(--c),.85);box-shadow:0 6px 18px rgba(0,0,0,.4)}',
+    '.g44-card .tx{position:absolute;left:32px;right:32px;bottom:28px}',
+    '.g44-card .hd{font:700 46px/1.05 var(--f-body);letter-spacing:-.02em;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.8)}',
+    '.g44-card .sb{margin-top:12px;max-width:720px;font:500 25px/1.32 var(--f-body);color:#c9d2d6;text-shadow:0 1px 10px rgba(0,0,0,.9)}',
+    /* card not yet revealed */
+    '.g44-card .cv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,rgba(var(--c),.10),transparent 70%),linear-gradient(180deg,#121d23,#0b1317);transition:opacity .8s ease}',
+    '.g44-card .cv span{font:600 200px/1 var(--f-display);color:rgba(255,255,255,.07)}',
+    '.g44-card.on .cv{opacity:0;pointer-events:none}',
+    /* checklist under each card */
+    '.g44-q{position:absolute;width:' + CW + 'px;height:84px;display:flex;align-items:center;gap:20px;padding:0 26px;border-radius:20px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);transition:background .35s ease,box-shadow .35s ease,opacity .5s ease}',
+    '.g44-q .ck,.g44-q .qt{transition:opacity .5s ease}',
+    '.g44-q.off .ck,.g44-q.off .qt{opacity:.25}',   /* on the children: the .rv animation fill owns the box's own opacity */
+    '.g44-q .ck{flex:none;position:relative;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#06141a;box-shadow:inset 0 0 0 2.5px rgba(255,255,255,.6)}',
+    '.g44-q .ck::before{content:"";position:absolute;inset:0;border-radius:inherit;background:#2ee59d;opacity:0;transform:scale(.5);transition:opacity .25s ease,transform .35s cubic-bezier(.2,1.6,.4,1)}',
+    '.g44-q .ck svg{position:relative;width:26px;height:26px;opacity:0;transform:scale(.4);transition:opacity .25s ease,transform .35s cubic-bezier(.2,1.6,.4,1)}',
+    '.g44-q .qt{font:600 27px/1.2 var(--f-body);color:#e6ebee}',
+    '.g44-q .qt small{display:block;margin-top:4px;font:500 19px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#7f8d94}',
+    '.g44-q.sel{background:rgba(46,229,157,.08);box-shadow:inset 0 0 0 1.5px rgba(46,229,157,.6)}',
+    '.g44-q.sel .ck{box-shadow:none}.g44-q.sel .ck::before,.g44-q.sel .ck svg{opacity:1;transform:none}',
+    '.g44-q.sel .qt small{color:#2ee59d}',
+    /* verdict */
+    '.g44-v{position:absolute;left:100px;top:960px;width:1720px;text-align:center;font:500 24px/1 var(--f-body);color:#7f8d94}',
+    '.g44-v b{color:#fff;font-weight:700}.g44-v.ok b{color:#2ee59d}',
+    '.g44.static *,.g44.reduced *{transition:none!important;animation:none!important}',
+    '.g44.static .rv,.g44.reduced .rv{opacity:1;transform:none}'
+  ]);
+
+  function setCard(r, i, on, sel) {
+    var st = r.__g44, c = st.cards[i], q = st.qs[i];
+    c.classList.toggle('on', on); q.classList.toggle('off', !on);
+    [c, q].forEach(function (n) { if (on) n.setAttribute('data-noadvance', ''); else n.removeAttribute('data-noadvance'); });
+    st.sel[i] = on && sel;
+    c.classList.toggle('sel', st.sel[i]); q.classList.toggle('sel', st.sel[i]);
+    q.querySelector('small').textContent = st.sel[i] ? 'Checked: not in this game' : 'Tap to tick once you have checked';
+    var n = st.sel.filter(Boolean).length, ok = n === CARDS.length;
+    st.v.classList.toggle('ok', ok);
+    st.v.innerHTML = ok ? '<b>Both clear.</b> Now it is worth looking at the game itself.'
+      : 'Before you install any game: <b>' + n + ' of ' + CARDS.length + '</b> checked. If either is there, the answer is no.';
+  }
+
+  Deck.registerSlide(44, {
+    keepBase: false, loop: false, steps: 1, tr: { type: 'fade', ms: 800 },
+    title: 'Two things a game must not have',
+    render: function (el, ctx) {
+      var r = h('div', 'g44' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
+      r.innerHTML =
+        '<div class="g44-k rv" style="--d:.05s">Before you give your child any game</div>' +
+        '<h1 class="g44-t rv" style="--d:.15s">Two things that must <em>not</em> be in it</h1>' +
+        CARDS.map(function (c, i) {
+          var x = X0 + i * (CW + GAP);
+          return '<div class="g44-card rv" data-i="' + i + '" style="left:' + x + 'px;top:' + Y0 + 'px;--c:' + c.c + ';--d:' + (.3 + i * .1).toFixed(2) + 's">' +
+            '<div class="ph"><img src="media/games/' + c.img + '.webp" alt=""></div><div class="sh"></div>' +
+            '<div class="no"><b>0' + (i + 1) + '</b><span>Danger</span></div>' +
+            '<div class="tx"><div class="hd">' + c.hd + '</div><div class="sb">' + c.sb + '</div></div>' +
+            '<div class="rg"></div><div class="cv"><span>' + (i + 1) + '</span></div></div>' +
+            '<div class="g44-q rv" data-i="' + i + '" style="left:' + x + 'px;top:' + (Y0 + CH + 24) + 'px;--d:' + (.5 + i * .1).toFixed(2) + 's">' +
+            '<div class="ck">' + CHECK + '</div><div class="qt">' + c.ask + '<small></small></div></div>';
+        }).join('') +
+        '<div class="g44-v rv" style="--d:.8s"></div>';
+      r.__g44 = { cards: [].slice.call(r.querySelectorAll('.g44-card')), qs: [].slice.call(r.querySelectorAll('.g44-q')),
+        sel: CARDS.map(function () { return false; }), v: r.querySelector('.g44-v') };
+      /* revealed card or its question: tap toggles the tick; unrevealed: drop data-noadvance so the click advances */
+      r.__g44.cards.concat(r.__g44.qs).forEach(function (node) {
+        var i = +node.getAttribute('data-i');
+        node.classList.add('pe');
+        node.addEventListener('click', function () {
+          var st = r.__g44; if (!st.cards[i].classList.contains('on')) return;
+          setCard(r, i, true, !st.sel[i]);
+        });
+      });
+      el.__g44 = r;
+      setCard(r, 0, true, false);
+      setCard(r, 1, !!ctx.static, false);
+      if (ctx.static || ctx.reduced) r.classList.add('go');
+    },
+    enter: function (el, ctx) {
+      var r = el.__g44; if (!r || ctx.static) return;
+      void r.offsetWidth; r.classList.add('go');
+    },
+    step: function (el, i) { var r = el.__g44; if (r) setCard(r, 1, true, false); },
+    unstep: function (el, i) { var r = el.__g44; if (r) setCard(r, 1, false, false); }
   });
 })();
 })();
