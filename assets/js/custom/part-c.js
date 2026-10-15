@@ -325,6 +325,57 @@ D.slides.forEach(function (s) { if (s.orig === 4 || s.orig === 2) s.hidden = tru
 // slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
 if (byN[98]) byN[98].hidden = true;
 if (byN[48]) byN[48].hidden = true;   // "How to treat device addiction?" title: the treat-intro chapter slide replaces it
+// #93 desktop screenshot -> Kahf New Tab (1462x887): same height, width from its aspect, centred, rounder corners
+var p93 = elData(93, 'e4');
+if (p93) { p93.src = 'media/kahf-newtab-desktop.webp'; p93.w = p93.h * H / W * 1462 / 887; p93.x = (100 - p93.w) / 2; p93.geom = 'round'; }
+// ...cycling every 3 s through more New Tab screenshots stacked on top (any missing file is skipped)
+(function () {
+  var ALTS = ['media/kahf-newtab-desktop-2.webp', 'media/kahf-newtab-desktop-3.webp'];
+  var st = document.createElement('style'); st.id = 'pc93-css';
+  st.textContent = '.pc93-alt{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.1s var(--ease)}' +
+    '.pc93-alt.on{opacity:1}.pc93-alt.instant{transition:none}' +
+    /* click: the SafeGaze extension popup drops down from the green shield in the screenshot's toolbar */
+    '.pc93-menu{position:absolute;width:440px;border-radius:16px;overflow:hidden;opacity:0;transform:translateY(-12px) scale(.92);transform-origin:calc(100% - 40px) 0;' +
+    'box-shadow:0 26px 70px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.1);transition:opacity .35s var(--ease),transform .5s var(--ease)}' +
+    '.pc93-menu img{display:block;width:100%}.pc93-menu.on{opacity:1;transform:none}.pc93-menu.instant{transition:none}' +
+    '.pc93-ping{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:3px solid rgba(255,255,255,.95);background:rgba(255,255,255,.35);opacity:0}' +
+    '.pc93-ping.go{animation:pc93-ping .7s ease-out}@keyframes pc93-ping{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(1.5)}}';
+  document.head.appendChild(st);
+  Deck.registerSlide(93, {
+    keepBase: true,
+    steps: 1,
+    render: function (el, ctx) {
+      // shield icon at (1259, 61) and toolbar bottom at y 82 in the 1462x887 screenshot
+      var sx = (p93.x + p93.w * 1259 / 1462) / 100 * W, sy = (p93.y + p93.h * 61 / 887) / 100 * H, ty = (p93.y + p93.h * 82 / 887) / 100 * H;
+      var menu = h('div', 'pc93-menu' + (ctx.reduced || ctx.static ? ' instant' : ''), el);
+      menu.style.left = (sx + 40 - 440) + 'px'; menu.style.top = (ty + 8) + 'px';
+      var mi = h('img', '', menu); mi.src = 'media/safegaze-menu.webp'; mi.alt = 'SafeGaze options: Decent Internet blur styles, blur female or male, video blur, limit short videos';
+      var ping = h('div', 'pc93-ping', el); ping.style.left = sx + 'px'; ping.style.top = sy + 'px';
+      el.__p93 = { menu: menu, ping: ping };
+      if (ctx.static) menu.classList.add('on');
+      var base = ctx.view.map.e4, box = base && base.querySelector('.in');
+      if (!box || ctx.static) return;
+      var alts = ALTS.map(function (src) {
+        var im = h('img', 'pc93-alt' + (ctx.reduced ? ' instant' : ''), box); im.alt = '';
+        im.onerror = function () { im.remove(); };
+        im.src = src; return im;
+      });
+      var i = 0;   // 0 = base picture, i = alts[i - 1]; a later alt fades in over the ones below it
+      ctx.interval(function () {
+        var live = alts.filter(function (im) { return im.isConnected; });
+        if (!live.length) return;
+        i = (i + 1) % (live.length + 1);
+        live.forEach(function (im, j) { im.classList.toggle('on', j < i); });
+      }, 3000);
+    },
+    step: function (el, i, ctx) {
+      var P = el.__p93; if (!P) return;
+      if (!ctx.reduced) { P.ping.classList.remove('go'); void P.ping.offsetWidth; P.ping.classList.add('go'); }
+      ctx.timeout(function () { P.menu.classList.add('on'); }, ctx.reduced ? 0 : 220);
+    },
+    unstep: function (el) { var P = el.__p93; if (P) { P.menu.classList.remove('on'); P.ping.classList.remove('go'); } }
+  });
+})();
 /* topic structure (matches TOPICS in topic-bar.js):
    - 54 divider is retitled "Drugs, Grooming and Suicide"
    - 45 (Lost Screen Memorial) is moved to sit right after 55, inside that topic
