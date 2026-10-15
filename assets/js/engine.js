@@ -2,7 +2,7 @@
    engine.js - deck core
    Sections: 0 util · 1 registry · 2 slide list · 3 element renderers · 4 slide view
              5 steps & effects · 6 media · 7 stage fit · 8 transitions + morph
-             9 navigation · 10 pointer extras (tilt / lightbox) · 11 public helpers
+             9 navigation · 10 pointer extras (lightbox) · 11 public helpers
    Classic script (works from file://). Globals: Deck. Data: window.DECK_DATA
    ============================================================================ */
 (function () {
@@ -78,7 +78,7 @@ function mkPic(e, opt) {
   if (e.flipH || e.flipV) img.style.transform = 'scale(' + (e.flipH ? -1 : 1) + ',' + (e.flipV ? -1 : 1) + ')';
   if (e.border) { inn.style.border = e.border[0] + 'px solid ' + darkToLight(e.border[1]); }
   inn.appendChild(img);
-  if (e.card && e.w >= 6 && !opt.static) d.classList.add('zoomable', 'tilt');
+  if (e.card && e.w >= 6 && !opt.static) d.classList.add('zoomable');
   return d;
 }
 
@@ -596,19 +596,6 @@ Deck.position = function () {   // {i, n} within active order
 };
 
 /* ---------------------------------------------------------------- 10. pointer extras */
-var tiltEl = null, tiltRaf = 0, lastPT = null;
-function onMove(ev) {
-  lastPT = ev;
-  if (tiltRaf) return;
-  tiltRaf = requestAnimationFrame(function () {
-    tiltRaf = 0; var t = lastPT && lastPT.target && lastPT.target.closest ? lastPT.target.closest('.pic.tilt') : null;
-    if (tiltEl && tiltEl !== t) resetTilt(tiltEl);
-    tiltEl = t; if (!t) return;
-    var r = t.getBoundingClientRect(), x = (lastPT.clientX - r.left) / r.width - .5, y = (lastPT.clientY - r.top) / r.height - .5, inn = t.firstChild;
-    inn.style.setProperty('--ry', (x * 9).toFixed(2) + 'deg'); inn.style.setProperty('--rx', (-y * 9).toFixed(2) + 'deg'); inn.style.setProperty('--sc', 1.025);
-  });
-}
-function resetTilt(t) { var i = t.firstChild; if (i && i.style) { i.style.setProperty('--ry', '0deg'); i.style.setProperty('--rx', '0deg'); i.style.setProperty('--sc', 1); } }
 var lb, lbimg;
 Deck.lightbox = function (src) { lbimg.src = src; lb.classList.add('on'); };
 Deck.closeLightbox = function () { lb.classList.remove('on'); lbimg.removeAttribute('src'); };
@@ -633,7 +620,6 @@ Deck.start = function () {
   buildList();
   fit(); addEventListener('resize', fit);
   stage.addEventListener('click', onStageClick);
-  stage.addEventListener('pointermove', onMove);
   lb.addEventListener('click', Deck.closeLightbox);
   addEventListener('hashchange', function () { var m = /^#\/(.+)$/.exec(location.hash); if (m && Deck.cur && decodeURIComponent(m[1]) !== Deck.cur.key) Deck.goto(decodeURIComponent(m[1])); });
   Deck.emit('ready');

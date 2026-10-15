@@ -137,7 +137,6 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     /* right column: the article + QR */
     '.g7-news{position:absolute;left:1290px;top:92px;width:530px;cursor:zoom-in}',
     '.g7-news .in{border-radius:20px;overflow:hidden;transform:rotate(2deg);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.18);transition:transform .4s cubic-bezier(.22,.8,.3,1)}',
-    '.g7-news:hover .in{transform:rotate(0deg) scale(1.02)}',
     '.g7-news img{display:block;width:100%}',
     '.g7-qr{position:absolute;left:1290px;top:640px;width:236px;height:236px;padding:14px;border-radius:22px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.55)}',
     '.g7-qr img{display:block;width:100%;height:100%}',
@@ -390,7 +389,6 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     '.b10-tile .ph{position:absolute;inset:0}',
     '.b10-tile .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.14);transition:transform 1.6s cubic-bezier(.22,.8,.3,1)}',
     '.b10-tile.on .ph img{transform:scale(1)}',
-    '.b10-tile.on:hover .ph img{transform:scale(1.05);transition-duration:.8s}',
     '.b10-tile .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,11,.55) 0%,rgba(5,8,11,0) 34%,rgba(5,8,11,0) 46%,rgba(5,8,11,.92) 100%)}',
     '.b10-tile .dim{position:absolute;inset:0;background:rgba(5,8,11,.62);opacity:0;transition:opacity .4s ease}',
     '.b10-tile.on:not(.sel) .dim{opacity:1}',
@@ -521,7 +519,6 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     '.g44-card .ph{position:absolute;inset:0}',
     '.g44-card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.12);transition:transform 1.8s cubic-bezier(.22,.8,.3,1)}',
     '.g44-card.on .ph img{transform:scale(1)}',
-    '.g44-card.on:hover .ph img{transform:scale(1.04);transition-duration:.8s}',
     '.g44-card .sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,11,.6) 0%,rgba(5,8,11,0) 26%,rgba(5,8,11,0) 42%,rgba(5,8,11,.95) 100%)}',
     '.g44-card .rg{position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 3px rgb(var(--c)),inset 0 0 50px rgba(var(--c),.3);opacity:.55;transition:box-shadow .4s ease,opacity .4s ease}',
     '.g44-card.sel .rg{opacity:1;box-shadow:inset 0 0 0 3px #2ee59d,inset 0 0 50px rgba(46,229,157,.3)}',

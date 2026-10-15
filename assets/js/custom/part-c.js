@@ -328,6 +328,14 @@ if (byN[48]) byN[48].hidden = true;   // "How to treat device addiction?" title:
 // #93 desktop screenshot -> Kahf New Tab (1462x887): same height, width from its aspect, centred, rounder corners
 var p93 = elData(93, 'e4');
 if (p93) { p93.src = 'media/kahf-newtab-desktop.webp'; p93.w = p93.h * H / W * 1462 / 887; p93.x = (100 - p93.w) / 2; p93.geom = 'round'; }
+// #93 phone video -> Kahf Browser iOS screen recording (media/kahf-browser.mp4, 720x1558, silent), in an iPhone frame
+// (built in render below): 840 px tall screen, same centre as the old video
+var v93 = elData(93, 'e8');
+if (v93) {
+  var v93cx = v93.x + v93.w / 2, v93h = 840 / H * 100, v93w = v93h * H / W * 720 / 1558;
+  v93.src = 'media/kahf-browser.mp4'; v93.poster = 'media/posters/kahf-browser.jpg'; v93.mute = true;
+  v93.h = v93h; v93.w = v93w; v93.y = (100 - v93h) / 2; v93.x = v93cx - v93w / 2;
+}
 // ...cycling every 3 s through more New Tab screenshots stacked on top (any missing file is skipped)
 (function () {
   var ALTS = ['media/kahf-newtab-desktop-2.webp', 'media/kahf-newtab-desktop-3.webp'];
@@ -339,7 +347,21 @@ if (p93) { p93.src = 'media/kahf-newtab-desktop.webp'; p93.w = p93.h * H / W * 1
     'box-shadow:0 26px 70px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.1);transition:opacity .35s var(--ease),transform .5s var(--ease)}' +
     '.pc93-menu img{display:block;width:100%}.pc93-menu.on{opacity:1;transform:none}.pc93-menu.instant{transition:none}' +
     '.pc93-ping{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:3px solid rgba(255,255,255,.95);background:rgba(255,255,255,.35);opacity:0}' +
-    '.pc93-ping.go{animation:pc93-ping .7s ease-out}@keyframes pc93-ping{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(1.5)}}';
+    '.pc93-ping.go{animation:pc93-ping .7s ease-out}@keyframes pc93-ping{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(1.5)}}' +
+    /* iPhone frame around the e8 video: the element box is the screen; .ip (painted under it) is the titanium edge +
+       black bezel, .btn are the side buttons, .isl the Dynamic Island and .gl a soft glass glare over the screen */
+    '.vid.pc93-phone{filter:drop-shadow(0 40px 60px rgba(0,0,0,.6)) drop-shadow(0 0 70px rgba(46,229,157,.18))}' +
+    '.vid.pc93-phone .in{border-radius:46px;outline:none;box-shadow:none}' +
+    '.pc93-phone .ip{position:absolute;inset:-17px;border-radius:63px;background:#050607;' +
+    'box-shadow:0 0 0 3px #8d8f93,0 0 0 4px #3a3c40,inset 0 0 0 2px #1d1f22,inset 0 0 0 4px #050607}' +
+    '.pc93-phone .ip::before{content:"";position:absolute;inset:-3px;border-radius:66px;padding:3px;' +
+    'background:linear-gradient(135deg,#d9dade,#6f7176 22%,#c4c6ca 48%,#5d5f63 74%,#b9bbbf);' +
+    '-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}' +
+    '.pc93-phone .btn{position:absolute;width:5px;border-radius:2px;background:linear-gradient(90deg,#5d5f63,#c4c6ca,#6f7176)}' +
+    '.pc93-phone .isl{position:absolute;left:50%;top:11px;width:112px;height:33px;margin-left:-56px;border-radius:20px;background:#000;z-index:2}' +
+    '.pc93-phone .isl::after{content:"";position:absolute;right:12px;top:10px;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#2a3550,#0a0d14 60%)}' +
+    '.pc93-phone .gl{position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;' +
+    'background:linear-gradient(115deg,rgba(255,255,255,.16),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06))}';
   document.head.appendChild(st);
   Deck.registerSlide(93, {
     keepBase: true,
@@ -353,6 +375,16 @@ if (p93) { p93.src = 'media/kahf-newtab-desktop.webp'; p93.w = p93.h * H / W * 1
       var ping = h('div', 'pc93-ping', el); ping.style.left = sx + 'px'; ping.style.top = sy + 'px';
       el.__p93 = { menu: menu, ping: ping };
       if (ctx.static) menu.classList.add('on');
+      var ph = ctx.view.map.e8, scr = ph && ph.querySelector('.in');
+      if (scr) {
+        ph.classList.add('pc93-phone');
+        var ip = h('div', 'ip'); ph.insertBefore(ip, scr);
+        // [side, top, height]: action button + volume up/down on the left, side button on the right
+        [['l', 130, 34], ['l', 196, 64], ['l', 278, 64], ['r', 226, 100]].forEach(function (b) {
+          var bt = h('i', 'btn', ip); bt.style.cssText = (b[0] === 'l' ? 'left:-8px' : 'right:-8px') + ';top:' + b[1] + 'px;height:' + b[2] + 'px';
+        });
+        h('i', 'isl', scr); h('i', 'gl', scr);
+      }
       var base = ctx.view.map.e4, box = base && base.querySelector('.in');
       if (!box || ctx.static) return;
       var alts = ALTS.map(function (src) {
