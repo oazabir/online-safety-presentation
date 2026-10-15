@@ -5,7 +5,7 @@
    Sections: 0 helpers/css . 1 removals + data patches . 2 typewriter slides (#28, #57)
              3 game headlines (#39-#43) . 4 Lost Screen Memorial scroll (#45) . 5 single picture (#55)
              6 Meet Susan narrative (#58) . 7 auto-advance (#59) . 8 dimming (#56, #64) . 9 toggles (#71)
-             10 website screenshots (#88, #92) . 11 Kahf Kids hero (#97) . 12 chart line reveal (#106-109)
+             10 website screenshots (#88 + scholar endorsements, #92) . 11 Kahf Kids hero (#97) . 12 chart line reveal (#106-109)
              13 closing video (#112) . 14 NEW WhatsApp privacy (after #97)
    ============================================================================ */
 (function () {
@@ -837,23 +837,146 @@ function noTog72(v) { Array.prototype.forEach.call(v.root.querySelectorAll('.pb7
 hook(72, { show: noTog72, enter: noTog72, step: noTog72 });
 
 /* ---------------------------------------------------------------- 10. #88 slide 58 / #92 slide 61 - website screenshots */
-function website(n, src, iw, ih, url, rgb) {
-  Deck.registerSlide(n, {
+/* `more` (optional): after(el, ctx, stg, box) runs at the end of render (stg = .pc-wst, the stage holding the window +
+   glow; box = the window's {x, y, w, h}); every other field is merged into the slide spec (enter, steps, step, ...) */
+function website(n, src, iw, ih, url, rgb, more) {
+  more = more || {};
+  var spec = {
     keepBase: false, loop: ['orbs'],
     render: function (el, ctx) {
       var maxW = 1660, maxH = 1000 - 46, w = Math.min(maxW, maxH * iw / ih), hh = w * ih / iw + 46;
       var x = (W - w) / 2, y = (H - hh) / 2;
-      var gl = h('div', 'pc-wglow', el); gl.style.cssText = 'left:' + (x - 160) + 'px;top:' + (y - 120) + 'px;width:' + (w + 320) + 'px;height:' + (hh + 240) + 'px;--wc:' + rgb;
-      var wrap = h('div', ctx.static ? '' : 'pc-rise', el); wrap.style.cssText = 'position:absolute;inset:0';
+      var stg = h('div', 'pc-wst', el);
+      var gl = h('div', 'pc-wglow', stg); gl.style.cssText = 'left:' + (x - 160) + 'px;top:' + (y - 120) + 'px;width:' + (w + 320) + 'px;height:' + (hh + 240) + 'px;--wc:' + rgb;
+      var wrap = h('div', ctx.static ? '' : 'pc-rise', stg); wrap.style.cssText = 'position:absolute;inset:0';
       var win = h('div', 'pc-win' + (ctx.static ? '' : ' pc-bob'), wrap,
         '<div class="bar"><i></i><i></i><i></i><div class="url"><b>&#128274;</b>' + url + '</div></div>');
       win.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;--wc:' + rgb;
       var im = h('img', '', win); im.src = src; im.alt = url + ' home page'; im.style.height = (w * ih / iw) + 'px';
+      if (more.after) more.after(el, ctx, stg, { x: x, y: y, w: w, h: hh });
     },
     enter: function () {}
-  });
+  };
+  Object.keys(more).forEach(function (k) { if (k !== 'after') spec[k] = more[k]; });
+  Deck.registerSlide(n, spec);
 }
-website(88, 'media/kahfguard-hero.webp', 1382, 829, 'kahfguard.com', '46,229,157');
+
+/* #88 (on-screen 62) kahfguard.com hero (media/kahfguard-hero.webp: headless Chrome 1440x745 css px at 2x, carousel
+   frame 1, Oct 2026) full screen; 5 s after entry it shrinks to the top and three endorsements from the site's "Trusted
+   by community leaders and scholars" section come in along the bottom (photos: media/scholars/, 256-300 px from the
+   site). Arriving with Back shows the end state. Each face fades up, its speech bubble
+   pops out of it with typing dots, then the quote arrives word by word while the face's ring pulses; bubbles keep
+   floating. Tap a face to replay its bubble. *text* = highlighted phrase; flex = column width share. */
+var SCHOLARS = [
+  { name: 'Sheikh Haitham Al-Haddad', role: 'Chair of the Fatwa Committee, Islamic Council of Europe', img: 'media/scholars/scholar-haitham-al-haddad.webp', pos: '55% 22%', flex: 1.38,
+    q: 'Kahf Guard is a beneficial tool for parents *protecting their children* and Muslims seeking to avoid prohibited material. It helps close the doors leading to sin. This is commendable, and we encourage Muslims to support and benefit from this important digital safeguarding initiative.' },
+  { name: 'Dr. Muhammad Salah', role: 'Esteemed Scholar, USA', img: 'media/scholars/scholar-dr-muhammad-salah.webp', pos: '50% 40%', flex: 1,
+    q: 'Kahf Guard is a service made by Muslims that *protects you and your family* from online threats like scams, harmful content, and more.' },
+  { name: 'Sheikh Ahmadullah', role: 'Chairman, As-Sunnah Foundation', img: 'media/scholars/scholar-ahmadullah.webp', pos: '52% 20%', flex: 1,
+    q: 'Kahf Guard blocks haram & inappropriate websites so we can avoid sin and *protect our children* inshAllah.' }
+];
+(function () {
+  var G = '46,229,157', HERO = { w: 2400, h: 1242 }, SMALL = { y: 24, w: 1300 }, WAIT = 5000;   // small window ends at y ~743
+  var css = [
+    '.pc-wst{position:absolute;inset:0;transform-origin:0 0;transition:transform 1.3s var(--ease)}',
+    '.pc-wst.small{transform:translate(var(--tx),var(--ty)) scale(var(--s))}',
+    '.pc-wst.inst{transition:none}',
+    '.pcs{position:absolute;left:70px;right:70px;top:768px;bottom:30px;display:flex;align-items:flex-end;gap:34px}',
+    '.pcs:not(.go) .face{pointer-events:none}',
+    '.pcs .c{min-width:0;display:flex;align-items:flex-end;gap:24px}',
+    /* face */
+    '.pcs .who{flex:none;opacity:0;transform:translateY(30px)}',
+    '.pcs.go .who{opacity:1;transform:none;transition:opacity .6s ease,transform .8s var(--ease);transition-delay:calc(.5s + var(--i) * .15s)}',
+    '.pcs .face{position:relative;width:108px;height:108px;margin-bottom:6px;border-radius:50%;cursor:pointer}',
+    '.pcs .face .ring{position:absolute;inset:-7px;border-radius:50%;background:conic-gradient(from 0deg,rgba(' + G + ',0),rgba(' + G + ',.95) 35%,rgba(140,210,255,.75) 55%,rgba(' + G + ',0) 80%)}',
+    '.pcs.go .face .ring{animation:pcs-spin 7s linear infinite;animation-delay:calc(var(--i) * -2.3s)}',
+    '@keyframes pcs-spin{to{transform:rotate(360deg)}}',
+    '.pcs .face img{position:relative;display:block;width:100%;height:100%;box-sizing:border-box;border-radius:50%;border:5px solid #07100d;object-fit:cover}',
+    '.pcs .face .pl{position:absolute;inset:-7px;border-radius:50%;border:3px solid rgba(' + G + ',.9);opacity:0}',
+    '.pcs .c.talk .face .pl{animation:pcs-pulse 1.15s ease-out infinite}',
+    '.pcs .c.talk .face .pl+.pl{animation-delay:.55s}',
+    '@keyframes pcs-pulse{from{transform:scale(1);opacity:.85}to{transform:scale(1.34);opacity:0}}',
+    /* speech bubble: .fl floats, .bb pops out of the face (origin = tail tip, left) */
+    '.pcs .fl{flex:1;min-width:0;filter:drop-shadow(0 22px 34px rgba(0,0,0,.55))}',
+    '.pcs.go .fl{animation:pcs-float 5.5s ease-in-out infinite alternate;animation-delay:calc(var(--i) * -1.9s)}',
+    '@keyframes pcs-float{from{transform:translateY(-6px)}to{transform:translateY(6px)}}',
+    '.pcs .bb{position:relative;box-sizing:border-box;padding:30px 24px 16px;border-radius:24px;background:#f5fbf8;color:#0f1d17;',
+    '  box-shadow:inset 0 2px 0 #fff,0 0 0 2px rgba(' + G + ',.55),0 0 60px rgba(' + G + ',.24);',
+    '  transform-origin:-24px calc(100% - 60px);transform:translateX(-30px) scale(.2);opacity:0;transition:transform .25s ease,opacity .2s ease}',
+    '.pcs .c.pop .bb{transform:none;opacity:1;transition:transform .7s cubic-bezier(.34,1.56,.64,1),opacity .3s ease}',
+    '.pcs .bb::after{content:"";position:absolute;left:-12px;bottom:48px;width:24px;height:24px;background:#f5fbf8;transform:rotate(45deg);border-radius:0 0 0 7px;box-shadow:-2px 2px 0 rgba(' + G + ',.55)}',
+    '.pcs .qm{position:absolute;left:18px;top:-4px;font:700 62px/1 var(--f-display);color:rgb(' + G + ');text-shadow:0 3px 14px rgba(' + G + ',.35)}',
+    '.pcs .qt{margin:0;font:500 19px/1.38 var(--f-display);letter-spacing:-.005em}',
+    '.pcs .qt b{font-weight:700;color:#0a7a52;background:linear-gradient(transparent 62%,rgba(' + G + ',.38) 62%) no-repeat 0 0/0 100%}',
+    '.pcs .c.say .qt b{background-size:100% 100%;transition:background-size .7s var(--ease);transition-delay:calc(var(--n) * 30ms + .3s)}',
+    '.pcs .w{display:inline-block;opacity:0;transform:translateY(10px)}',
+    '.pcs .c.say .w{opacity:1;transform:none;transition:opacity .35s ease,transform .5s var(--ease);transition-delay:calc(var(--n) * 30ms)}',
+    '.pcs .by{margin-top:10px;padding-top:9px;border-top:1px solid rgba(10,122,82,.16);opacity:0}',
+    '.pcs .c.say .by{opacity:1;transition:opacity .5s ease calc(var(--n) * 30ms)}',
+    '.pcs .nm{font:700 17px/1.15 var(--f-body);color:#0f1d17}',
+    '.pcs .rl{margin-top:2px;font:500 13.5px/1.25 var(--f-body);color:#4b6358}',
+    '.pcs .dots{position:absolute;left:50%;top:50%;display:flex;gap:11px;transform:translate(-50%,-50%);opacity:0;transition:opacity .2s}',
+    '.pcs .c.typing .dots{opacity:1}',
+    '.pcs .dots i{width:12px;height:12px;border-radius:50%;background:rgb(' + G + ');animation:pcs-dot 1s ease-in-out infinite}',
+    '.pcs .dots i:nth-child(2){animation-delay:.15s}.pcs .dots i:nth-child(3){animation-delay:.3s}',
+    '@keyframes pcs-dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-10px);opacity:1}}',
+    '.pcs.inst *,.pcs.inst{transition:none!important}',
+    '@media (prefers-reduced-motion:reduce){.pc-wst{transition:none}}',
+    '@media (prefers-reduced-motion:reduce){.pcs *{animation:none!important;transition:none!important}}'
+  ].join('\n');
+  if (!document.getElementById('pcs-css')) { var st = document.createElement('style'); st.id = 'pcs-css'; st.textContent = css; document.head.appendChild(st); }
+
+  function words(q) {
+    var n = 0, hi = false;
+    return q.split(/(\*)/).map(function (part) {
+      if (part === '*') { hi = !hi; return ''; }
+      var s = part.split(/(\s+)/).map(function (w) { return /^\s*$/.test(w) ? w : '<span class="w" style="--n:' + (n++) + '">' + w + '</span>'; }).join('');
+      return hi ? '<b style="--n:' + n + '">' + s + '</b>' : s;
+    }).join('');
+  }
+  /* bubble: pop + typing dots, then the words, then the face stops "talking" */
+  function speak(r, ctx, c, t0) {
+    var nw = c.querySelectorAll('.w').length, T = function (fn, ms) { r.t.push(ctx.timeout(fn, ms)); };
+    T(function () { c.classList.add('pop', 'typing', 'talk'); }, t0);
+    T(function () { c.classList.remove('typing'); c.classList.add('say'); }, t0 + 850);
+    T(function () { c.classList.remove('talk'); }, t0 + 850 + nw * 30 + 700);
+  }
+
+  website(88, 'media/kahfguard-hero.webp?v=2026-10', HERO.w, HERO.h, 'kahfguard.com', G, {
+    after: function (el, ctx, stg, box) {
+      var sc = SMALL.w / box.w;   // .small maps the full-screen window onto a SMALL.w window centred at SMALL.y
+      stg.style.cssText = '--s:' + sc + ';--tx:' + ((W - SMALL.w) / 2 - box.x * sc) + 'px;--ty:' + (SMALL.y - box.y * sc) + 'px';
+      var root = h('div', 'pcs', el, SCHOLARS.map(function (s, i) {
+        var n = (s.q.match(/\S+/g) || []).length;
+        return '<div class="c" style="--i:' + i + ';flex:' + s.flex + '">' +
+          '<div class="who"><div class="face pe" data-noadvance title="Replay"><div class="ring"></div><i class="pl"></i><i class="pl"></i>' +
+          '<img src="' + s.img + '" alt="' + s.name + '" style="object-position:' + s.pos + '"></div></div>' +
+          '<div class="fl"><div class="bb"><span class="qm">&ldquo;</span><p class="qt">' + words(s.q) + '</p>' +
+          '<div class="by" style="--n:' + n + '"><div class="nm">' + s.name + '</div><div class="rl">' + s.role + '</div></div>' +
+          '<div class="dots"><i></i><i></i><i></i></div></div></div></div>';
+      }).join(''));
+      var r = el.__pcs = { root: root, stg: stg, cols: [].slice.call(root.querySelectorAll('.c')), t: [] };
+      /* render runs before the 'show' event, so compare with the previous position here (arriving with Back = fully built) */
+      if (ctx.static || ctx.reduced || (lastPos !== null && ctx.slide.pos < lastPos)) {
+        stg.classList.add('inst', 'small'); root.classList.add('inst', 'go'); r.cols.forEach(function (c) { c.classList.add('pop', 'say'); });
+      }
+      r.cols.forEach(function (c) {
+        c.querySelector('.face').addEventListener('click', function () {
+          if (ctx.reduced) return;
+          c.classList.remove('pop', 'typing', 'say', 'talk'); root.classList.remove('inst');
+          void c.offsetWidth; speak(r, ctx, c, 250);
+        });
+      });
+    },
+    enter: function (el, ctx) {
+      var r = el.__pcs; if (!r || ctx.static || r.root.classList.contains('go')) return;
+      r.t.push(ctx.timeout(function () { r.stg.classList.add('small'); r.root.classList.add('go'); }, WAIT));
+      r.cols.forEach(function (c, i) { speak(r, ctx, c, WAIT + 1300 + i * 1500); });
+    }
+  });
+  var s88 = D.slides.filter(function (s) { return s.orig === 88; })[0];
+  if (s88 && !s88.notes) s88.notes = 'Kahf Guard: blocks harmful content on every device in the house. Here is what scholars say about it.';
+})();
 
 /* #92 (on-screen 61) kahfbrowser.com hero. media/kahfbrowser/hero-base.webp is the live hero with the headline removed;
    the headline is rebuilt from cut-outs of the site's own glyphs (hl-*.webp, 3x) laid out in the site's css px (1491 wide)
