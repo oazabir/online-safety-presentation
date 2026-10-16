@@ -3079,7 +3079,7 @@ Deck.registerSlide(51, {
   function show(el, k) { (el.__t3 || []).forEach(function (n, i) { n.classList.toggle('off', i >= k); }); }
 
   Deck.insertSlide({
-    after: 51, id: 'three-things', title: 'Tackle three things', section: 'treat', tr: { type: 'fade', ms: 800 }, loop: false, steps: 3,
+    after: 51, id: 'three-things', title: 'Tackle three things', section: 'treat', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 3,
     notes: 'To curb the addiction, we need to tackle the three things that make a screen so stimulating. [click] One: fast motion content, ' +
       'rapid cuts and non-stop action. [click] Two: colour, bright saturated screens. [click] Three: sound, music loops and sound effects. ' +
       'Take these away and the device becomes boring, which is exactly what we want. Let’s see how.',
