@@ -184,14 +184,31 @@ function mkEl(e, opt) {
   return d;
 }
 
+/* source badges: publisher name up front (what the audience reads), the address beside it */
+var PUBLISHERS = { 'datareportal.com': 'DataReportal', 'gallup.com': 'Gallup', 'dqinstitute.org': 'DQ Institute',
+  'nature.com': 'Nature · Scientific Reports', 'forbes.com': 'Forbes', 'cambridge.org': 'Cambridge · Psychological Medicine',
+  'unsw.edu.au': 'UNSW Sydney', 'nspcc.org.uk': 'NSPCC' };
+var LINK_LABELS = { 'arras.io': 'Play' };   // links that are not evidence (e.g. the game on #74)
+function publisher(host) {
+  for (var k in PUBLISHERS) if (host === k || host.slice(-k.length - 1) === '.' + k) return PUBLISHERS[k];
+  return '';
+}
+/** Deck.sourceChip(url[, name]) -> <a class="chip"> badge; also used by custom slides so every source looks the same */
+Deck.sourceChip = function (u, name) {
+  var href = /^https?:/i.test(u) ? u : 'https://' + u, addr = u.replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/$/, '');
+  var host = addr.split('/')[0].toLowerCase(), pub = name || publisher(host);
+  var a = h('a', 'chip src'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.title = href;
+  a.setAttribute('data-noadvance', '');
+  a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><b>' + (LINK_LABELS[host] || 'Source') + '</b>';
+  h('strong', '', a).textContent = pub || host;            // no known publisher: the site name stands in
+  if (pub) h('span', '', a).textContent = host;
+  if (addr.length > host.length) h('em', '', a).textContent = addr.slice(host.length);
+  return a;
+};
 function mkChips(list) {
   var box = h('div', 'chips');
-  list.slice(0, 3).forEach(function (u) {
-    var a = h('a', 'chip', box); a.href = /^https?:/i.test(u) ? u : 'https://' + u; a.target = '_blank'; a.rel = 'noopener';
-    a.setAttribute('data-noadvance', '');
-    var b = h('b', '', a); b.textContent = 'source'; var s = h('span', '', a);
-    s.textContent = u.replace(/^https?:\/\/(www\.)?/i, '');
-  });
+  list.slice(0, 3).forEach(function (u) { box.appendChild(Deck.sourceChip(u)); });
   return box;
 }
 

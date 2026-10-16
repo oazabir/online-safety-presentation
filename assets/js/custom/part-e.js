@@ -111,7 +111,8 @@ addCss('pe-gr-css', [
   '.gr-bd{flex:1;min-width:0;padding:0 26px 0 6px;border-left:1px solid rgba(255,255,255,.08);padding-left:28px}',
   '.gr-by{display:flex;align-items:baseline;gap:12px;font:600 29px/1.1 var(--f-body);color:#fff;white-space:nowrap}',
   '.gr-mt{display:flex;align-items:center;gap:12px;margin-top:9px;white-space:nowrap}',
-  '.gr-mt i{font:italic 400 18px/1 var(--f-body);color:var(--muted)}',
+  '.gr-mt i{display:inline-flex;align-items:center;gap:7px;font:italic 500 20px/1 var(--f-body);color:#fff}',
+  '.gr-mt i svg{width:20px;height:20px;color:var(--amber);flex:0 0 20px}',
   '.gr-who{display:inline-block;padding:5px 12px;border-radius:8px;background:rgba(255,176,32,.14);color:var(--amber);font:700 15px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase}',
   '.gr-d{margin-top:10px;font:400 21px/1.32 var(--f-body);color:var(--ink2)}',
   '.gr-d b{color:#fff;font-weight:600}',
@@ -145,6 +146,8 @@ var I = {
   user: SV + '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
   people: SV + '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.6 3.6-5.5 6.5-5.5s5.5 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.8"/><path d="M16.5 14.6c2.5.2 4.3 2 5 5.4"/></svg>'
 };
+
+var DOC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
 
 function post(p) {
   var c = p.a.split(';');
@@ -205,7 +208,7 @@ Deck.insertSlide({
       var c = h('div', 'gr-cd off', box,
         '<div class="gr-nm"><div class="v">−' + s.n + '</div><div class="u">min / day</div></div>' +
         '<div class="gr-bd"><div class="gr-by">' + s.by + ', ' + s.y + '</div>' +
-        '<div class="gr-mt"><span class="gr-who">' + s.who + '</span><i>' + s.j + '</i></div>' +
+        '<div class="gr-mt"><span class="gr-who">' + s.who + '</span><i>' + DOC + s.j + '</i></div>' +
         '<div class="gr-d">' + s.d + (s.x ? '<span class="gr-x">' + s.x.map(function (t) { return '<span>' + t + '</span>'; }).join('') + '</span>' : '') + '</div></div>' +
         '<div class="gr-yr"><div class="v">≈' + s.yr + '</div><div class="u">days back<br>per year</div></div>' +
         '<i class="gr-mb" style="--w:' + (s.n / 60).toFixed(3) + '"></i>');

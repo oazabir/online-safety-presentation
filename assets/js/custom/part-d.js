@@ -26,7 +26,7 @@ function h(tag, cls, parent, html) { var e = document.createElement(tag); if (cl
 function addCss(id, rules) { if (document.getElementById(id)) return; var st = document.createElement('style'); st.id = id; st.textContent = rules.join('\n'); document.head.appendChild(st); }
 function chips(r, list) {
   var box = h('div', 'chips', r);
-  list.forEach(function (u) { var a = h('a', 'chip', box, '<b>source</b><span>' + u.replace(/^https?:\/\/(www\.)?/, '') + '</span>'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('data-noadvance', ''); });
+  list.forEach(function (u) { box.appendChild(Deck.sourceChip(u)); });
 }
 function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
 function f1(n) { return (Math.round(n * 10) / 10).toFixed(1); }

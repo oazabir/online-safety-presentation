@@ -263,8 +263,7 @@ function countOnShow(ctx, id, has, o) {
 function chipsFor(r, list) {
   var box = mk(r, '<div class="chips"></div>');
   list.forEach(function (u) {
-    var a = document.createElement('a'); a.className = 'chip'; a.href = u; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('data-noadvance', '');
-    a.innerHTML = '<b>source</b><span>' + u.replace(/^https?:\/\/(www\.)?/, '') + '</span>'; box.appendChild(a);
+    box.appendChild(Deck.sourceChip(u));
   });
 }
 

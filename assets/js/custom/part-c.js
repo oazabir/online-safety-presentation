@@ -1554,7 +1554,7 @@ function kahfUrlEnter(u, ctx) {
     '.yr.reduced.a1 .yr-pie .pie-slice{transform:translateY(44px)}',
     '.yr-cap{margin-top:0;font:500 38px/1.18 var(--f-display);color:var(--ink)}.yr-cap em{font-style:normal;color:#ff9c89}',
     '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block}',
-    '.yr-src{position:absolute;right:84px;bottom:28px;font-size:16px;color:#a5b3af;text-align:right;max-width:1130px;line-height:1.35;z-index:41}',
+    '.yr-src{position:absolute;right:84px;bottom:92px;font-size:18px;color:#c3cecb;text-align:right;max-width:1000px;line-height:1.35;z-index:41}',
     '.yr.static *,.yr.static *::before,.yr.static *::after{transition:none!important}',
     '.yr.reduced .rv{opacity:1;animation:none}.yr.reduced *,.yr.reduced *::after{transition:none!important;animation:none!important}',
     '@media (prefers-reduced-motion:reduce){.yr *,.yr *::after{transition:none!important;animation:none!important}}',
@@ -1673,8 +1673,7 @@ function kahfUrlEnter(u, ctx) {
           '<div class="yr-cap yr-sw"><span class="v0">More than <em>1 in ' + inN(PO) + '</em> waking hours.</span><span class="v1">More than <em>1 in ' + inN(PT) + '</em> waking hours.</span></div></div>' +
         '<div class="yr-src">GWI Q2 2025, via DataReportal Digital 2026. Model: 60-year life; 16 waking h/day; counted from age 10 (ages 10–15 assumed at the 16–24 rate, as GWI does not survey under-16s); age-specific usage. All online media: 33.5 h/week (2026). All internet use: 6h 40m/day (2024), same age profile.</div>';
       var box = document.createElement('div'); box.className = 'chips';
-      var a2 = document.createElement('a'); a2.className = 'chip'; a2.href = 'https://datareportal.com/reports/digital-2026-global-overview-report'; a2.target = '_blank'; a2.rel = 'noopener'; a2.setAttribute('data-noadvance', '');
-      a2.innerHTML = '<b>source</b><span>datareportal.com/reports/digital-2026-global-overview-report</span>'; box.appendChild(a2); r.appendChild(box);
+      box.appendChild(Deck.sourceChip('https://datareportal.com/reports/digital-2026-global-overview-report')); r.appendChild(box);
       el.__yr = r;
       if (!ctx.static) { void r.offsetWidth; r.classList.add('go'); }
     },
