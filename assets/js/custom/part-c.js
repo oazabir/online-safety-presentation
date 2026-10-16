@@ -1010,6 +1010,46 @@ var SCHOLARS = [
   if (s88 && !s88.notes) s88.notes = 'Kahf Guard: blocks harmful content on every device in the house. Here is what scholars say about it.';
 })();
 
+var freeBadge;
+(function () {
+  /* #92 / #94 "FREE" sticker (shared, so it is defined ahead of both slides): gold starburst seal in the empty top-right corner (centre 1770, 150), tilted -12deg. Stamps in
+     after the table rows, then the scalloped edge turns slowly and a light sweep glints across it every few seconds */
+  var FREE_CSS = [
+    '.pc94-free{position:absolute;left:1660px;top:40px;width:220px;height:220px;transform:rotate(-12deg);filter:drop-shadow(0 18px 30px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(242,193,78,.45))}',
+    '.pc94-free .st{position:absolute;inset:0;animation:pc94-spin 40s linear infinite}',
+    '.pc94-free .st svg{display:block;width:100%;height:100%}',
+    '.pc94-free .fc{position:absolute;inset:34px;border-radius:50%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;',
+    '  background:radial-gradient(circle at 35% 28%,#fff1c2,#F2C14E 55%,#d9962a);box-shadow:inset 0 0 0 3px rgba(90,52,8,.35),inset 0 0 0 9px rgba(255,241,194,.55),inset 0 -10px 24px rgba(120,66,6,.35)}',
+    '.pc94-free .fc b{font:900 50px/1 var(--f-display);letter-spacing:0;color:#3d2404;text-shadow:0 2px 0 rgba(255,241,194,.7)}',
+    '.pc94-free .fc i{font:800 15px/1 var(--f-body);font-style:normal;letter-spacing:.3em;margin:0 0 6px .3em;color:#7a4a0c}',
+    '.pc94-free .fc::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;transform:skewX(-20deg) translateX(0);',
+    '  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));animation:pc94-glint 4.5s ease-in-out 2.4s infinite}',
+    '@keyframes pc94-spin{to{transform:rotate(360deg)}}',
+    '@keyframes pc94-glint{0%,70%{transform:skewX(-20deg) translateX(0)}100%{transform:skewX(-20deg) translateX(560%)}}',
+    '.pc94-free.pre{opacity:0}',
+    '.pc94-free.go{animation:pc94-stamp .75s cubic-bezier(.3,1.5,.5,1) both}',
+    '@keyframes pc94-stamp{0%{opacity:0;transform:rotate(-40deg) scale(2.4)}55%{opacity:1}100%{opacity:1;transform:rotate(-12deg) scale(1)}}',
+    '.pc94-free.still .st,.pc94-free.still .fc::after{animation:none}',
+    '@media (prefers-reduced-motion:reduce){.pc94-free .st,.pc94-free .fc::after,.pc94-free.go{animation:none!important}}'
+  ].join('\n');
+  if (!document.getElementById('pc94-css')) { var st94 = document.createElement('style'); st94.id = 'pc94-css'; st94.textContent = FREE_CSS; document.head.appendChild(st94); }
+  freeBadge = function (el, ctx, anim) {
+    var N = 22, pts = [];
+    for (var i = 0; i < N * 2; i++) {
+      var a = Math.PI * i / N, r = i % 2 ? 94 : 110;
+      pts.push((110 + r * Math.sin(a)).toFixed(1) + ',' + (110 - r * Math.cos(a)).toFixed(1));
+    }
+    var b = h('div', 'pc94-free' + (anim ? ' pre' : '') + (ctx.static ? ' still' : ''), el,
+      '<div class="st"><svg viewBox="0 0 220 220"><defs><linearGradient id="pc94g" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#F2C14E"/><stop offset="1" stop-color="#C98A22"/></linearGradient></defs>' +
+      '<polygon points="' + pts.join(' ') + '" fill="url(#pc94g)" stroke="rgba(255,241,194,.8)" stroke-width="2" stroke-linejoin="round"/></svg></div>' +
+      '<div class="fc"><i>&#9733; &#9733; &#9733;</i><b>FREE</b></div>');
+    b.setAttribute('aria-label', 'Free');
+    return anim ? function () { ctx.timeout(function () { b.classList.remove('pre'); b.classList.add('go'); }, 1300); } : null;
+  };
+
+})();
+
 /* #92 (on-screen 61) kahfbrowser.com hero. media/kahfbrowser/hero-base.webp is the live hero with the headline removed;
    the headline is rebuilt from cut-outs of the site's own glyphs (hl-*.webp, 3x) laid out in the site's css px (1491 wide)
    and driven by the site's word rotator: calmer -> safer -> decent every 2.6 s, outgoing word drops out while the next
@@ -1042,8 +1082,10 @@ var SCHOLARS = [
       var web = h('img', '', row); web.src = 'media/kahfbrowser/hl-web.webp'; web.alt = '';
       web.style.cssText = 'width:' + WEB.w + 'px;margin:0 ' + WEB.mr + 'px 0 ' + GAP2 + 'px';
       el.__hl = { rot: rot, ws: ws };
+      el.__free = freeBadge(el, ctx, !ctx.static && !ctx.reduced);   // same gold FREE seal as #94, on the window's top-right corner
     },
     enter: function (el, ctx) {
+      if (el.__free) el.__free();
       var s = el.__hl; if (!s || ctx.static || ctx.reduced) return;
       var i = 0;
       s.ws.forEach(function (n, j) { n.classList.toggle('on', j === 0); n.classList.remove('out'); });
@@ -2276,42 +2318,6 @@ Deck.registerSlide(51, {
     var k = 66 / src.span;
     return 'background-image:url(' + src.src + ');background-size:' + Math.round(src.w * k) + 'px auto;background-position:' +
       -Math.round((cx - src.span / 2) * k) + 'px ' + -Math.round((cy - src.span / 2) * k) + 'px';
-  }
-
-  /* #94 "FREE" sticker: gold starburst seal in the empty top-right corner (centre 1770, 150), tilted -12deg. Stamps in
-     after the table rows, then the scalloped edge turns slowly and a light sweep glints across it every few seconds */
-  var FREE_CSS = [
-    '.pc94-free{position:absolute;left:1660px;top:40px;width:220px;height:220px;transform:rotate(-12deg);filter:drop-shadow(0 18px 30px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(242,193,78,.45))}',
-    '.pc94-free .st{position:absolute;inset:0;animation:pc94-spin 40s linear infinite}',
-    '.pc94-free .st svg{display:block;width:100%;height:100%}',
-    '.pc94-free .fc{position:absolute;inset:34px;border-radius:50%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;',
-    '  background:radial-gradient(circle at 35% 28%,#fff1c2,#F2C14E 55%,#d9962a);box-shadow:inset 0 0 0 3px rgba(90,52,8,.35),inset 0 0 0 9px rgba(255,241,194,.55),inset 0 -10px 24px rgba(120,66,6,.35)}',
-    '.pc94-free .fc b{font:900 50px/1 var(--f-display);letter-spacing:0;color:#3d2404;text-shadow:0 2px 0 rgba(255,241,194,.7)}',
-    '.pc94-free .fc i{font:800 15px/1 var(--f-body);font-style:normal;letter-spacing:.3em;margin:0 0 6px .3em;color:#7a4a0c}',
-    '.pc94-free .fc::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:40%;transform:skewX(-20deg) translateX(0);',
-    '  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));animation:pc94-glint 4.5s ease-in-out 2.4s infinite}',
-    '@keyframes pc94-spin{to{transform:rotate(360deg)}}',
-    '@keyframes pc94-glint{0%,70%{transform:skewX(-20deg) translateX(0)}100%{transform:skewX(-20deg) translateX(560%)}}',
-    '.pc94-free.pre{opacity:0}',
-    '.pc94-free.go{animation:pc94-stamp .75s cubic-bezier(.3,1.5,.5,1) both}',
-    '@keyframes pc94-stamp{0%{opacity:0;transform:rotate(-40deg) scale(2.4)}55%{opacity:1}100%{opacity:1;transform:rotate(-12deg) scale(1)}}',
-    '.pc94-free.still .st,.pc94-free.still .fc::after{animation:none}',
-    '@media (prefers-reduced-motion:reduce){.pc94-free .st,.pc94-free .fc::after,.pc94-free.go{animation:none!important}}'
-  ].join('\n');
-  if (!document.getElementById('pc94-css')) { var st94 = document.createElement('style'); st94.id = 'pc94-css'; st94.textContent = FREE_CSS; document.head.appendChild(st94); }
-  function freeBadge(el, ctx, anim) {
-    var N = 22, pts = [];
-    for (var i = 0; i < N * 2; i++) {
-      var a = Math.PI * i / N, r = i % 2 ? 94 : 110;
-      pts.push((110 + r * Math.sin(a)).toFixed(1) + ',' + (110 - r * Math.cos(a)).toFixed(1));
-    }
-    var b = h('div', 'pc94-free' + (anim ? ' pre' : '') + (ctx.static ? ' still' : ''), el,
-      '<div class="st"><svg viewBox="0 0 220 220"><defs><linearGradient id="pc94g" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#F2C14E"/><stop offset="1" stop-color="#C98A22"/></linearGradient></defs>' +
-      '<polygon points="' + pts.join(' ') + '" fill="url(#pc94g)" stroke="rgba(255,241,194,.8)" stroke-width="2" stroke-linejoin="round"/></svg></div>' +
-      '<div class="fc"><i>&#9733; &#9733; &#9733;</i><b>FREE</b></div>');
-    b.setAttribute('aria-label', 'Free');
-    return anim ? function () { ctx.timeout(function () { b.classList.remove('pre'); b.classList.add('go'); }, 1300); } : null;
   }
 
   function stage(el, k) { var r = el.__pc91; if (r) r.classList.toggle('hl', k >= 1); }
