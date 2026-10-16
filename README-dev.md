@@ -1,14 +1,14 @@
 # Deck dev notes (extension API)
 
 Open `index.html` from disk (file://). Classic scripts only, no network. Stage = 1920x1080 px, auto-scaled.
-Data: `assets/js/slides-data.js` is GENERATED (`python3 -I scripts/gen_slides.py`) - never hand-edit.
+Data: `assets/js/slides-data.js` was originally generated (`scripts/gen_slides.py`, no longer in the repo); slides are in show order, each with a unique `id`. Edit surgically; see `SLIDES.md` for the slide map.
 Load order: slides-data, engine, loops, ui, `custom/*.js` (add your own `<script>` in index.html), boot.
 
 ## Registering / inserting slides (put code in `assets/js/custom/<name>.js`)
 ```js
-Deck.registerSlide(24, spec)                 // override/augment ORIGINAL slide 24 (or an inserted id)
-Deck.insertSlide({after: 4, id: 'live-counter', title: '...', section: 'problem', notes: '...',
-                  tr: {type: 'fade', ms: 800}, ...spec})   // new slide after original 4
+Deck.registerSlide('signs-of-addiction', spec)  // override/augment a slide by id (base or inserted)
+Deck.insertSlide({after: 'year-gone', id: 'my-slide', title: '...', section: 'problem',
+                  tr: {type: 'fade', ms: 800}, ...spec})   // new slide after slide 'year-gone'; id must be unique
 // spec (all optional):
 { render(el, ctx),            // build DOM into el (1920x1080 layer, px coords). Replaces base elements...
   keepBase: true,             // ...unless keepBase: base converted elements stay, el is an overlay
@@ -17,8 +17,9 @@ Deck.insertSlide({after: 4, id: 'live-counter', title: '...', section: 'problem'
   calm: bool,                 // true = no decorative loops (video slides are calm automatically)
   loop: 'orbs' | ['aurora','float'] | false }       // override ambient loops
 ```
-Insert order: several inserts with the same `after` keep call order; `after` may be another inserted id.
-`tr.type`: fade | slide (pageturn, peel = aliases) | circle | wipe | cover | pull | none | morph(only between consecutive originals).
+Speaker notes live in `notes.json` ({id: text}); `Deck.loadNotes()` (boot.js) loads it before `Deck.start()`; file:// falls back to `assets/js/notes-data.js` (`python3 scripts/sync_notes.py`).
+Insert order: several inserts with the same `after` keep call order; `after` may be any slide id, including an insert registered later.
+`tr.type`: fade | slide (pageturn, peel = aliases) | circle | wipe | cover | pull | none | morph(only between neighbouring slides).
 `ctx`: `{deck, slide, el, root, n, id, section, step, steps, static, W, H, reduced}` plus helpers
 `ctx.onLeave(fn)`, `ctx.timeout(fn,ms)`, `ctx.interval(fn,ms)`, `ctx.tick((dt,t)=>..)` (rAF, auto-stopped), `ctx.q/qa(sel)`, `ctx.elapsed()`.
 `ctx.static` is true when rendered as overview/presenter thumbnail: draw the end state, no timers.
@@ -26,10 +27,10 @@ Clicks on `a, button, input, select, textarea, video, .chip, [data-noadvance]` d
 (`el` itself ignores the pointer: give interactive nodes class `pe` so they get events, plus `data-noadvance` if they are not one of those tags). Keys: set `Deck.keyHook = ev => handled?`.
 
 ## Useful API
-`Deck.next/prev/first/last()`, `Deck.goto(origIndexOrId)`, `Deck.gotoNumber(n)` (n-th visible slide; what typed digits + Enter use), `Deck.number(slide)`, `Deck.cur` (slide), `Deck.view` (live DOM/state), `Deck.order()`,
+`Deck.next/prev/first/last()`, `Deck.goto(idOrNumber)`, `Deck.gotoNumber(n)` (n-th visible slide; what typed digits + Enter use), `Deck.number(slide)` (= `slide.n`), `Deck.cur` (slide), `Deck.view` (live DOM/state), `Deck.order()`,
 `Deck.toast(msg)`, `Deck.lightbox(src)`, `Deck.on('enter'|'leave'|'step'|'show'|'state', fn)`,
-`Deck.renderStatic(slide, container)`. Slide object: `{n, orig, key, id, hidden, section, tr, notes, calm, loop, els, steps}`.
-Debug: `#/N` opens slide N; `Loops.assign(slide)` shows the loops chosen.
+`Deck.renderStatic(slide, container)`. Slide object: `{n, key, id, pos, hidden, section, tr, notes, calm, loop, els, steps}` (`key` = `id`; `n` = 1-based position, 0 if hidden).
+Debug: `#/<id>` or `#/N` opens a slide; `Loops.assign(slide)` shows the loops chosen.
 
 ## Loops (ambient, `loops.js`)
 orbs, particles, embers, kenburns, float, pulse, shimmer, scan, stars, aurora, grid, underline, caret, calm.

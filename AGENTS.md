@@ -14,15 +14,17 @@ writing slide code. This file explains how the pieces fit together and how to ch
 index.html                  shell: DOM hooks + ordered <script> tags (load order matters)
 assets/css/deck.css         all base styling, design tokens, transitions
 assets/fonts/               Fraunces (display), Inter (body), JetBrains Mono — local woff2
-assets/js/slides-data.js    GENERATED: window.DECK_DATA = {w,h,slides:[{n,id,orig,section,tr,notes,els,steps,...}]}
+assets/js/slides-data.js    window.DECK_DATA = {w,h,slides:[{id,section,tr,els,steps,...}]}, in show order
+notes.json                  SPEAKER NOTES: {"slide-id": "text"}, the one place to edit them (read by `Deck.loadNotes` in boot.js)
+assets/js/notes-data.js     GENERATED copy of notes.json for file:// (`python3 scripts/sync_notes.py`); don't edit
 assets/js/engine.js         Deck core: render, transitions, build steps, registerSlide/insertSlide, goto
 assets/js/loops.js          ambient animation loops (orbs, aurora, embers, …), auto-assigned per slide
 assets/js/ui.js             presenter tools: keys, overview, presenter window, laser, spotlight, magnifier
 assets/js/sky.js            background night-sky canvas
-assets/js/custom/part-a.js  hand-built slides for original #1–47 (+ inserted live counter, calculator)
-assets/js/custom/part-b.js  hand-built slides for original #48–112 (+ closing slide "shepherd")
+assets/js/custom/part-a.js  hand-built slides for the first third of the deck
+assets/js/custom/part-b.js  hand-built slides for the rest of the deck
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
-assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (orig #7 Gallup chart, #8 hours x 365, #10 hour tiles, #44 game dangers)
+assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (`gallup-teen-hours`, `hours-per-year`, `hours-tiles`, `game-dangers`)
 assets/js/custom/topic-bar.js  bottom topic progress bar (6 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
@@ -34,18 +36,19 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
 
 ## How the deck is built (mental model)
 
-1. **`slides-data.js`** is the base deck, converted from the original PowerPoint: 72 slides, each an `els[]` list of
-   pictures/text/shapes/videos positioned in % of a 1920×1080 stage, plus `steps[]` click-builds. Slide `n` is the
-   position in the data; **`orig` is the original PowerPoint number and is the stable key** used everywhere
-   (`Deck.goto(41)`, `registerSlide(41, …)`, URL `#/41`). Sections: `problem`, `why`, `treat`, `grooming`,
-   `protect`, `evidence`.
+1. **`slides-data.js`** is the base deck, converted from the original PowerPoint: 68 slides in show order, each an
+   `els[]` list of pictures/text/shapes/videos positioned in % of a 1920×1080 stage, plus `steps[]` click-builds.
+   Every slide (data or inserted) has a unique, stable **`id`** (`roblox`, `meet-susan`) — the key used everywhere
+   (`Deck.goto('roblox')`, `registerSlide('roblox', …)`, URL `#/roblox`). The slide **number** `n` (1…N) is just its
+   position in the show, assigned by the engine, so it changes when slides move; `#/34` also works. `SLIDES.md`
+   lists number ↔ id ↔ old PowerPoint number. Sections: `problem`, `why`, `treat`, `grooming`, `protect`, `evidence`.
 2. **`engine.js`** renders each slide from that data. A slide can be **overridden** with
-   `Deck.registerSlide(orig, spec)` or **added** with `Deck.insertSlide({after, id, …spec})`.
+   `Deck.registerSlide(id, spec)` or **added** with `Deck.insertSlide({after, id, …spec})`.
 3. **`custom/part-*.js`** are the real authoring surface. Each is a self-contained IIFE that injects its own `<style>`
    (ids like `part-a-css`, class prefixes `pa-`, `pc-` …), registers/inserts slides, and may patch `DECK_DATA` in
-   place (e.g. part-c hides slide 98 via `byN[98].hidden = true`).
-4. **Hidden slides** (`hidden: true`) exist but are skipped in the show order — used for the live counter,
-   calculator and alternate closers. `Deck.order()` is the visible sequence; `Deck.slides` is everything.
+   place (look slides up with `byId['<id>']`).
+4. **Hidden slides** (`hidden: true`) are supported (kept in `Deck.slides`, skipped by `Deck.order()` and numbered 0), but the
+   deck currently has none: the old hidden ones (counter, calculator, alternate closer, …) were deleted.
 5. Later scripts win: `registerSlide` merges with `Object.assign`, so part-c can override part-a/b for the same slide.
 
 ## Running and previewing
@@ -62,19 +65,19 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
 ## Making modifications
 
 ### Change an existing slide's look or behaviour
-Edit the `registerSlide(<orig>, …)` block in the custom file that owns it (grep `registerSlide(41` across
+Edit the `registerSlide('<id>', …)` block in the custom file that owns it (grep `registerSlide('roblox-strangers'` across
 `assets/js/custom/`). If none exists, add one — preferably in `part-c.js` (the newest revision layer). Use
 `keepBase: true` to keep the converted pictures/text and just add an overlay; omit it to replace the slide entirely.
 
 ### Add a new slide
 ```js
-Deck.insertSlide({ after: 96, id: 'my-slide', title: '…', section: 'protect',
-  tr: { type: 'fade', ms: 800 }, notes: 'speaker notes',
+Deck.insertSlide({ after: 'youtube-train', id: 'my-slide', title: '…', section: 'protect',
+  tr: { type: 'fade', ms: 800 },   // speaker notes go in notes.json under this id
   render(el, ctx) { /* build DOM into el, 1920×1080 px coords */ },
   steps: 2, step(el, i, ctx) { /* click-build i */ }, unstep(el, i, ctx) { /* reverse on Back */ } });
 ```
-`after` is an original number or another inserted id. Set `hidden: true` for a slide you want available but not in
-the default run. Inserted slides get their own `id` as key (`#/my-slide`).
+`after` is the id of any slide, base or inserted (inserts may be registered in any order). The new slide's `id` must be
+unique across the deck (`#/my-slide`); the engine warns on duplicates and unknown ids.
 
 ### Rules for custom slide code
 - Classic scripts only (no modules, no bundler, no CDN). Keep it working from `file://`.
@@ -89,8 +92,14 @@ the default run. Inserted slides get their own `id` as key (`#/my-slide`).
 - New script file: create `assets/js/custom/<name>.js` and add a `<script>` tag in `index.html` **before the
   `<!-- CUSTOM-SCRIPTS-END -->` marker** (and therefore before `boot.js`). Order = override priority.
 
-### Change text, images, or speaker notes of an un-customised slide
-Prefer a small patch in a custom file (look up the element via `DECK_DATA.slides` by `orig`, mutate `els`/`notes`
+### Speaker notes
+Edit `notes.json` (keys are slide ids, in show order; see `SLIDES.md`). Served over http a reload is enough. Opened from disk
+(`file://`) browsers can't `fetch` local files, so the deck reads `assets/js/notes-data.js` instead: run
+`python3 scripts/sync_notes.py` after editing (it also checks the JSON is valid). Unknown ids are warned about in the console.
+Don't put `notes` in slide data or `insertSlide` specs; a note given there is only a fallback when `notes.json` has none.
+
+### Change text or images of an un-customised slide
+Prefer a small patch in a custom file (look up the element via `DECK_DATA.slides` by `id`, mutate `els`
 before `Deck.start()`), as part-b/part-c already do. Avoid hand-editing `slides-data.js`: it is one 110 KB line.
 
 ### Add media
@@ -105,13 +114,13 @@ Use the CSS variables in `deck.css` (`--bg0 --bg1 --ink --muted --cyan --amber -
 
 ## Gotchas
 
-- **`slides-data.js` is generated** by `scripts/gen_slides.py` (see `README-dev.md`), but **that script is not in this
-  repository**. Until it is restored, the generator cannot be re-run; treat `slides-data.js` as read-only source
-  data and make changes through `custom/part-*.js` patches. If you must edit it, edit surgically and keep it valid
+- **`slides-data.js` was generated** by `scripts/gen_slides.py` (see `README-dev.md`), but **that script is not in this
+  repository** and the data has since been edited by hand (hidden slides removed, reordered, ids added), so it must not be
+  regenerated; make changes through `custom/part-*.js` patches. If you must edit it, edit surgically and keep it valid
   JSON after `window.DECK_DATA=`.
-- Slide numbers in comments are the *original* PowerPoint numbers (`orig`), not the on-screen position — the
-  on-screen counter shows both (`#<orig> · <position> / <total>`).
-- Removing a slide = set `hidden: true`, don't delete its data; other slides' morph transitions (`mk` keys,
-  `type: 'morph'` between consecutive originals) may depend on neighbours.
+- Slide numbers (`#92`, `slide 41`) in older comments and commit messages are the *original PowerPoint* numbers; use
+  `SLIDES.md` to translate them to ids / current positions. New code should refer to slides by id.
+- Removing a slide = delete its entry from `slides-data.js` and its `registerSlide`/`insertSlide` code. `type: 'morph'`
+  only runs between neighbouring slides (and falls back to a cross-fade otherwise), so check the slides around it.
 - Fonts and assets must stay local; the deck is meant to run offline on a presentation laptop.
 - Don't commit `.DS_Store` or `.remember/` (covered by `.gitignore`).

@@ -168,17 +168,6 @@ function showCards(el, k) {          // k = number of custom steps applied (1 = 
 
 Deck.insertSlide({
   after: 'three-things', id: 'gray-research', title: 'Grayscale research', section: 'treat', tr: { type: 'fade', ms: 800 }, loop: false, steps: 3,
-  notes: 'Does black and white really work? Researchers have tested it, and notice: every one of these studies was done on adults. ' +
-    'This is a colourful feed, the way your phone looks today: bright images, red hearts, red badges, LIVE tags. Watch the thumb, it keeps flicking. ' +
-    '[click] Now we switch the same phone to grayscale. Same apps, same content, but it is just less rewarding, and the thumb slows down. ' +
-    '[click] Three studies measured it. Wickord and Quaiser-Pohl, 2023, Computers in Human Behavior Reports: habitual users, the people who scroll out of boredom or habit, ' +
-    'dropped about one full hour a day. That is about 15 days a year. ' +
-    'Holte and Ferraro, 2020, The Social Science Journal, college students: about 38 minutes a day, over 4 hours a week, ' +
-    'mostly from social media and browsing. Grey notification badges and grey colours break the automatic reward loop. ' +
-    'Dekker and colleagues, 2023, University of Amsterdam: a strict two-week trial with all kinds of users. Time dropped a modest 20 minutes a day, ' +
-    'but people reported a lower urge to check notifications, less anxiety and a stronger sense of control. ' +
-    '[click] So this is not just for kids. If grown adults, who know they are being studied, still scroll less in black and white, ' +
-    'imagine the effect on a child. Turn it on for your kids, and turn it on for yourself. Next, let me show you how to make devices boring.',
   render: function (el, ctx) {
     var still = ctx.static || ctx.reduced;
     var r = h('div', 'gr inst', el);

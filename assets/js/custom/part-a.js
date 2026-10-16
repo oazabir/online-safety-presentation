@@ -1,15 +1,11 @@
 /* ============================================================================
-   part-a.js - custom, animated & interactive slides for original slides 1-47
-   (+ new: live counter after 4, screen-time calculator after 10).
+   part-a.js - custom, animated & interactive slides for the first part of the deck
    Self-contained: injects <style id="part-a-css">, uses only Deck/ctx helpers.
    ============================================================================ */
 (function () {
 'use strict';
 if (!window.Deck) return;
 
-var T0 = Date.now();                       // deck load = start of the live counter
-var YEARS_PER_DAY = 684932;                // 6h40m x 900M Muslims / 8760 h per year (slide 4)
-var RATE = YEARS_PER_DAY / 86400;          // years per second  (~7.93)
 
 /* ---------------------------------------------------------------- css */
 var CSS = [
@@ -67,59 +63,9 @@ var CSS = [
 '.pa1.static .rv,.pa1.reduced .rv{opacity:1;animation:none}.pa1.reduced *{animation:none!important;transition:none!important}',
 '@keyframes pa-grad{to{background-position:-220% 0}}',
 
-/* ---- live counter */
-'.lc-k{position:absolute;left:0;right:0;top:92px;text-align:center;font-size:40px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);font-weight:700}',
-'.lc-h{position:absolute;left:0;right:0;top:170px;text-align:center;font-family:var(--f-display);font-size:70px;font-weight:500;color:var(--ink)}',
-'.lc-odo{position:absolute;left:0;right:0;top:268px;display:flex;justify-content:center;align-items:center;font-family:var(--f-display);font-weight:700;font-size:270px;line-height:1.05;',
-'  font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 0 70px rgba(34,211,238,.65),0 0 14px rgba(34,211,238,.45)}',
-'.od{display:inline-block;height:1.05em;width:.6em;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}',
-'.od i{display:block;font-style:normal;will-change:transform}',
-'.od b{display:block;height:1.05em;line-height:1.05em;text-align:center;font-weight:700}',
-'.od-c{display:inline-block;width:.26em;text-align:center;line-height:1.05em;opacity:.8}',
-'.lc-u{position:absolute;left:0;right:0;top:566px;text-align:center;font-family:var(--f-display);font-size:92px;font-weight:600;color:var(--amber);text-shadow:0 0 40px rgba(255,176,32,.45)}',
-'.lc-life{position:absolute;left:0;right:0;top:716px;text-align:center;font-size:44px;color:var(--ink2);font-weight:500}',
-'.lc-life b{color:#fff;font-variant-numeric:tabular-nums;font-size:58px;font-weight:700;margin:0 6px}',
-'.lc-stats{position:absolute;left:160px;right:160px;top:826px;display:flex;gap:28px}',
-'.lc-stats div{flex:1;text-align:center;padding:20px 12px 18px;border-radius:20px;background:var(--glass);box-shadow:inset 0 0 0 1px var(--glass-b)}',
-'.lc-stats b{display:block;font-family:var(--f-display);font-size:60px;color:#fff;font-variant-numeric:tabular-nums}',
-'.lc-stats span{font-size:27px;color:var(--ink2);text-transform:uppercase;letter-spacing:.1em}',
-'.lc-ring{position:absolute;left:50%;top:410px;width:1500px;height:1500px;margin:-750px 0 0 -750px;border-radius:50%;border:2px solid rgba(34,211,238,.5);animation:pa-ring 9s linear infinite;animation-delay:var(--d)}',
-'.lc-meta{position:absolute;right:52px;bottom:34px;font-size:24px;color:var(--muted);display:flex;gap:18px;align-items:center}',
+/* ---- buttons */
 '.pa-btn{font:600 24px var(--f-body);color:var(--ink);background:var(--glass);border:1px solid var(--glass-b);border-radius:99px;padding:10px 24px;cursor:pointer;transition:background .2s,transform .2s}',
 '.pa-btn:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}',
-
-/* ---- calculator */
-'.cx-title{position:absolute;left:100px;top:54px;font-family:var(--f-display);font-size:80px;font-weight:600;line-height:1.05}',
-'.cx-sub{position:absolute;left:104px;top:150px;font-size:32px;color:var(--ink2)}',
-'.cx-card{position:absolute;border-radius:28px;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.035));box-shadow:inset 0 0 0 1px var(--glass-b),var(--shadow);padding:30px 40px}',
-'.cx-lab{font-size:28px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);font-weight:700}',
-'.cx-val{font-family:var(--f-display);font-weight:700;font-size:150px;line-height:1;color:#fff;font-variant-numeric:tabular-nums;text-shadow:0 0 40px rgba(34,211,238,.5)}',
-'.cx-val small{font-size:56px;font-weight:500;color:var(--ink2);margin-left:14px;text-shadow:none}',
-'.cx-row{display:flex;align-items:center;gap:20px;margin-top:14px}',
-'.cx-btn{flex:none;width:76px;height:76px;border-radius:50%;border:1px solid var(--glass-b);background:rgba(255,255,255,.08);color:#fff;font:600 44px/1 var(--f-body);cursor:pointer;transition:background .2s,transform .15s}',
-'.cx-btn:hover{background:rgba(34,211,238,.35)}.cx-btn:active{transform:scale(.92)}',
-'.cx-range{-webkit-appearance:none;appearance:none;flex:1;height:22px;border-radius:22px;outline:none;cursor:pointer;margin:0;',
-'  background:linear-gradient(90deg,var(--cyan) var(--p,40%),rgba(255,255,255,.16) var(--p,40%))}',
-'.cx-range::-webkit-slider-thumb{-webkit-appearance:none;width:64px;height:64px;border-radius:50%;background:#fff;border:8px solid var(--cyan);box-shadow:0 0 0 8px rgba(34,211,238,.22),0 8px 24px rgba(0,0,0,.6);cursor:grab}',
-'.cx-range:active::-webkit-slider-thumb{cursor:grabbing;box-shadow:0 0 0 14px rgba(34,211,238,.3),0 8px 24px rgba(0,0,0,.6)}',
-'.cx-range::-moz-range-thumb{width:48px;height:48px;border-radius:50%;background:#fff;border:8px solid var(--cyan)}',
-'.cx-scale{display:flex;justify-content:space-between;margin:8px 98px 0 98px;font-size:24px;color:var(--muted)}',
-'.cx-chip{position:absolute;right:36px;top:28px;font:600 26px var(--f-body);color:var(--amber);background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.4);border-radius:99px;padding:8px 22px;cursor:pointer}',
-'.cx-chip:hover{background:rgba(255,176,32,.25)}',
-'.cx-tile{position:absolute;top:226px;width:284px;height:204px;border-radius:24px;background:linear-gradient(160deg,rgba(34,211,238,.16),rgba(34,211,238,.04));box-shadow:inset 0 0 0 1px rgba(34,211,238,.35);padding:22px 24px}',
-'.cx-tile.hot{background:linear-gradient(160deg,rgba(255,77,77,.26),rgba(255,77,77,.05));box-shadow:inset 0 0 0 1px rgba(255,77,77,.55),0 0 50px rgba(255,77,77,.25)}',
-'.cx-tile b{display:block;font-family:var(--f-display);font-size:66px;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}',
-'.cx-tile span{display:block;margin-top:10px;font-size:30px;line-height:1.25;color:var(--ink2)}',
-'.cx-eq{position:absolute;left:920px;top:466px;width:880px}',
-'.cx-eqh{font-size:28px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:12px}',
-'.cx-r{position:relative;height:132px;margin-bottom:14px;border-radius:24px;background:var(--glass);box-shadow:inset 0 0 0 1px var(--glass-b);padding:16px 26px 0 128px;overflow:hidden}',
-'.cx-r svg{position:absolute;left:24px;top:22px;width:84px;height:84px;animation:pa-float 4.5s ease-in-out infinite alternate;--r0:-3deg;--r1:3deg}',
-'.cx-r b{font-family:var(--f-display);font-size:62px;color:#fff;font-variant-numeric:tabular-nums;line-height:1}',
-'.cx-r em{font-style:normal;font-size:30px;color:var(--ink2);margin-left:14px;font-weight:600}',
-'.cx-r u{display:block;text-decoration:none;font-size:22px;color:var(--muted);margin-top:6px}',
-'.cx-bar{position:absolute;left:0;right:0;bottom:0;height:12px;background:rgba(255,255,255,.07)}',
-'.cx-bar i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--cyan),var(--green),var(--amber));will-change:transform}',
-'.cx-foot{position:absolute;left:100px;right:100px;bottom:26px;font-size:22px;color:var(--muted);line-height:1.35}',
 
 /* ---- slide 24 checklist */
 '.sg-row{position:absolute;left:840px;width:1010px;height:140px;display:flex;align-items:center;gap:26px;padding:0 30px 0 24px;border-radius:24px;border:0;background:var(--glass);color:var(--ink);text-align:left;cursor:pointer;',
@@ -216,7 +162,6 @@ st.textContent = CSS;
 function rng(seed) { var s = (seed * 2654435761) >>> 0 || 1; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 function ease(x) { return 1 - Math.pow(1 - x, 3); }
 function smooth(a, b, x) { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
-function fmt(n, d) { return Number(n).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
 function mk(parent, html) { var d = document.createElement('div'); d.innerHTML = html; var n = d.firstElementChild; parent.appendChild(n); return n; }
 function root(el, cls, ctx) { var r = document.createElement('div'); r.className = 'pa ' + cls + (ctx.static ? ' static' : ''); el.appendChild(r); return r; }
 function go(r, ctx) { if (!ctx.static) { void r.offsetWidth; r.classList.add('go'); } }
@@ -268,7 +213,7 @@ function chipsFor(r, list) {
 }
 
 /* ================================================================ SLIDE 1 - opener */
-Deck.registerSlide(1, {
+Deck.registerSlide('title', {
   loop: false,
   render: function (el, ctx) {
     var r = root(el, 'pa1' + (ctx.reduced ? ' reduced' : ''), ctx);
@@ -284,90 +229,19 @@ Deck.registerSlide(1, {
   }
 });
 
-/* ================================================================ SLIDE 2 - three panels light up in turn */
-Deck.registerSlide(2, {
-  keepBase: true,
-  render: function (el, ctx) {
-    var host = ctx.view.map.e7; if (!host || ctx.static) return;
-    var t = host.querySelector('.in') || host; t.classList.add('pa-hs');
-    for (var i = 0; i < 3; i++) { var d = document.createElement('div'); d.className = 'pa-pan'; d.style.left = (i * 33.3) + '%'; d.style.setProperty('--d', (i * 3) + 's'); t.appendChild(d); }
-    addSweep(ctx, 'e7', 2);
-  }
-});
-
-/* ================================================================ SLIDE 4 - count up the headline */
-Deck.registerSlide(4, {
-  keepBase: true,
-  render: function (el, ctx) {
-    addSweep(ctx, 'e14', 0.5);
-    var h = ctx.view.map.e14; if (h) h.classList.add('pa-hs');
-  },
-  enter: function (el, ctx) { countOnShow(ctx, 'e14', '684,932', { dur: 2600, pulse: true }); }
-});
-
-/* ================================================================ NEW - live counter (after 4) */
-(function () {
-  var NDIG = 8;
-  Deck.insertSlide({
-    after: 4, id: 'live-counter', title: 'Live screen-time counter', section: 'problem', hidden: true,
-    tr: { type: 'fade', ms: 900 }, loop: 'orbs',
-    notes: 'The counter started the moment this deck was opened. It uses the figures from the previous slide: 6h 40m per day x 900M Muslims = 684,932 years per day = about 7.93 years every second. Use the restart button if you opened the deck before the talk began. Lifetimes assume a 70-year life.',
-    render: function (el, ctx) {
-      var r = root(el, 'lc', ctx);
-      var cols = '';
-      for (var i = NDIG - 1; i >= 0; i--) {
-        var strip = ''; for (var k = 0; k <= 10; k++) strip += '<b>' + (k % 10) + '</b>';
-        cols += '<span class="od" data-i="' + i + '"><i>' + strip + '</i></span>' + (i % 3 === 0 && i > 0 ? '<span class="od-c" data-c="' + i + '">,</span>' : '');
-      }
-      r.innerHTML = '<div class="lc-ring" style="--d:0s"></div><div class="lc-ring" style="--d:-3s"></div><div class="lc-ring" style="--d:-6s"></div>' +
-        '<div class="lc-k rv" style="--d:.1s">Since this talk began</div>' +
-        '<div class="lc-h rv" style="--d:.25s">the Ummah has spent</div>' +
-        '<div class="lc-odo rv" style="--d:.4s">' + cols + '</div>' +
-        '<div class="lc-u rv" style="--d:.6s">years on screens</div>' +
-        '<div class="lc-life rv" style="--d:.8s">that is <b class="lt">0.0</b> lifetimes of 70 years</div>' +
-        '<div class="lc-stats rv" style="--d:1s"><div><b>' + fmt(RATE, 2) + '</b><span>years every second</span></div><div><b>' + fmt(RATE * 60) + '</b><span>years every minute</span></div><div><b>' + fmt(YEARS_PER_DAY / 24) + '</b><span>years every hour</span></div></div>' +
-        '<div class="lc-meta rv" style="--d:1.2s"><span>6h 40m per day &times; 900M Muslims = 684,932 years per day</span><span>Talk time <b class="tm" style="color:#fff;font-variant-numeric:tabular-nums">00:00:00</b></span><button class="pa-btn" data-act="reset" title="Restart the counter from zero">&#8635; Restart count</button></div>';
-      chipsFor(r, ['https://datareportal.com/reports/digital-2024-global-overview-report']);
-      var cols_ = r.querySelectorAll('.od'), commas = r.querySelectorAll('.od-c'), strips = [], lt = r.querySelector('.lt'), tm = r.querySelector('.tm');
-      cols_.forEach(function (c) { strips.push(c.firstChild); });
-      var last = { n: -1, lt: '', tm: '' };
-      function draw() {
-        var v = (Date.now() - T0) / 1000 * RATE;
-        var iv = Math.floor(v), ndig = Math.max(1, String(iv).length);
-        for (var i = 0; i < NDIG; i++) {
-          var q = v / Math.pow(10, i), fl = Math.floor(q), fr = q - fl;
-          var pos = (fl % 10) + smooth(i === 0 ? .55 : .92, 1, fr);
-          strips[NDIG - 1 - i].style.transform = 'translate3d(0,' + (-pos * 100 / 11).toFixed(3) + '%,0)';
-          if (i + 1 > ndig && last.n !== ndig) cols_[NDIG - 1 - i].style.display = 'none';
-          else if (last.n !== ndig) cols_[NDIG - 1 - i].style.display = '';
-        }
-        if (last.n !== ndig) { commas.forEach(function (c) { c.style.display = (+c.dataset.c < ndig) ? '' : 'none'; }); last.n = ndig; }
-        var l = (v / 70).toFixed(1); if (l !== last.lt) { lt.textContent = l; last.lt = l; }
-        var s = Math.floor((Date.now() - T0) / 1000), t = pad(Math.floor(s / 3600)) + ':' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60);
-        if (t !== last.tm) { tm.textContent = t; last.tm = t; }
-      }
-      function pad(n) { return (n < 10 ? '0' : '') + n; }
-      draw();
-      r.querySelector('[data-act=reset]').addEventListener('click', function (e) { e.stopPropagation(); T0 = Date.now(); last.n = -1; draw(); Deck.toast && Deck.toast('Counter restarted', 1600); });
-      if (!ctx.static) ctx.tick(draw);
-      go(r, ctx);
-    }
-  });
-})();
-
 /* ================================================================ SLIDES 8, 9, 10 - numbers count up */
-Deck.registerSlide(7, { keepBase: true, render: function (el, ctx) { addSweep(ctx, 'e5', 1.5); } });
-Deck.registerSlide(8, {
+Deck.registerSlide('gallup-teen-hours', { keepBase: true, render: function (el, ctx) { addSweep(ctx, 'e5', 1.5); } });
+Deck.registerSlide('hours-per-year', {
   keepBase: true,
   render: function (el, ctx) { addSweep(ctx, 'e5', 1); },
   enter: function (el, ctx) { countOnShow(ctx, 'e2', '1752', { dur: 1000, delay: 0, pulse: false }); }
 });
-Deck.registerSlide(9, {
+Deck.registerSlide('what-in-1700-hours', {
   keepBase: true,
   render: function (el, ctx) { var t = ctx.view.map.e16; if (t) t.classList.add('pa9-books'); },
   enter: function (el, ctx) { countOnShow(ctx, 'e16', '200', { dur: 1800, pulse: true }); }
 });
-Deck.registerSlide(10, {
+Deck.registerSlide('hours-tiles', {
   keepBase: true, loop: ['glow', 'pulse', 'beam'],
   enter: function (el, ctx) {
     [['e5', '1200'], ['e6', '1000'], ['e8', '800'], ['e10', '1500'], ['e11', '1000']].forEach(function (a, i) {
@@ -376,96 +250,8 @@ Deck.registerSlide(10, {
   }
 });
 
-/* ================================================================ NEW - screen-time calculator (after 10) */
-(function () {
-  var ICON_BOOK = '<svg viewBox="0 0 64 64"><path d="M8 12c8-4 17-4 24 2 7-6 16-6 24-2v38c-8-4-17-4-24 2-7-6-16-6-24-2z" fill="rgba(34,211,238,.22)" stroke="#22D3EE" stroke-width="3" stroke-linejoin="round"/><path d="M32 14v38" stroke="#22D3EE" stroke-width="3"/></svg>';
-  var ICON_CAP = '<svg viewBox="0 0 64 64"><path d="M32 12 3 26l29 14 29-14z" fill="rgba(255,176,32,.25)" stroke="#FFB020" stroke-width="3" stroke-linejoin="round"/><path d="M14 33v13c10 8 26 8 36 0V33" fill="none" stroke="#FFB020" stroke-width="3"/><path d="M58 28v18" stroke="#FFB020" stroke-width="3" stroke-linecap="round"/></svg>';
-  var ICON_CLK = '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="25" fill="rgba(255,122,26,.22)" stroke="#FF7A1A" stroke-width="3"/><path d="M32 17v16l11 7" fill="none" stroke="#FF7A1A" stroke-width="3.5" stroke-linecap="round"/></svg>';
-  var MAXH = 10 * 365 * 15;                       // 10 h/day from age 3 = scale for the bars
-  Deck.insertSlide({
-    after: 10, id: 'calculator', title: 'Screen-time calculator', section: 'problem', hidden: true, tr: { type: 'fade', ms: 800 }, loop: 'orbs',
-    notes: 'Interactive. Drag the daily-hours slider (default 4.8, the Gallup teen average from slide 8) and the child\'s age. Assumptions: 365 days a year, same daily hours until 18; a book takes about 6 hours; a year of college is about 800 hours (slide 10); 1,700 hours is the yardstick from slide 9.',
-    render: function (el, ctx) {
-      var r = root(el, 'cx', ctx);
-      r.innerHTML =
-        '<div class="cx-title rv" style="--d:.1s">What do screen hours really cost?</div>' +
-        '<div class="cx-sub rv" style="--d:.2s">Move the sliders. Every number below updates live.</div>' +
-        '<div class="cx-card pe rv" style="left:100px;top:226px;width:770px;height:362px;--d:.3s">' +
-          '<div class="cx-lab">Screen time per day</div>' +
-          '<div class="cx-val"><span data-o="h">4.8</span><small>hours</small></div>' +
-          '<div class="cx-row"><button class="cx-btn" data-d="h-">&minus;</button><input class="cx-range" type="range" min="0" max="10" step="0.1" value="4.8" data-in="h" aria-label="Screen hours per day"><button class="cx-btn" data-d="h+">+</button></div>' +
-          '<div class="cx-scale"><span>0</span><span>5</span><span>10</span></div>' +
-          '<span class="cx-chip" data-preset="4.8">Teen avg 4.8 h</span>' +
-        '</div>' +
-        '<div class="cx-card pe rv" style="left:100px;top:612px;width:770px;height:322px;--d:.45s">' +
-          '<div class="cx-lab">Child\'s age today</div>' +
-          '<div class="cx-val" style="font-size:120px"><span data-o="age">12</span><small>years old</small></div>' +
-          '<div class="cx-row" style="margin-top:6px"><button class="cx-btn" data-d="a-">&minus;</button><input class="cx-range" type="range" min="3" max="17" step="1" value="12" data-in="age" aria-label="Child age"><button class="cx-btn" data-d="a+">+</button></div>' +
-          '<div class="cx-scale"><span>3</span><span>10</span><span>17</span></div>' +
-        '</div>' +
-        '<div class="cx-tile rv" style="left:920px;--d:.5s"><b data-o="hy">0</b><span>hours a year</span></div>' +
-        '<div class="cx-tile rv" style="left:1224px;--d:.6s"><b data-o="dy">0</b><span>full days a year</span></div>' +
-        '<div class="cx-tile hot rv" style="left:1528px;--d:.7s"><b data-o="h18">0</b><span>hours by age 18</span></div>' +
-        '<div class="cx-eq rv" style="--d:.8s"><div class="cx-eqh">What those hours could become</div>' +
-          '<div class="cx-r">' + ICON_BOOK + '<b data-o="bk">0</b><em>books</em><u>assumption: about 6 hours per book</u><div class="cx-bar"><i data-bar="bk"></i></div></div>' +
-          '<div class="cx-r">' + ICON_CAP + '<b data-o="cl">0</b><em>years of college</em><u>assumption: about 800 study hours per college year</u><div class="cx-bar"><i data-bar="cl"></i></div></div>' +
-          '<div class="cx-r">' + ICON_CLK + '<b data-o="bl">0</b><em>&times; the 1,700-hour year</em><u>200+ books, or a new language</u><div class="cx-bar"><i data-bar="bl"></i></div></div>' +
-        '</div>' +
-        '<div class="cx-foot rv" style="--d:1s">Estimates, not predictions. Assumes the same daily screen time every day of the year, from today until age 18 (365 days a year).</div>';
-      var S = { h: 4.8, age: 12 }, cur = {}, tgt = {};
-      var o = {}; r.querySelectorAll('[data-o]').forEach(function (n) { o[n.dataset.o] = n; });
-      var bars = {}; r.querySelectorAll('[data-bar]').forEach(function (n) { bars[n.dataset.bar] = n; });
-      var rangeH = r.querySelector('[data-in=h]'), rangeA = r.querySelector('[data-in=age]');
-      function targets() {
-        var ht = Math.round(S.h * 10), yl = 18 - S.age, hy = ht * 365 / 10, h18 = ht * 365 * yl / 10;   // integer tenths: exact, deterministic
-        tgt = { hy: hy, dy: hy / 24, h18: h18, bk: h18 / 6, cl: h18 / 800, bl: h18 / 1700 };
-        tgt.bkb = tgt.bk / (MAXH / 6); tgt.clb = tgt.cl / (MAXH / 800); tgt.blb = tgt.bl / (MAXH / 1700);
-      }
-      function text(k, v) {
-        if (k === 'cl' || k === 'bl') return v < 10 ? v.toFixed(1) : fmt(v);
-        return fmt(v);
-      }
-      var lastTxt = {};
-      function render(now) {
-        ['hy', 'dy', 'h18', 'bk', 'cl', 'bl'].forEach(function (k) {
-          var t = text(k, cur[k]); if (lastTxt[k] !== t) { o[k].textContent = t; lastTxt[k] = t; }
-        });
-        bars.bk.style.transform = 'scaleX(' + Math.max(.012, Math.min(1, cur.bkb)).toFixed(4) + ')';
-        bars.cl.style.transform = 'scaleX(' + Math.max(.012, Math.min(1, cur.clb)).toFixed(4) + ')';
-        bars.bl.style.transform = 'scaleX(' + Math.max(.012, Math.min(1, cur.blb)).toFixed(4) + ')';
-      }
-      function setP(inp) { inp.style.setProperty('--p', ((inp.value - inp.min) / (inp.max - inp.min) * 100) + '%'); }
-      function sync() {
-        o.h.textContent = S.h.toFixed(1); o.age.textContent = S.age; if (o.yl) o.yl.textContent = 18 - S.age;
-        rangeH.value = S.h; rangeA.value = S.age; setP(rangeH); setP(rangeA); targets();
-        if (ctx.static) { for (var k in tgt) cur[k] = tgt[k]; render(); }
-      }
-      ['hy', 'dy', 'h18', 'bk', 'cl', 'bl', 'bkb', 'clb', 'blb'].forEach(function (k) { cur[k] = 0; });
-      sync();
-      rangeH.addEventListener('input', function () { S.h = Math.round(parseFloat(rangeH.value) * 10) / 10; sync(); });
-      rangeA.addEventListener('input', function () { S.age = parseInt(rangeA.value, 10); sync(); });
-      [rangeH, rangeA].forEach(function (inp) { inp.addEventListener('pointerup', function () { inp.blur(); }); inp.addEventListener('change', function () { inp.blur(); }); });
-      r.addEventListener('click', function (e) {
-        var b = e.target.closest('[data-d],[data-preset]'); if (!b) return; e.stopPropagation();
-        if (b.dataset.preset) S.h = parseFloat(b.dataset.preset);
-        else if (b.dataset.d === 'h-') S.h = Math.max(0, Math.round((S.h - .5) * 10) / 10);
-        else if (b.dataset.d === 'h+') S.h = Math.min(10, Math.round((S.h + .5) * 10) / 10);
-        else if (b.dataset.d === 'a-') S.age = Math.max(3, S.age - 1);
-        else if (b.dataset.d === 'a+') S.age = Math.min(17, S.age + 1);
-        sync();
-      });
-      if (!ctx.static) ctx.tick(function (dt) {
-        var a = 1 - Math.pow(.0016, dt / 1000), dirty = false;
-        for (var k in tgt) { var d = tgt[k] - cur[k]; if (Math.abs(d) > (/^(hy|dy|h18|bk|cl|bl)$/.test(k) ? .02 : 1e-4 * Math.max(1, Math.abs(tgt[k])))) { cur[k] += d * a; dirty = true; } else cur[k] = tgt[k]; }
-        if (dirty || !lastTxt.hy) render();
-      });
-      go(r, ctx);
-    }
-  });
-})();
-
 /* ================================================================ SLIDE 21 / 23 - mood */
-Deck.registerSlide(21, {
+Deck.registerSlide('mood-swings', {
   keepBase: true,
   render: function (el, ctx) {
     if (ctx.static) return;
@@ -473,7 +259,7 @@ Deck.registerSlide(21, {
     r.innerHTML = '<div class="dv-glow" style="left:60px;top:300px;width:1000px;height:520px;background:radial-gradient(ellipse,rgba(255,60,50,.28),transparent 70%)"></div><div class="dv-beam" style="--d:0s"></div>';
   }
 });
-Deck.registerSlide(23, {
+Deck.registerSlide('teen-tantrums', {
   keepBase: true,
   render: function (el, ctx) {
     if (ctx.static) return;
@@ -484,7 +270,7 @@ Deck.registerSlide(23, {
 });
 
 /* ================================================================ SLIDE 24 - clickable signs checklist */
-Deck.registerSlide(24, {
+Deck.registerSlide('signs-of-addiction', {
   keepBase: true,
   render: function (el, ctx) {
     var base = ctx.view.map.e4; if (base) base.style.display = 'none';
@@ -522,7 +308,7 @@ Deck.registerSlide(24, {
 });
 
 /* ================================================================ SLIDE 27 - split screen */
-Deck.registerSlide(27, {
+Deck.registerSlide('device-vs-drug-addiction', {
   loop: false,
   render: function (el, ctx) {
     var r = root(el, 'pa27', ctx);
@@ -564,7 +350,7 @@ Deck.registerSlide(27, {
     CO.forEach(function (c, i) { h += '<div class="co" data-i="' + i + '" style="left:' + c.x + 'px;top:' + c.y + 'px"><p style="margin:0">' + c.t + '</p></div>'; });
     return h;
   }
-  Deck.registerSlide(28, {
+  Deck.registerSlide('dopamine-pathways', {
     keepBase: true,
     render: function (el, ctx) {
       var m = ctx.view.map, pic = m.e5, qr = m.e10242;
@@ -610,11 +396,11 @@ function divider(spec) {
     }
   };
 }
-Deck.registerSlide(31, divider({ c1: '#FF4D4D', c2: '#FFB020', glow: 'left:70px;top:40px;width:1220px;height:420px;background:radial-gradient(ellipse,rgba(255,70,60,.30),transparent 70%)' }));
-Deck.registerSlide(36, divider({ c1: '#FF4D4D', c2: '#FFB020', glow: 'left:70px;top:40px;width:1220px;height:420px;background:radial-gradient(ellipse,rgba(255,60,60,.30),transparent 70%)' }));
+Deck.registerSlide('why-addictive', divider({ c1: '#FF4D4D', c2: '#FFB020', glow: 'left:70px;top:40px;width:1220px;height:420px;background:radial-gradient(ellipse,rgba(255,70,60,.30),transparent 70%)' }));
+Deck.registerSlide('games-made-addictive', divider({ c1: '#FF4D4D', c2: '#FFB020', glow: 'left:70px;top:40px;width:1220px;height:420px;background:radial-gradient(ellipse,rgba(255,60,60,.30),transparent 70%)' }));
 
 /* ================================================================ SLIDE 38 - Which games are most popular nowadays? */
-Deck.registerSlide(38, {
+Deck.registerSlide('popular-games', {
   loop: false,
   render: function (el, ctx) {
     var r = root(el, 'pa38', ctx);

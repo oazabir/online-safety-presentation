@@ -25,36 +25,63 @@ function safe(fn, label) { try { return fn(); } catch (e) { console.error('[deck
 
 /* ---------------------------------------------------------------- 1. registry (extension API) */
 var overrides = {}, inserts = [];
-/** Deck.registerSlide(idOrOriginalIndex, spec) - override/augment an existing slide, or add handlers to an inserted one.
+/** Deck.registerSlide(id, spec) - override/augment an existing slide, or add handlers to an inserted one.
  *  spec: {render(el,ctx), enter(el,ctx), leave(el,ctx), steps:n, step(el,i,ctx), unstep(el,i,ctx), calm:bool, loop:'name'|[..]|false, keepBase:bool} */
 Deck.registerSlide = function (id, spec) { id = String(id); overrides[id] = Object.assign(overrides[id] || {}, spec); return Deck; };
-/** Deck.insertSlide({after:origIndexOrId, id:'x', title, section, notes, hidden, tr:{type,ms}, ...same handlers}) */
+/** Deck.insertSlide({after:slideId, id:'x', title, section, hidden, tr:{type,ms}, ...same handlers}) */
 Deck.insertSlide = function (spec) { if (!spec || !spec.id || spec.after === undefined) throw new Error('insertSlide needs {id, after}'); inserts.push(spec); return Deck; };
+
+/* ---------------------------------------------------------------- speaker notes (notes.json: {slideId: text}) */
+Deck.notes = {};
+/** Loads notes.json, so notes can be edited without touching code. fetch() cannot read local files, so when the deck is opened
+ *  from disk (file://) it falls back to assets/js/notes-data.js (window.DECK_NOTES, made by scripts/sync_notes.py). */
+Deck.loadNotes = function (url) {
+  return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .catch(function () {
+      if (window.DECK_NOTES) return window.DECK_NOTES;
+      console.warn('speaker notes: could not read ' + url + ' - serve the folder over http, or run scripts/sync_notes.py');
+      return {};
+    }).then(function (map) { Deck.notes = map || {}; });
+};
 
 /* ---------------------------------------------------------------- 2. slide list */
 function buildList() {
   var list = DATA.slides.map(function (s) {
-    var o = Object.assign({}, s); o.key = String(s.n); o.spec = overrides[o.key] || overrides[s.id] || null; return o;
+    var o = Object.assign({}, s); o.key = String(s.id); o.spec = overrides[o.key] || null; o.notes = Deck.notes[o.key] || ''; return o;
   });
-  var tail = {};
-  inserts.forEach(function (sp) {
-    var after = String(sp.after), anchor = tail[after] || after;
-    var idx = list.findIndex(function (x) { return x.key === anchor; });
-    if (idx < 0) { console.warn('insertSlide: unknown anchor', sp.after); idx = list.length - 1; }
-    var prev = list[idx];
-    var o = { n: null, orig: null, key: String(sp.id), id: String(sp.id), hidden: !!sp.hidden, section: sp.section || prev.section,
-      tr: Object.assign({ type: 'fade', ms: 800 }, sp.tr || {}), notes: sp.notes || '', calm: !!sp.calm, loop: sp.loop || null,
-      els: sp.els || [], steps: [], custom: true, title: sp.title || sp.id };
-    o.spec = Object.assign({}, sp, overrides[o.key] || {});
-    list.splice(idx + 1, 0, o); tail[after] = o.key;
+  var tail = {}, pending = inserts.slice(), progress = true;
+  // an insert whose anchor is another (not yet placed) insert waits for it, so registration order never matters
+  while (pending.length && progress) {
+    progress = false;
+    pending = pending.filter(function (sp) {
+      var after = String(sp.after), anchor = tail[after] || after;
+      var idx = list.findIndex(function (x) { return x.key === anchor; });
+      if (idx < 0) return true;
+      var prev = list[idx];
+      var o = { n: null, key: String(sp.id), id: String(sp.id), section: sp.section || prev.section,
+        tr: Object.assign({ type: 'fade', ms: 800 }, sp.tr || {}), notes: Deck.notes[sp.id] || sp.notes || '', calm: !!sp.calm, loop: sp.loop || null,
+        els: sp.els || [], steps: [], custom: true, title: sp.title || sp.id };
+      o.spec = Object.assign({}, sp, overrides[o.key] || {});
+      list.splice(idx + 1, 0, o); tail[after] = o.key; progress = true;
+      return false;
+    });
+  }
+  pending.forEach(function (sp) { console.warn('insertSlide: unknown anchor', sp.after, 'for', sp.id); });
+  var ids = {}, num = 0;
+  list.forEach(function (s, i) {
+    if (ids[s.key]) console.warn('duplicate slide id', s.key);
+    s.hidden = !!s.hidden;
+    ids[s.key] = 1; s.pos = i; s.n = s.hidden ? 0 : ++num; s.label = s.hidden ? '★' : String(s.n); Deck.byKey[s.key] = s;
   });
-  list.forEach(function (s, i) { s.pos = i; s.label = s.orig ? String(s.orig) : '★'; Deck.byKey[s.key] = s; });
+  Object.keys(overrides).forEach(function (k) { if (!ids[k]) console.warn('registerSlide: unknown slide', k); });
+  Object.keys(Deck.notes).forEach(function (k) { if (!ids[k]) console.warn('notes.json: unknown slide', k); });
   Deck.slides = list;
 }
 Deck.order = function () { return Deck.slides.filter(function (s) { return !s.hidden; }); };
-Deck.find = function (k) { return Deck.byKey[String(k)] || null; };
-/** Sequential on-screen number (1..N over the visible order). Hidden slides have none (0). */
-Deck.number = function (s) { return Deck.order().indexOf(s) + 1; };
+/** by id ('roblox') or by on-screen number (7 / '7'). Ids are never purely numeric. */
+Deck.find = function (k) { k = String(k); return Deck.byKey[k] || (/^\d+$/.test(k) ? Deck.byNumber(k) : null); };
+/** Sequential on-screen number (1..N over the visible order, 0 for a hidden slide). Same as slide.n. */
+Deck.number = function (s) { return s.n; };
 Deck.byNumber = function (n) { return Deck.order()[(parseInt(n, 10) || 0) - 1] || null; };
 Deck.isCalm = function (s) { var sp = s.spec; return sp && sp.calm !== undefined ? !!sp.calm : !!s.calm; };
 
@@ -217,7 +244,7 @@ function mkChips(list) {
 function buildView(slide, opt) {
   opt = opt || {};
   var spec = slide.spec || {};
-  var root = h('section', 'slide'); root.dataset.n = slide.key; root.dataset.sec = slide.section;
+  var root = h('section', 'slide'); root.dataset.slide = slide.key; root.dataset.sec = slide.section;
   var sc = h('div', 'sc', root), bg = h('div', 'bgf', sc), amb = h('div', 'amb', sc), els = h('div', 'els', sc);
   var view = { slide: slide, root: root, sc: sc, bg: bg, amb: amb, els: els, map: {}, timers: [], cleanups: [], k: 0, groups: [], entryAuto: [],
     cust: 0, opt: opt, t0: performance.now(), active: false, stopLoops: null, static: !!opt.static };
@@ -548,10 +575,10 @@ Deck.show = function (slide, opts) {
   }
   deactivate(A);
   var T = dir > 0 ? slide.tr : from.tr, ref = dir > 0 ? A : B;
-  // morph only if the two slides are consecutive originals
+  // morph only between neighbouring slides
   if (T.type === 'morph') {
     var late = dir > 0 ? slide : from, early = dir > 0 ? from : slide;
-    if (!(late.orig && early.orig && late.orig === early.orig + 1)) T = { type: 'xfade', ms: 800 };
+    if (late.pos !== early.pos + 1) T = { type: 'xfade', ms: 800 };
   }
   // stage the incoming slide, wait for images, then animate
   stage.appendChild(B.root); B.root.style.visibility = 'hidden';

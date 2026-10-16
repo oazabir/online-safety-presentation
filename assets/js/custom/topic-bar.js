@@ -1,7 +1,7 @@
 /* ============================================================================
    topic-bar.js - bottom "chapter" progress bar.
    The deck is split into six major topics. Each topic starts at the slide named
-   in `from` (original number or inserted id) and runs until the next topic
+   in `from` (slide id) and runs until the next topic
    starts, so a topic is always one contiguous run of slides in show order.
    Each segment fills as the talk moves through its slides; earlier topics stay
    full, later ones stay empty. Click a segment to jump to the start of a topic.
@@ -11,11 +11,11 @@
 'use strict';
 
 var TOPICS = [
-  { from: 1,   label: 'The Problem',       color: 'var(--cyan)'   },   // life lost to screens, sleep, family, signs of addiction
+  { from: 'title', label: 'The Problem',       color: 'var(--cyan)'   },   // life lost to screens, sleep, family, signs of addiction
   { from: 'why-intro', label: 'Why It’s Addictive', color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
-  { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose (71-74)
-  { from: 'harm-intro', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial (45), grooming, Susan
-  { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist (66-105)
+  { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose
+  { from: 'harm-intro', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial, grooming, Susan
+  { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist
   { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
 
@@ -61,7 +61,7 @@ var segs = TOPICS.map(function (t, i) {
 });
 document.body.appendChild(bar);
 
-/* topic index + fill fraction for the slide on screen. Works for hidden slides too (counter, calculator),
+/* topic index + fill fraction for the slide on screen. Works for hidden slides too (if any),
    which sit between visible ones and count as "just after the previous visible slide". */
 function update() {
   var cur = Deck.cur; if (!cur) return;

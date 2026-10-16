@@ -18,7 +18,7 @@
 'use strict';
 if (!window.Deck || !window.DECK_DATA) return;
 var D = window.DECK_DATA;
-var byOrig = {}; D.slides.forEach(function (s) { if (s.orig) byOrig[s.orig] = s; });
+var byId = {}; D.slides.forEach(function (s) { byId[s.id] = s; });
 var GALLUP = 'https://news.gallup.com/poll/512576/teens-spend-average-hours-social-media-per-day.aspx';
 var S = { hpd: 4.8 };                       // hours of screen time per day, shared by [5] and [7]
 
@@ -45,25 +45,9 @@ function countUp(ctx, node, to, ms, format) {
 function noFocus(node) { node.addEventListener('pointerup', function () { setTimeout(function () { node.blur(); }, 0); }); }
 
 /* ---------------------------------------------------------------- data patches */
-if (byOrig[7]) byOrig[7].notes = 'This 2023 Gallup study shows that teens are spending 4.8 hours on social media every day. ' +
-  'YouTube and TikTok alone are over three hours. [click] And you can see here, girls spend more time on social media than boys: 5.3 hours against 4.4. ' +
-  'Interactive: the All / Boys / Girls buttons switch the chart; tap a platform to see what it costs in a year. The QR code opens the Gallup article.';
-if (byOrig[8]) {
-  byOrig[8].tr = { type: 'fade', ms: 800 };
-  byOrig[8].notes = 'Let’s do the maths. 4.8 hours a day, times 365 days, is 1,752 hours a year. [click] That is 73 full days, 24 hours a day, ' +
-    'every year: from the 1st of January to the middle of March, gone. Interactive: drag the slider or tap a preset to try your own child’s number; ' +
-    'the next slides use the same number.';
+if (byId['hours-per-year']) {
+  byId['hours-per-year'].tr = { type: 'fade', ms: 800 };
 }
-if (byOrig[10]) byOrig[10].notes = 'If you can stop your kids from wasting time on screens every day, and channel their time and energy into doing productive work, ' +
-  'you can make your teen complete a year of college, [click] learn a new language the next year, [click] develop competitive level skill in a sport, ' +
-  '[click] learn programming, [click] become a martial art expert, [click] and build a real body of creative work. \n\n' +
-  'Interactive: tap any tile to drop it from (or add it back to) the bar at the bottom, which shows how many years of today’s screen time the plan takes. ' +
-  '\n\nThe solution to this problem is easy. You don’t need to take devices away. I will show you later what you can do.';
-if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sure these two are not there. First: there must not be any chat feature ' +
-  'where your kids can chat with random people anywhere in the world. Text, voice, friend requests: that is the biggest threat to your children. ' +
-  '[click] Secondly, check that random people do not create the game levels or environments inside that game. For example, in Roblox, people create games ' +
-  'and environments, and then kids go into those environments. That is where the harm is. \n\n' +
-  'Interactive: tap a card or its question to tick it off. Only when both are clear is the game worth considering.';
 
 /* ================================================================ 1. #7 [4] Gallup chart, live */
 (function () {
@@ -185,7 +169,7 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     foot(r);
   }
 
-  Deck.registerSlide(7, {
+  Deck.registerSlide('gallup-teen-hours', {
     keepBase: false, loop: false, steps: 1,
     render: function (el, ctx) {
       var r = h('div', 'g7 m-all' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
@@ -308,7 +292,7 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     st.pres.forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.v === hpd)); });
   }
 
-  Deck.registerSlide(8, {
+  Deck.registerSlide('hours-per-year', {
     keepBase: false, loop: false, steps: 1,
     render: function (el, ctx) {
       var r = h('div', 'y8' + (ctx.static ? ' static a1' : '') + (ctx.reduced ? ' reduced' : ''), el);
@@ -449,7 +433,7 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
     timeline(r);
   }
 
-  Deck.registerSlide(10, {
+  Deck.registerSlide('hours-tiles', {
     keepBase: false, loop: false, steps: 5,
     render: function (el, ctx) {
       var r = h('div', 'b10' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
@@ -564,7 +548,7 @@ if (byOrig[44]) byOrig[44].notes = 'Before you give your kids ANY game, make sur
       : 'Before you install any game: <b>' + n + ' of ' + CARDS.length + '</b> checked. If either is there, the answer is no.';
   }
 
-  Deck.registerSlide(44, {
+  Deck.registerSlide('game-dangers', {
     keepBase: false, loop: false, steps: 1, tr: { type: 'fade', ms: 800 },
     title: 'Two things a game must not have',
     render: function (el, ctx) {

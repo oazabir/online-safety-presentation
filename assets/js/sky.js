@@ -250,7 +250,6 @@ function apply(slide) {
   var m = 'full';
   if (slide.section === 'grooming') m = 'groom';
   if (window.Deck && Deck.isCalm && Deck.isCalm(slide)) m = 'calm';
-  if (/^shepherd/.test(String(slide.id || slide.key))) m = 'off';
   setMode(m); redT = slide.section === 'grooming' ? 1 : 0;
   if (reduced) { fade = fadeT; staticFrame(); }
 }

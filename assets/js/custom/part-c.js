@@ -12,8 +12,8 @@
 'use strict';
 if (!window.Deck || !window.DECK_DATA) return;
 var D = window.DECK_DATA, W = D.w || 1920, H = D.h || 1080;
-var byN = {}; D.slides.forEach(function (s) { byN[s.n] = s; });
-function elData(n, id) { var s = byN[n]; if (!s) return null; for (var i = 0; i < s.els.length; i++) if (s.els[i].id === id) return s.els[i]; return null; }
+var byId = {}; D.slides.forEach(function (s) { byId[s.id] = s; });
+function elData(n, id) { var s = byId[n]; if (!s) return null; for (var i = 0; i < s.els.length; i++) if (s.els[i].id === id) return s.els[i]; return null; }
 function h(tag, cls, parent, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; }
 function hide(ctx, ids) { ids.forEach(function (id) { var e = ctx.view.map[id]; if (e) e.style.display = 'none'; }); }
 
@@ -72,12 +72,12 @@ var CSS = [
 '.pc-lsm .url{position:absolute;left:0;right:0;bottom:44px;text-align:center;font:500 54px/1 var(--f-mono);color:#fff;letter-spacing:.01em;text-shadow:0 4px 30px rgba(0,0,0,.8)}',
 
 /* dimming */
-'.slide[data-n="56"] .el[data-id=e1026] img{filter:brightness(.42) saturate(.85)}',
-'.slide[data-n="57"] .el[data-id=e3] video{filter:brightness(.42) saturate(.8)}',
+'.slide[data-slide="child-grooming"] .el[data-id=e1026] img{filter:brightness(.42) saturate(.85)}',
+'.slide[data-slide="kayleigh-haywood"] .el[data-id=e3] video{filter:brightness(.42) saturate(.8)}',
 '.pc-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(3,8,11,.82) 0%,rgba(3,8,11,.62) 45%,rgba(3,8,11,.12) 75%,rgba(3,8,11,0))}',
-'.slide[data-n="58"] .el[data-id=e4] video{filter:brightness(.36) saturate(.7)}',
-'.slide[data-n="64"] .el[data-id=e5] img,.slide[data-n="64"] .el[data-id=e4097] img{transition:filter 1.2s var(--ease)}',
-'.slide.pc-dim[data-n="64"] .el[data-id=e5] img,.slide.pc-dim[data-n="64"] .el[data-id=e4097] img{filter:brightness(.32) saturate(.8)}',
+'.slide[data-slide="meet-susan"] .el[data-id=e4] video{filter:brightness(.36) saturate(.7)}',
+'.slide[data-slide="night-contact-abuse"] .el[data-id=e5] img,.slide[data-slide="night-contact-abuse"] .el[data-id=e4097] img{transition:filter 1.2s var(--ease)}',
+'.slide.pc-dim[data-slide="night-contact-abuse"] .el[data-id=e5] img,.slide.pc-dim[data-slide="night-contact-abuse"] .el[data-id=e4097] img{filter:brightness(.32) saturate(.8)}',
 
 /* #71 toggles: stacked beside the phone, leave when the screenshots arrive */
 '.pb7-tog.pc-side{transition:background .4s,border-color .4s,transform .45s cubic-bezier(.4,0,.2,1),opacity .45s ease}',
@@ -320,17 +320,13 @@ function twRun(chars, ms, alive, done) {
   return function () { dead = true; };
 }
 
-/* ---------------------------------------------------------------- 1. removals + data patches */
-D.slides.forEach(function (s) { if (s.orig === 4 || s.orig === 2) s.hidden = true; });
-// slide 4 (live counter), 9 (calculator) and 74 (closing night sky) are hidden in part-a / part-b; slide 67 here
-if (byN[98]) byN[98].hidden = true;
-if (byN[48]) byN[48].hidden = true;   // "How to treat device addiction?" title: the treat-intro chapter slide replaces it
+/* ---------------------------------------------------------------- 1. data patches */
 // #93 desktop screenshot -> Kahf New Tab (1462x887): same height, width from its aspect, centred, rounder corners
-var p93 = elData(93, 'e4');
+var p93 = elData('kahf-browser-new-tab', 'e4');
 if (p93) { p93.src = 'media/kahf-newtab-desktop.webp'; p93.w = p93.h * H / W * 1462 / 887; p93.x = (100 - p93.w) / 2; p93.geom = 'round'; }
 // #93 phone video -> Kahf Browser iOS screen recording (media/kahf-browser.mp4, 720x1558, silent), in an iPhone frame
 // (built in render below): 840 px tall screen, same centre as the old video
-var v93 = elData(93, 'e8');
+var v93 = elData('kahf-browser-new-tab', 'e8');
 if (v93) {
   var v93cx = v93.x + v93.w / 2, v93h = 840 / H * 100, v93w = v93h * H / W * 720 / 1558;
   v93.src = 'media/kahf-browser.mp4'; v93.poster = 'media/posters/kahf-browser.jpg'; v93.mute = true;
@@ -363,7 +359,7 @@ if (v93) {
     '.pc93-phone .gl{position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;' +
     'background:linear-gradient(115deg,rgba(255,255,255,.16),rgba(255,255,255,0) 32%,rgba(255,255,255,0) 70%,rgba(255,255,255,.06))}';
   document.head.appendChild(st);
-  Deck.registerSlide(93, {
+  Deck.registerSlide('kahf-browser-new-tab', {
     keepBase: true,
     steps: 1,
     render: function (el, ctx) {
@@ -408,39 +404,17 @@ if (v93) {
     unstep: function (el) { var P = el.__p93; if (P) { P.menu.classList.remove('on'); P.ping.classList.remove('go'); } }
   });
 })();
-/* topic structure (matches TOPICS in topic-bar.js):
-   - 54 divider is retitled "Drugs, Grooming and Suicide"
-   - 45 (Lost Screen Memorial) is moved to sit right after 55, inside that topic
-   - 66-105 all belong to "Practical Protection" (the section drives overview headings + accent colours),
-     except 71-74, which move to the end of "How to Treat It" */
-if (byN[54]) {
-  var t54 = elData(54, 'e2');             // longer title: slightly smaller + wider box so it stays on one line
+/* 54 divider is retitled "Drugs, Grooming and Suicide" (the deck order and sections live in slides-data.js) */
+if (byId['drugs-grooming-suicide']) {
+  var t54 = elData('drugs-grooming-suicide', 'e2');             // longer title: slightly smaller + wider box so it stays on one line
   t54.paras[0].runs = [{ t: 'Drugs, Grooming and Suicide', sz: 108, c: '#F4F1EA' }];
   t54.w = 80;
 }
-(function () {
-  var from = D.slides.indexOf(byN[45]), to = D.slides.indexOf(byN[55]);
-  if (from < 0 || to < 0) return;
-  var s = D.slides.splice(from, 1)[0];
-  D.slides.splice(D.slides.indexOf(byN[55]) + 1, 0, s);
-  s.section = 'grooming';
-})();
-D.slides.forEach(function (s) { if (s.orig >= 66 && s.orig <= 105) s.section = 'protect'; });
-// 71-74 (make devices boring, top 10 games, violence-free games) close "How to Treat It": moved to right after 51
-(function () {
-  var at = D.slides.indexOf(byN[51]);
-  [71, 72, 73, 74].forEach(function (n, i) {
-    var s = byN[n]; if (!s || at < 0) return;
-    D.slides.splice(D.slides.indexOf(s), 1);
-    D.slides.splice(D.slides.indexOf(byN[51]) + 1 + i, 0, s);
-    s.section = 'treat';
-  });
-})();
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
 D.slides.forEach(function (s) {
-  if (s.orig !== 8 || !s.steps[0]) return;
+  if (s.id !== 'hours-per-year' || !s.steps[0]) return;
   s.steps[0].fx.forEach(function (f, i) { f.t = i * 180; f.d = 350; });
 });
 
@@ -450,7 +424,7 @@ D.slides.forEach(function (s) {
    The original "Luke:/Kayleigh:" text boxes and cursor blocks are dropped; the phone replaces them. */
 var T57 = { luke: 2200, lukeMsg: 3400, kay: 4200, kayMs: 1100, send: 5600, story: 6500, storyMs: 5000 };
 D.slides.forEach(function (s) {
-  if (s.orig !== 57 || !s.steps || !s.steps[1]) return;
+  if (s.id !== 'kayleigh-haywood' || !s.steps || !s.steps[1]) return;
   var chatIds = ['e4', 'e6', 'e7', 'e8', 'e9', 'e10'];
   s.els = s.els.filter(function (e) { return chatIds.indexOf(e.id) < 0; });
   s.steps[1].fx = [
@@ -469,7 +443,7 @@ D.slides.forEach(function (s) {
 
 /* slide #74 title */
 D.slides.forEach(function (s) {
-  if (s.orig !== 74) return;
+  if (s.id !== 'less-exciting-games') return;
   s.els.forEach(function (e) {
     (e.paras || []).forEach(function (p) {
       var t = p.runs.map(function (r) { return r.t || ''; }).join('');
@@ -480,7 +454,7 @@ D.slides.forEach(function (s) {
 
 /* slide #55 title */
 D.slides.forEach(function (s) {
-  if (s.orig !== 55) return;
+  if (s.id !== 'knife-vs-phone') return;
   s.els.forEach(function (e) {
     if (e.k !== 'text' || !e.paras) return;
     var txt = e.paras.map(function (p) { return p.runs.map(function (r) { return r.t || ''; }).join(''); }).join('');
@@ -493,7 +467,7 @@ D.slides.forEach(function (s) {
 
 /* kids in the room: blur sensitive words in slide #43's BBC quote */
 D.slides.forEach(function (s) {
-  if (s.orig !== 43) return;
+  if (s.id !== 'roblox-news') return;
   s.els.forEach(function (e) {
     if (e.k !== 'text' || !e.paras) return;
     e.paras.forEach(function (p) {
@@ -513,21 +487,21 @@ D.slides.forEach(function (s) {
 });
 
 // #55 (slide 41): only the heading and the UNSW picture, filling the free area
-if (byN[55]) {
-  var p55 = elData(55, 'e7');
-  byN[55].els = byN[55].els.filter(function (e) { return e.id === 'e2' || e.id === 'e7'; });
+if (byId['knife-vs-phone']) {
+  var p55 = elData('knife-vs-phone', 'e7');
+  byId['knife-vs-phone'].els = byId['knife-vs-phone'].els.filter(function (e) { return e.id === 'e2' || e.id === 'e7'; });
   var top55 = 19, hp = (100 - top55 - 2) * H / 100, wp = hp * 2400 / 1594;
   p55.hide0 = false; p55.card = true; p55.h = (100 - top55 - 2); p55.y = top55; p55.w = wp / W * 100; p55.x = (100 - p55.w) / 2;
-  byN[55].steps = [];
+  byId['knife-vs-phone'].steps = [];
 }
 // #28 (slide 20): all text auto-types, no click builds
-if (byN[28]) byN[28].steps = [];
+if (byId['dopamine-pathways']) byId['dopamine-pathways'].steps = [];
 // #58 (slide 44): new narrative builds replace the paragraph wipes
-if (byN[58]) byN[58].steps = [{ auto: 1, fx: [{ ids: ['e4'], t: 0, d: 0, do: 'play' }] }];
+if (byId['meet-susan']) byId['meet-susan'].steps = [{ auto: 1, fx: [{ ids: ['e4'], t: 0, d: 0, do: 'play' }] }];
 
 /* ---------------------------------------------------------------- 2. typewriter slides */
 /* #28 slide 20 - the three points pop out of the study page as speech bubbles, one by one, and type themselves out */
-Deck.registerSlide(28, {
+Deck.registerSlide('dopamine-pathways', {
   enter: function (el, ctx) {
     var r = el.querySelector('.pa28'); if (!r) return;
     var cos = Array.prototype.slice.call(r.querySelectorAll('.co'));
@@ -546,7 +520,7 @@ Deck.registerSlide(28, {
 });
 
 /* #57 slide 43 - starts on its own; dimmed video; the two story lines type out over 5 s */
-hook(57, {
+hook('kayleigh-haywood', {
   show: function (v) {
     var vid = v.map.e3; if (vid && !vid.querySelector('.pc-scrim')) h('div', 'pc-scrim', vid.querySelector('.in'));
   },
@@ -671,14 +645,14 @@ hook(57, {
     }
   }
 
-  Deck.registerSlide(57, {
+  Deck.registerSlide('kayleigh-haywood', {
     keepBase: true,
     render: function (el, ctx) {
       var P = el.__p57 = build(el);
       if (ctx.static) { P.root.classList.add('static'); final(P); }
     }
   });
-  hook(57, {
+  hook('kayleigh-haywood', {
     enter: function (v) { var P = v.custom && v.custom.__p57; if (P && v.k >= 1) final(P); },   // arrived built (Back)
     step: function (v, k) {
       var P = v.custom && v.custom.__p57; if (!P) return;
@@ -713,12 +687,12 @@ function headline(n, hideIds, game, o) {
     }
   });
 }
-headline(39, ['e4', 'e5'], 'Fortnite', { x: 255, y: 34, fs: 124 });
-headline(40, ['e4', 'e5'], 'Roblox', { x: 1362, y: 360, fs: 150 });
-headline(42, ['e4', 'e5'], 'Roblox', { x: 196, y: 66, fs: 120, row: true });
-headline(43, ['e4', 'e5'], 'Roblox', { x: 196, y: 40, fs: 120 });
+headline('fortnite', ['e4', 'e5'], 'Fortnite', { x: 255, y: 34, fs: 124 });
+headline('roblox', ['e4', 'e5'], 'Roblox', { x: 1362, y: 360, fs: 150 });
+headline('roblox-countries', ['e4', 'e5'], 'Roblox', { x: 196, y: 66, fs: 120, row: true });
+headline('roblox-news', ['e4', 'e5'], 'Roblox', { x: 196, y: 40, fs: 120 });
 /* #41 slide 31 - the question */
-Deck.registerSlide(41, {
+Deck.registerSlide('roblox-strangers', {
   keepBase: true,
   render: function (el, ctx) {
     hide(ctx, ['e2']);
@@ -733,7 +707,7 @@ Deck.registerSlide(41, {
 
 /* ---------------------------------------------------------------- 4. #45 slide 35 - Lost Screen Memorial scroll */
 var LSM = { src: 'media/lostscreenmemorial.org_.png', w: 901, h: 6144, ms: 30000 };
-Deck.registerSlide(45, {
+Deck.registerSlide('lost-screen-memorial', {
   calm: true, loop: false,
   render: function (el, ctx) {
     var box = h('div', 'pc-lsm', el);
@@ -752,7 +726,7 @@ Deck.registerSlide(45, {
 });
 
 /* ---------------------------------------------------------------- 5. #55 slide 41 - heading + picture only */
-Deck.registerSlide(55, { keepBase: true, loop: 'embers', render: function () {}, enter: function () {} });
+Deck.registerSlide('knife-vs-phone', { keepBase: true, loop: 'embers', render: function () {}, enter: function () {} });
 
 /* ---------------------------------------------------------------- 6. #58 slide 44 - Meet "Susan" */
 var IC = {
@@ -764,7 +738,7 @@ var IC = {
   warn: '<svg viewBox="0 0 34 34"><path d="M17 4 31 29H3z" fill="none" stroke="#FF4D4D" stroke-width="2.8" stroke-linejoin="round"/><path d="M17 13v8" stroke="#FF4D4D" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="25" r="1.8" fill="#FF4D4D"/></svg>',
   msg: '<svg viewBox="0 0 24 24"><path d="M5 8h14M5 12h10M5 16h6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>'
 };
-Deck.registerSlide(58, {
+Deck.registerSlide('meet-susan', {
   keepBase: true, calm: true, steps: 1,
   render: function (el, ctx) {
     hide(ctx, ['e5', 'e6', 'e7']);
@@ -831,7 +805,7 @@ function set58(p, k, instant) {
 }
 
 /* ---------------------------------------------------------------- 7. #59 slide 45 - move on when the chat ends */
-hook(59, {
+hook('susan-tricked', {
   enter: function (v) {
     if (cameBack || v.static) return;
     v.timers.push(setTimeout(function () { if (Deck.view === v && !v.deactivated) Deck.next(); }, 18600 + 3600));
@@ -840,16 +814,16 @@ hook(59, {
 
 /* ---------------------------------------------------------------- 8. #64 slide 50 - dim the girl once the quotes start */
 function dim64(v) { v.root.classList.toggle('pc-dim', v.k >= 1); }
-hook(64, { show: function (v) { dim64(v); }, enter: dim64, step: function (v) { dim64(v); } });
+hook('night-contact-abuse', { show: function (v) { dim64(v); }, enter: dim64, step: function (v) { dim64(v); } });
 
 /* ---------------------------------------------------------------- 9. #71 slide 53 - toggles beside the phone */
 function tog71(v) {
   var t = v.root.querySelectorAll('.pb7-tog'); if (t.length < 2) return;
-  var ph = elData(71, 'e6146'), x = (ph.x + ph.w) * W / 100 + 38, cy = (ph.y + ph.h / 2) * H / 100;
+  var ph = elData('boring-devices-color', 'e6146'), x = (ph.x + ph.w) * W / 100 + 38, cy = (ph.y + ph.h / 2) * H / 100;
   [cy - 128, cy + 26].forEach(function (y, i) { var n = t[i]; n.classList.add('pc-side'); n.style.left = x + 'px'; n.style.top = Math.round(y) + 'px'; n.style.width = '520px'; });
   Array.prototype.forEach.call(t, function (n) { n.classList.toggle('pc-out', v.k >= 3); });
 }
-hook(71, { show: tog71, enter: tog71, step: function (v) { tog71(v); } });
+hook('boring-devices-color', { show: tog71, enter: tog71, step: function (v) { tog71(v); } });
 /* #90 - two touch taps on the phone video: left 20% after 6 s, right 20% 2 s later */
 function tap90(v) {
   var box = v.map.e3; if (!box || v.k !== 0 || v.static) return;
@@ -862,11 +836,11 @@ function tap90(v) {
   v.timers.push(setTimeout(function () { tap(0.2); }, 6000));
   v.timers.push(setTimeout(function () { tap(0.8); }, 9000));
 }
-hook(90, { enter: tap90 });
+hook('kahf-browser-video', { enter: tap90 });
 
 /* #72 - the colour / sound chips are not shown on this slide */
 function noTog72(v) { Array.prototype.forEach.call(v.root.querySelectorAll('.pb7-tog'), function (n) { n.style.display = 'none'; }); }
-hook(72, { show: noTog72, enter: noTog72, step: noTog72 });
+hook('boring-devices-bw', { show: noTog72, enter: noTog72, step: noTog72 });
 
 /* ---------------------------------------------------------------- 10. #88 slide 58 / #92 slide 61 - website screenshots */
 /* `more` (optional): after(el, ctx, stg, box) runs at the end of render (stg = .pc-wst, the stage holding the window +
@@ -974,7 +948,7 @@ var SCHOLARS = [
     T(function () { c.classList.remove('talk'); }, t0 + 850 + nw * 30 + 700);
   }
 
-  website(88, 'media/kahfguard-hero.webp?v=2026-10', HERO.w, HERO.h, 'kahfguard.com', G, {
+  website('kahfguard-website', 'media/kahfguard-hero.webp?v=2026-10', HERO.w, HERO.h, 'kahfguard.com', G, {
     after: function (el, ctx, stg, box) {
       var sc = SMALL.w / box.w;   // .small maps the full-screen window onto a SMALL.w window centred at SMALL.y
       stg.style.cssText = '--s:' + sc + ';--tx:' + ((W - SMALL.w) / 2 - box.x * sc) + 'px;--ty:' + (SMALL.y - box.y * sc) + 'px';
@@ -1006,8 +980,6 @@ var SCHOLARS = [
       r.cols.forEach(function (c, i) { speak(r, ctx, c, WAIT + 1300 + i * 1500); });
     }
   });
-  var s88 = D.slides.filter(function (s) { return s.orig === 88; })[0];
-  if (s88 && !s88.notes) s88.notes = 'Kahf Guard: blocks harmful content on every device in the house. Here is what scholars say about it.';
 })();
 
 var freeBadge;
@@ -1059,7 +1031,7 @@ var freeBadge;
   var LEFT = { w: 285.453, ml: -P, mr: -P };               // "Switch to a" incl. 6px bearing pad each side
   var GAP1 = 10.375, GAP2 = 4.36, WEB = { w: 118.984, mr: -P };
   var WORDS = [{ k: 'calmer', w: 175 }, { k: 'safer', w: 132 }, { k: 'decent', w: 175 }];
-  Deck.registerSlide(92, {
+  Deck.registerSlide('kahf-browser-hero', {
     keepBase: false, loop: ['orbs'],
     render: function (el, ctx) {
       var maxW = 1660, maxH = 1000 - 46, w = Math.min(maxW, maxH * IW / IH), ih = w * IH / IW, hh = ih + 46;
@@ -1102,7 +1074,7 @@ var freeBadge;
 })();
 
 /* #105 - the kahf.co/checklist page (tall screenshot, slowly scrolls inside a fixed browser frame) with a big QR code to scan */
-Deck.registerSlide(105, {
+Deck.registerSlide('safety-checklist', {
   keepBase: false, loop: ['orbs'],
   render: function (el, ctx) {
     var r = h('div', 'pc-ck', el), w = 1322, vh = 914, x = 70, y = (H - (vh + 46)) / 2, ih = w * 2000 / 1586;   // frame size unchanged; page is 1586x2000
@@ -1144,7 +1116,7 @@ function kkStat(c, num, lbl, stars, to, k) {
   return '<div class="kk-stat" style="border-color:' + c + '">' + (stars ? '<div class="kk-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' : '') +
     '<div class="kk-num">' + num + '+</div><div class="kk-lbl">' + lbl + '</div></div>';
 }
-Deck.registerSlide(97, {
+Deck.registerSlide('kahf-kids-app', {
   keepBase: false, loop: false,
   render: function (el, ctx) {
     var box = h('div', 'pc-kk', el), stg = h('div', 'kk-stg', box), hero = h('div', 'kk-hero', stg);
@@ -1227,13 +1199,13 @@ function lineChart(n, picId, name, extra, prep) {
     }
   });
 }
-lineChart(106, 'e1026', 'image181');
-lineChart(107, 'e5122', 'image182');
-lineChart(108, 'e3074', 'image183');
+lineChart('depression-chart', 'e1026', 'image181');
+lineChart('self-harm-chart', 'e5122', 'image182');
+lineChart('suicide-rate-chart', 'e3074', 'image183');
 /* #109 - the social-app icons stay hidden until the lines finish drawing, then pop in one after another and keep bobbing */
 var SOC109 = ['e1028', 'e1030', 'e1032', 'e1034'];
 function soc109(ctx) { return SOC109.map(function (id) { var e = ctx.view.map[id]; return e && (e.querySelector('.in') || e); }).filter(Boolean); }
-lineChart(109, 'e3074', 'image183', function (ctx, instant) {
+lineChart('suicide-rate-social-apps', 'e3074', 'image183', function (ctx, instant) {
   SOC109.forEach(function (id, i) {                             // bob (was part-b's loop); the pop runs on the inner node so transforms don't clash
     var e = ctx.view.map[id]; if (!e) return;
     e.style.setProperty('--t', (6 + i * 1.7) + 's'); e.style.setProperty('--d', (-i * 2.3) + 's'); e.classList.add('pb-float');
@@ -1259,7 +1231,7 @@ lineChart(109, 'e3074', 'image183', function (ctx, instant) {
 });
 
 /* ---------------------------------------------------------------- 13. #112 closing slide - company.kahf.to hero recording (4K) */
-Deck.registerSlide(112, {
+Deck.registerSlide('closing', {
   keepBase: false, loop: false, calm: true,
   render: function (el, ctx) {
     var box = h('div', 'pc-close', el);
@@ -1363,10 +1335,7 @@ function kahfUrlEnter(u, ctx) {
   var PIW = 540, PIH = Math.round(PIW * 985 / 916), CAW = 384, CAH = Math.round(CAW * 1408 / 958);
 
   Deck.insertSlide({
-    after: 97, id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
-    notes: 'Step 1: create a Google account for your child as a child account (Google asks "Create a Google Account... you will help manage this account until your child is 13"). Set the date of birth so the account is 11 years old, and set the location to Qatar. ' +
-      '[click] To change the location later, open myaccount.google.com > Personal info while signed in as the child and set the home address to Doha. The date of birth can be changed from Family Link. ' +
-      '[click] Step 2: sign in with this account on the TV (YouTube app) and on every shared computer at home. Google now treats whoever is watching as a child: Google Search results are sanitised, the YouTube feed becomes much cleaner, and the ads on YouTube and Google become far cleaner too. Pair it with "train YouTube what not to show" from the previous slide.',
+    after: 'kahf-kids-app', id: 'kid-google', title: 'A child’s Google account', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'], steps: 2,
     render: function (el, ctx) {
       var r = h('div', 'gk' + (ctx.static ? ' static s1 s2' : ''), el);
       h('div', 'ttl', r, 'A child&rsquo;s <em>Google account</em>');
@@ -1461,8 +1430,7 @@ function kahfUrlEnter(u, ctx) {
   var LOCK = '<svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>';
 
   Deck.insertSlide({
-    after: 97, id: 'wa-privacy', title: 'How to keep Susan away', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'],
-    notes: 'WhatsApp > Settings > Privacy. Last seen & online: Nobody. Profile picture: My contacts. Status: only share with the people you choose. Groups: My contacts (strangers cannot add your child to groups). Read receipts: Off, so a groomer cannot see when messages were read.',
+    after: 'kahf-kids-app', id: 'wa-privacy', title: 'How to keep Susan away', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: ['orbs'],
     render: function (el, ctx) {
       var r = h('div', 'wa', el);
       h('div', 'ttl', r, 'How to keep <em>Susan</em> away');
@@ -1596,7 +1564,7 @@ function kahfUrlEnter(u, ctx) {
     '.yr.reduced.a1 .yr-pie .pie-slice{transform:translateY(44px)}',
     '.yr-cap{margin-top:0;font:500 38px/1.18 var(--f-display);color:var(--ink)}.yr-cap em{font-style:normal;color:#ff9c89}',
     '.yr-sw .v1{display:none}.yr.s1 .yr-sw .v0{display:none}.yr.s1 .yr-sw .v1{display:inline-block}',
-    '.yr-src{position:absolute;right:84px;bottom:92px;font-size:18px;color:#c3cecb;text-align:right;max-width:1000px;line-height:1.35;z-index:41}',
+    '.yr-src{position:absolute;left:104px;bottom:128px;width:700px;font-size:18px;color:#c3cecb;text-align:left;line-height:1.35;z-index:41}',
     '.yr.static *,.yr.static *::before,.yr.static *::after{transition:none!important}',
     '.yr.reduced .rv{opacity:1;animation:none}.yr.reduced *,.yr.reduced *::after{transition:none!important;animation:none!important}',
     '@media (prefers-reduced-motion:reduce){.yr *,.yr *::after{transition:none!important;animation:none!important}}',
@@ -1692,19 +1660,14 @@ function kahfUrlEnter(u, ctx) {
   }
 
   Deck.insertSlide({
-    after: 4, id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 2,
-    notes: 'Newest data: DataReportal Digital 2026 Global Overview (GWI survey, data up to Oct 2025). The average internet user aged 16+ spends 18 hours 36 minutes every week just on social media and online video, not counting Netflix or TV streaming. ' +
-      'That is 970 hours a year, 1 in 6 of your waking hours. ' +
-      '[click: the 60-year view comes in big: the years number slams in, the pie grows, then the online slice pulls away] Now take a 60-year life, only the hours you are awake, counting from age 10, because children are online long before they turn 16. Adding up the real time online for each age group, even though people use less as they get older, comes to ' + fmt(ONL_Y, 1) + ' years: more than 1 in ' + inN(PO) + ' of all your waking hours, spent online. ' +
-      '[click] And if we add ALL internet use, the 6 hours 40 minutes a day from Digital 2024, it grows to ' + fmt(TOT_Y, 1) + ' years: more than 1 in ' + inN(PT) + ' waking hours of your life on a screen. ' +
-      'Defending the numbers: 18.6 h x 52.14 weeks = 970 h a year. Lifetime: GWI hours/week by age band (mean of women and men) x 52.14 x years in band: 10-15 24.7h x 6 (ASSUMPTION: GWI does not survey under-16s, so ages 10-15 are set at the 16-24 rate), 16-24 24.7h x 9, 25-34 20.9h x 10, 35-44 17.7h x 10, 45-54 15.7h x 10, 55-59 13.3h x 5 = ' + fmt(LIFE_H) + ' h; / (16 h x 365) = ' + fmt(FEED_Y, 1) + ' waking years = ' + fmt(PF * 100, 1) + '% of 60 x 365 x 16 waking hours (kids\' longer sleep not adjusted for). All online media (33.5 h/week, DataReportal) scaled by the same age profile = ' + fmt(ONL_Y, 1) + ' years (' + fmt(PO * 100, 1) + '%). All internet use 6h 40m/day (Digital 2024, slide 4) same way = ' + fmt(TOT_Y, 1) + ' years (' + fmt(PT * 100, 1) + '%).',
+    after: 'agenda-journey', id: 'year-gone', title: 'Where does your life go?', section: 'problem', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 2,
     render: function (el, ctx) {
       var r = document.createElement('div'); r.className = 'yr' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''); el.appendChild(r);
       r.innerHTML =
         '<div class="yr-k rv" style="--d:.05s">The cost of “just one more”</div>' +
         '<h1 class="yr-t rv" style="--d:.15s">A little scrolling. <em>A lot of life.</em></h1>' +
         '<div class="yr-l"><div class="lab rv" style="--d:.3s">Social media + online video</div>' +
-          '<div class="yr-big rv" style="--d:.4s"><span class="n">18</span><small>h</small> <span class="m">36</span><small>m</small></div>' +
+          '<div class="yr-big rv" style="--d:.4s"><span class="n">' + (ctx.static || ctx.reduced ? '18' : '0') + '</span><small>h</small> <span class="m">' + (ctx.static || ctx.reduced ? '36' : '00') + '</span><small>m</small></div>' +
           '<div class="what rv" style="--d:.5s">every single week.</div><div class="who rv" style="--d:.5s">Average internet user, aged 16+</div></div>' +
         '<div class="yr-rows rv" style="--d:.7s"><div class="yr-row"><b>' + fmt(HY) + ' h</b><span>every year</span></div><div class="yr-row"><b>1 in 6</b><span>of your waking hours</span></div></div>' +
         '<div class="yr-lifetime"><div class="hd st" style="--d:.15s">Zoom out to a 60-year life</div>' +
@@ -1723,7 +1686,7 @@ function kahfUrlEnter(u, ctx) {
       var r = el.__yr; if (!r) return;
       if (ctx.reduced) return;
       var n = r.querySelector('.yr-big .n'), m = r.querySelector('.yr-big .m'), DUR = 1800, JUMPS = 5, TOTAL = 18 * 60 + 36;
-      n.textContent = '0'; m.textContent = '00';
+      n.textContent = '0'; m.textContent = '00';   // render() already starts at 0; reset again on re-entry
       for (var i = 1; i <= JUMPS; i++) {
         (function (jump) {
           ctx.timeout(function () {
@@ -1755,7 +1718,7 @@ function kahfUrlEnter(u, ctx) {
 var PILL = '<svg viewBox="0 0 100 100"><defs><linearGradient id="pc51-pr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a95"/><stop offset="1" stop-color="#c8102e"/></linearGradient></defs>' +
   '<rect x="10" y="34" width="80" height="32" rx="16" fill="#F4F1EA"/><path d="M26 34h24v32H26a16 16 0 0 1 0-32z" fill="url(#pc51-pr)"/>' +
   '<rect x="49" y="34" width="2.5" height="32" fill="rgba(0,0,0,.18)"/><rect x="18" y="39" width="58" height="6" rx="3" fill="#fff" opacity=".55"/></svg>';
-Deck.registerSlide(51, {
+Deck.registerSlide('dont-drug-kids', {
   keepBase: true,
   render: function (el, ctx) {
     hide(ctx, ['e3']);
@@ -1831,8 +1794,8 @@ Deck.registerSlide(51, {
     var k = [0, 1, -1, .7, -.5, .3, 0].map(function (f, i) { return { transform: 'translate(' + (f * amp) + 'px,' + ((i % 2 ? -.6 : .6) * f * amp) + 'px)' }; });
     nodes.forEach(function (n) { if (n) n.animate(k, { duration: 380, easing: 'ease-out' }); });
   }
-  if (byN[110]) byN[110].steps = [];                    // the cross is now one custom build, not the two ink wipes
-  Deck.registerSlide(110, {
+  if (byId['remember-this']) byId['remember-this'].steps = [];                    // the cross is now one custom build, not the two ink wipes
+  Deck.registerSlide('remember-this', {
     keepBase: true, steps: 1,
     render: function (el, ctx) {
       hide(ctx, ['e6', 'e7']);                             // the old amber ink strokes
@@ -1907,7 +1870,7 @@ Deck.registerSlide(51, {
     '<rect x="8" y="12" width="48" height="44" rx="8"/><path d="M8 26h48M22 6v12M42 6v12"/><path d="M40 40a8 8 0 1 1-2.3-5.7M40 32v4h-4"/></svg>';
 
   function hot(el, on) { var c = el.__c2; if (c) c.classList.toggle('hot', !!on); }
-  Deck.registerSlide(96, {
+  Deck.registerSlide('youtube-train', {
     keepBase: true,
     render: function (el, ctx) {
       hide(ctx, ['e2', 'e11']);
@@ -1934,7 +1897,7 @@ Deck.registerSlide(51, {
     }
   });
   // the base build (menu screenshot) is a base step, not a custom one: follow it via the deck's step event
-  Deck.on('step', function (k, v) { if (v && v.slide && v.slide.orig === 96 && v.custom) hot(v.custom, k >= 1); });
+  Deck.on('step', function (k, v) { if (v && v.slide && v.slide.id === 'youtube-train' && v.custom) hot(v.custom, k >= 1); });
 })();
 
 /* ---------------------------------------------------------------- 16. #87 four major threats
@@ -1974,13 +1937,10 @@ Deck.registerSlide(51, {
   ];
 
   function show(el, k) { var c = el.__cards; if (c) c.forEach(function (n, i) { n.classList.toggle('off', i >= k); }); }
-  if (byN[87]) {
-    byN[87].steps = [];
-    byN[87].notes = 'Before we look at the protections, here are the four big threats we need to guard against: ' +
-      'harmful websites, haram images and videos in the browser, excessive time on social media, and harmful videos on YouTube. ' +
-      'The next few slides tackle each one.';
+  if (byId['protection-threats']) {
+    byId['protection-threats'].steps = [];
   }
-  Deck.registerSlide(87, {
+  Deck.registerSlide('protection-threats', {
     title: 'Four major threats', steps: 4,
     render: function (el, ctx) {
       var anim = !ctx.static && !ctx.reduced && !cameBack;
@@ -2087,14 +2047,8 @@ Deck.registerSlide(51, {
   }
 
   Deck.insertSlide({
-    after: 87, id: 'parental-controls', title: 'Built-in parental controls', section: 'protect',
-    tr: { type: 'fade', ms: 800 }, steps: 3,
-    notes: 'Before you buy anything, use what is already free on your child\'s device. Google Family Link for Android and Chromebook, ' +
-      'Microsoft Family Safety for Windows and Xbox, and Apple Screen Time for iPhone, iPad and Mac. All three can block harmful websites in three ways. ' +
-      '[click] One: automatically block adult sites. Family Link: Try to block explicit sites. Microsoft: Filter inappropriate websites and searches, which also forces SafeSearch on Bing. Apple: Limit Adult Websites. ' +
-      '[click] Two: block specific sites you add yourself. Family Link: Manage sites, Blocked sites. Microsoft: Blocked sites, add a website. Apple: Apps and Websites, Blocked. ' +
-      '[click] Three, the strictest: allow only the sites you approve, everything else is blocked. Best for young children. ' +
-      'Caveat: Family Link filters only Chrome, Microsoft only Edge (it blocks other browsers), Apple covers Safari and most apps. No filter is perfect, which is why we need more layers.',
+    after: 'protection-threats', id: 'parental-controls', title: 'Built-in parental controls', section: 'protect',
+    tr: { type: 'fade', ms: 800 }, loop: ['aurora', 'shimmer'], steps: 3,
     render: function (el, ctx) {
       var anim = !ctx.static && !ctx.reduced && !cameBack;
       var r = h('div', 'pcfl inst', el);
@@ -2219,12 +2173,7 @@ Deck.registerSlide(51, {
 
   Deck.insertSlide({
     after: 'parental-controls', id: 'parental-gaps', title: 'Built-in controls have gaps', section: 'protect',
-    tr: { type: 'fade', ms: 800 }, steps: 3,
-    notes: 'So why not just switch on "only allow approved sites" and be done? Because it is impractical. Every homework link, every school video, every login page, quran.com, Wikipedia, Google Docs, has to be approved by a parent first. ' +
-      'The requests never stop, and parents give up and switch it back off. ' +
-      '[click] And children find the holes fast: they open links inside other apps or another browser, change the clock or time zone to escape downtime, or delete and re-download an app to reset its limit. ' +
-      '[click] Compare what the built-in tools can actually do. They only apply their own browser restrictions, each one only on its own company\'s devices, they do not block drugs, alcohol, gambling, anti-Islamic or pro-LGBT content, social media is all or nothing, almost no ad or tracker blocking, and they are easy to tamper with. ' +
-      '[click] Kahf Guard works at the DNS level, so it covers every app and every browser, on Android, iOS, Windows, Mac and even your home router. It blocks drugs, alcohol, gambling, anti-Islamic and pro-LGBT content, it can block just Shorts and Reels instead of the whole app, filters ads and trackers system-wide, and has a forced cooldown and DNS lock so children cannot simply switch it off.',
+    tr: { type: 'fade', ms: 800 }, loop: ['aurora', 'underline'], steps: 3,
     render: function (el, ctx) {
       var anim = !ctx.static && !ctx.reduced && !cameBack, pre = anim ? ' pre' : '';
       var r = h('div', 'pcgp inst', el);
@@ -2322,12 +2271,12 @@ Deck.registerSlide(51, {
 
   function stage(el, k) { var r = el.__pc91; if (r) r.classList.toggle('hl', k >= 1); }
 
-  /* cfg: {orig, title, kicker, head, lead, pill, score, legend, notes, L, FC, CW, TOP, HH, RH, cols:[[name, style]], rows:[[label, 'ynp..']],
+  /* cfg: {slide, title, kicker, head, lead, pill, score, legend, L, FC, CW, TOP, HH, RH, cols:[[name, style]], rows:[[label, 'ynp..']],
      extra?: function (el, ctx, anim) -> optional fn run when the entry animation starts} */
   function browserTable(cfg) {
     var n = cfg.cols.length, SH = 84;
-    if (byN[cfg.orig]) { byN[cfg.orig].steps = []; byN[cfg.orig].notes = cfg.notes; }
-    Deck.registerSlide(cfg.orig, {
+    if (byId[cfg.slide]) { byId[cfg.slide].steps = []; }
+    Deck.registerSlide(cfg.slide, {
       title: cfg.title, steps: 1,
       render: function (el, ctx) {
         var anim = !ctx.static && !ctx.reduced && !cameBack, pre = anim ? ' pre' : '';
@@ -2378,7 +2327,7 @@ Deck.registerSlide(51, {
   }
 
   browserTable({
-    orig: 91, title: 'Choose the right browser', kicker: 'Built-in protection, no extensions',
+    slide: 'choose-browser', title: 'Choose the right browser', kicker: 'Built-in protection, no extensions',
     head: 'Choose the right <em>browser</em>', lead: 'Built-in features', pill: 'Our pick', score: 'Fully protected', legend: ['y', 'p', 'n'],
     L: 140, FC: 600, CW: 180, TOP: 238, HH: 132, RH: 76,
     cols: [['Brave', 1017], ['Chrome', 1206], ['DDG', 1397], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; }),
@@ -2391,14 +2340,10 @@ Deck.registerSlide(51, {
       ['Bounce-tracking protection', 'ynnnpn'],
       ['Tor mode (anonymous routing)', 'ynnnnn']
     ],
-    notes: 'Not all browsers protect your family equally. Here is what each one blocks out of the box, with no extensions: ' +
-      'invasive ads, cross-site trackers, cookies, fingerprinting, malware and phishing, bounce tracking, and anonymous Tor routing. ' +
-      'Chrome, the most popular browser, blocks almost nothing by default. ' +
-      '[click] Brave is the only one that ticks every box, so it is the browser we recommend installing on your children\'s devices.'
   });
 
   browserTable({
-    orig: 94, title: 'Kahf Browser vs other browsers', kicker: 'Built for family safety',
+    slide: 'browser-comparison', title: 'Kahf Browser vs other browsers', kicker: 'Built for family safety',
     head: '<em>Kahf</em> Browser vs other browsers', lead: 'Family features', pill: 'Built for families', score: 'Family-safe', legend: ['y', 'n'],
     L: 140, FC: 640, CW: 200, TOP: 250, HH: 140, RH: 92,
     cols: [['Kahf', logo(SRC162, 758, 98)]].concat([['Chrome', 1206], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; })),
@@ -2410,9 +2355,6 @@ Deck.registerSlide(51, {
       ['Ads &amp; trackers blocked', 'ynnnn'],
       ['Blocks harmful sites', 'ynnnn']
     ],
-    notes: 'Privacy browsers like Brave stop ads and trackers, but none of the mainstream browsers protect children from what they actually see. ' +
-      'Kahf Browser does: it hides inappropriate images, forces Safe Search and a safe YouTube, blocks ads and trackers, and blocks harmful sites. ' +
-      '[click] Five out of five, against zero for Chrome, Edge, Firefox and Safari.'
   });
 })();
 
@@ -2554,13 +2496,8 @@ Deck.registerSlide(51, {
   }
 
   Deck.insertSlide({
-    after: 110, id: 'tahrim-66-6', title: 'Guard yourselves and your families', section: 'evidence',
+    after: 'remember-this', id: 'tahrim-66-6', title: 'Guard yourselves and your families', section: 'evidence',
     tr: { type: 'slide', ms: 900 }, loop: false, calm: true, steps: 3,
-    notes: 'Surah At-Tahrim 66:6. The whole verse in Arabic is on screen; recite it first. ' +
-      '[click] "Believers, guard yourselves and your families against a Fire" ' +
-      '[click] "fuelled by people and stones," ' +
-      '[click] "over which stand angels, stern and strong; angels who never disobey God’s commands to them, but do as they are ordered." ' +
-      'Protecting our families is not optional; it is a command. (Translation: M.A.S. Abdel Haleem.)',
     render: function (el, ctx) {
       var r = h('div', 'tq' + (ctx.static ? ' static' : ''), el);
       h('div', 'glow', r);
@@ -2624,7 +2561,7 @@ Deck.registerSlide(51, {
   ].join('\n');
   (function () { if (document.getElementById('pc-s9-css')) return; var st = document.createElement('style'); st.id = 'pc-s9-css'; st.textContent = css; document.head.appendChild(st); })();
 
-  Deck.registerSlide(9, {
+  Deck.registerSlide('what-in-1700-hours', {
     keepBase: false,
     render: function (el, ctx) {
       var r = h('div', 's9' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el,
@@ -2726,7 +2663,7 @@ Deck.registerSlide(51, {
   // class a1..aN on the root = "build level >= n"; all builds are CSS transitions, so Back reverses them for free
   function level(r, n) { for (var i = 1; i <= 4; i++) r.classList.toggle('a' + i, n >= i); }
 
-  Deck.registerSlide(19, {
+  Deck.registerSlide('kids-online-risks', {
     keepBase: false,
     steps: 4,
     render: function (el, ctx) {
@@ -2857,11 +2794,7 @@ Deck.registerSlide(51, {
   }
 
   Deck.insertSlide({
-    after: 2, id: 'agenda-journey', title: 'Tonight’s journey', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false,
-    notes: 'Here is where we are going tonight. We start down here, in the swamp of glowing phones, with the problem itself: where our children’s hours really go. ' +
-      'Then why it is so addictive: dopamine, feeds and how games are built. Then how to treat it, remembering that the child is the victim. ' +
-      'Then the ravine: drugs, grooming and suicide, the dangers hiding behind the screen. We cross that bridge into practical protection: what you can do at home tomorrow. ' +
-      'And finally the research on where things are heading, and the way back home to a family that is together.',
+    after: 'title', id: 'agenda-journey', title: 'Tonight’s journey', section: 'problem', tr: { type: 'fade', ms: 900 }, loop: false,
     render: function (el, ctx) {
       var r = h('div', 'aj' + (ctx.static ? ' static' : '') + (ctx.reduced ? ' reduced' : ''), el);
       r.style.setProperty('--t0', T0 + 's'); r.style.setProperty('--tt', TT + 's');
@@ -2955,38 +2888,30 @@ Deck.registerSlide(51, {
 
   /* stop: STOPS index; S: zoom; X,Y: where the stop lands on screen (S*1920 must still cover the frame); rt: text on the right */
   var CHAPTERS = [
-    { stop: 1, after: 24, id: 'why-intro', section: 'why', S: 1.5, X: 600, Y: 700, rt: true,
+    { stop: 1, after: 'signs-of-addiction', id: 'why-intro', section: 'why', S: 1.5, X: 600, Y: 700, rt: true,
       t: 'Why it’s<br><em>Addictive</em>', s: 'Why our children can’t put them down.',
       items: ['Device vs drug addiction', 'What screens do to the brain', 'Videos made for toddlers', 'How games are made addictive', 'Fortnite and Roblox', 'Two rules before any game'],
-      notes: 'That is the problem. Now the question every parent asks: why can’t they put it down? We will compare device addiction with drug addiction, ' +
-        'look at what screens do to a child’s brain and at the videos made for toddlers, then at how games are deliberately built to hook children, ' +
-        'including Fortnite and Roblox. And two rules to check before you give your child any game.' },
-    { stop: 2, after: 44, id: 'treat-intro', section: 'treat', S: 1.5, X: 1380, Y: 620,
+},
+    { stop: 2, after: 'game-dangers', id: 'treat-intro', section: 'treat', S: 1.5, X: 1380, Y: 620,
       t: 'How to<br><em>Treat It</em>', s: 'It starts with us, not with them.',
       items: ['Your child is the victim', 'Children aren’t born addicts', 'We let it happen', 'A screen to make them eat', 'Make devices boring', 'Choose safer games'],
-      notes: 'So what do we do about it? Before any tool or setting, it starts with how we see it. Your child is the victim, not the culprit. ' +
-        'Children are not born addicts: we let it happen, often with good intentions, like a phone at the table to get them to eat. ' +
-        'Then two first steps: make their devices boring, black and white with the sound off, and choose their games carefully: which popular games to avoid, and what to give them instead.' },
-    { stop: 3, after: 74, id: 'harm-intro', section: 'grooming', S: 1.5, X: 1380, Y: 600, tsz: 104,
+},
+    { stop: 3, after: 'less-exciting-games', id: 'harm-intro', section: 'grooming', S: 1.5, X: 1380, Y: 600, tsz: 104,
       t: 'Drugs, Grooming<br><em>and Suicide</em>', s: 'The dangers hiding behind the screen.',
       items: ['What the numbers say', 'The Lost Screen Memorial', 'How grooming works', 'Kayleigh’s story', 'Meet “Susan”', 'Never alone online'],
-      notes: 'Now we come to the ravine, the darkest part of tonight, so please be prepared. We will look at the numbers, at children who lost their lives, ' +
-        'and at how grooming works, through Kayleigh’s story and a groomer called Susan. A child with a device in their room is never alone.' },
-    { stop: 4, after: 64, id: 'protect-intro', section: 'protect', S: 1.5, X: 1380, Y: 600,
+},
+    { stop: 4, after: 'night-contact-abuse', id: 'protect-intro', section: 'protect', S: 1.5, X: 1380, Y: 600,
       t: 'Practical<br><em>Protection</em>', s: 'What you can do at home, starting tomorrow.',
       items: ['Tech-free zones', 'The first phone', 'Parental controls', 'Safe browsers', 'WhatsApp privacy', 'A family checklist'],
-      notes: 'We have walked through the ravine: drugs, grooming and suicide. That is the darkest part of tonight. Now we cross the bridge. ' +
-        'This part is practical: what you can do at home, starting tomorrow. Tech-free zones, what the first phone should be, ' +
-        'the parental controls already on your child’s device, safe browsers, WhatsApp privacy settings, and a checklist you can take home.' },
-    { stop: 5, after: 105, id: 'trends-intro', section: 'evidence', S: 1.5, X: 1560, Y: 500,
+},
+    { stop: 5, after: 'safety-checklist', id: 'trends-intro', section: 'evidence', S: 1.5, X: 1560, Y: 500,
       t: 'Disturbing<br><em>Trends</em>', s: 'What the research shows, and the way home.',
       items: ['Teen depression', 'Self-harm admissions', 'Suicide, ages 10–14', 'One change at home', 'Guard your families'],
-      notes: 'Finally, where things are heading. The research on teenage depression, self-harm and suicide since smartphones arrived. ' +
-        'Then the one change you need to make at home, and the verse that reminds us whose responsibility this is. And then, the way home.' }
+}
   ];
 
   CHAPTERS.forEach(function (CH) { Deck.insertSlide({
-    after: CH.after, id: CH.id, title: STOPS[CH.stop].t, section: CH.section, tr: { type: 'fade', ms: 900 }, loop: false, notes: CH.notes,
+    after: CH.after, id: CH.id, title: STOPS[CH.stop].t, section: CH.section, tr: { type: 'fade', ms: 900 }, loop: false,
     render: function (el, ctx) {
       var s = STOPS[CH.stop], p = PATH[s.at];
       var tx = CH.X - CH.S * p[0], ty = CH.Y - CH.S * p[1];
@@ -3084,10 +3009,7 @@ Deck.registerSlide(51, {
   function show(el, k) { (el.__t3 || []).forEach(function (n, i) { n.classList.toggle('off', i >= k); }); }
 
   Deck.insertSlide({
-    after: 51, id: 'three-things', title: 'Tackle three things', section: 'treat', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 3,
-    notes: 'To curb the addiction, we need to tackle the three things that make a screen so stimulating. [click] One: fast motion content, ' +
-      'rapid cuts and non-stop action. [click] Two: colour, bright saturated screens. [click] Three: sound, music loops and sound effects. ' +
-      'Take these away and the device becomes boring, which is exactly what we want. Let’s see how.',
+    after: 'dont-drug-kids', id: 'three-things', title: 'Tackle three things', section: 'treat', tr: { type: 'slide', ms: 1000 }, loop: false, steps: 3,
     render: function (el, ctx) {
       var r = h('div', 't3 inst' + (ctx.static || ctx.reduced ? ' still' : ''), el);
       h('div', 't3-k', r, 'To curb device addiction');
