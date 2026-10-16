@@ -1,7 +1,7 @@
 /* ============================================================================
    part-b.js - custom, animated and interactive slides for the second part of the deck.
    Self-contained: CSS is injected below.
-   Sections: 0 helpers/css . 1 data patches . 2 section divider (drugs-grooming-suicide) . 3 knife-vs-phone evidence
+   Sections: 0 helpers/css . 1 data patches . 2 (removed divider) . 3 knife-vs-phone evidence
              4 chat slides (kayleigh-haywood, susan) . 5 tech-free / slow phones . 6 boring-devices phone
              7 framed light pictures (kahf-kids-app, closing) . 8 charts . 9 small loops
    ============================================================================ */
@@ -29,12 +29,6 @@ var CSS = [
 '.pb-breathe{animation:pbbreathe 5s ease-in-out infinite}',
 '@keyframes pbbreathe{0%,100%{opacity:.55}50%{opacity:1}}',
 
-/* ---- 54 dark divider ---- */
-'.pb54-breath{position:absolute;inset:0;background:radial-gradient(1100px 620px at 50% 50%,rgba(150,24,52,.30),rgba(90,14,20,.16) 55%,transparent 75%);pointer-events:none;animation:pb54b 9s ease-in-out infinite}',
-'@keyframes pb54b{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}',
-'.pb54-line{position:absolute;left:50%;height:2px;width:0;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(255,120,140,.8),transparent);pointer-events:none;animation:pb54l 8s ease-in-out infinite}',
-'@keyframes pb54l{0%{width:0;opacity:0}30%{opacity:1}55%{width:760px;opacity:.9}100%{width:760px;opacity:0}}',
-'.pb54-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 45%,rgba(2,6,9,.65) 100%)}',
 
 /* ---- 55 evidence ---- */
 '.pb55-vs{position:absolute;left:50%;top:' + (0.37 * H) + 'px;width:130px;height:130px;margin:-65px 0 0 -65px;border-radius:50%;display:grid;place-items:center;',
@@ -131,7 +125,7 @@ var CSS = [
 '.pbc-lbl.on{opacity:1}',
 '.pbc-scan{position:absolute;top:0;bottom:0;width:6px;background:linear-gradient(180deg,transparent,rgba(255,200,90,.95),transparent);box-shadow:0 0 40px 10px rgba(255,190,70,.6);pointer-events:none;opacity:0}',
 
-'@media (prefers-reduced-motion:reduce){.pb54-breath,.pb54-line,.pb-ring,.pb-shine::before,.pb-float,.pb7-buzz,.pb7-badge,.pb7-wiggle,.pb66-badge::before,.pb66-badge::after,.pb70-spin svg,.pbc-band::before{animation:none!important}}'
+'@media (prefers-reduced-motion:reduce){.pb-ring,.pb-shine::before,.pb-float,.pb7-buzz,.pb7-badge,.pb7-wiggle,.pb66-badge::before,.pb66-badge::after,.pb70-spin svg,.pbc-band::before{animation:none!important}}'
 ].join('\n');
 
 (function injectCss() {
@@ -206,16 +200,6 @@ function loops(n, o) {
   var p112 = elData('closing', 'e3');
   if (p112) { p112.bleed = false; p112.card = true; }
 })();
-
-/* ---------------------------------------------------------------- 2. dividers */
-/* 54 - Child Grooming & Suicide (dark, restrained). Title element + morph key untouched. */
-add('drugs-grooming-suicide', {
-  keepBase: true, loop: false,
-  render: function (el, ctx) {
-    h('div', 'pb54-breath', el); h('div', 'pb54-vig', el);
-    var t = px('drugs-grooming-suicide', 'e2'), l = h('div', 'pb54-line', el); l.style.top = Math.round(t.y + t.h * .5 + 92) + 'px';
-  }
-});
 
 /* ---------------------------------------------------------------- 3. slide 55 */
 add('knife-vs-phone', {

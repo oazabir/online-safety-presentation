@@ -1,6 +1,6 @@
 # Slide map
 
-Every slide has a **number** (its position in the show, 1-82, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-81, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -53,43 +53,42 @@ use it; `—` marks slides that were added after the conversion.
 | 42 | `top-10-games` | treat | 73 |
 | 43 | `less-exciting-games` | treat | 74 |
 | 44 | `harm-intro` | grooming | — |
-| 45 | `drugs-grooming-suicide` | grooming | 54 |
-| 46 | `knife-vs-phone` | grooming | 55 |
-| 47 | `lost-screen-memorial` | grooming | 45 |
-| 48 | `child-grooming` | grooming | 56 |
-| 49 | `kayleigh-haywood` | grooming | 57 |
-| 50 | `meet-susan` | grooming | 58 |
-| 51 | `susan-tricked` | grooming | 59 |
-| 52 | `susan-blackmailed` | grooming | 60 |
-| 53 | `photo-spot-the-risk` | grooming | 61 |
-| 54 | `photo-how-about-now` | grooming | 62 |
-| 55 | `never-alone` | grooming | 63 |
-| 56 | `night-contact-abuse` | grooming | 64 |
-| 57 | `protect-intro` | protect | — |
-| 58 | `tech-free-zones` | protect | 66 |
-| 59 | `slow-phones` | protect | 70 |
-| 60 | `protection-threats` | protect | 87 |
-| 61 | `parental-controls` | protect | — |
-| 62 | `parental-gaps` | protect | — |
-| 63 | `kahfguard-website` | protect | 88 |
-| 64 | `kahf-browser-video` | protect | 90 |
-| 65 | `choose-browser` | protect | 91 |
-| 66 | `kahf-browser-hero` | protect | 92 |
-| 67 | `kahf-browser-new-tab` | protect | 93 |
-| 68 | `browser-comparison` | protect | 94 |
-| 69 | `youtube-hide-content` | protect | 95 |
-| 70 | `youtube-train` | protect | 96 |
-| 71 | `kahf-kids-app` | protect | 97 |
-| 72 | `kid-google` | protect | — |
-| 73 | `wa-privacy` | protect | — |
-| 74 | `safety-checklist` | protect | 105 |
-| 75 | `trends-intro` | evidence | — |
-| 76 | `depression-chart` | evidence | 106 |
-| 77 | `self-harm-chart` | evidence | 107 |
-| 78 | `suicide-rate-chart` | evidence | 108 |
-| 79 | `suicide-rate-social-apps` | evidence | 109 |
-| 80 | `remember-this` | evidence | 110 |
-| 81 | `tahrim-66-6` | evidence | — |
-| 82 | `closing` | evidence | 112 |
+| 45 | `knife-vs-phone` | grooming | 55 |
+| 46 | `lost-screen-memorial` | grooming | 45 |
+| 47 | `child-grooming` | grooming | 56 |
+| 48 | `kayleigh-haywood` | grooming | 57 |
+| 49 | `meet-susan` | grooming | 58 |
+| 50 | `susan-tricked` | grooming | 59 |
+| 51 | `susan-blackmailed` | grooming | 60 |
+| 52 | `photo-spot-the-risk` | grooming | 61 |
+| 53 | `photo-how-about-now` | grooming | 62 |
+| 54 | `never-alone` | grooming | 63 |
+| 55 | `night-contact-abuse` | grooming | 64 |
+| 56 | `protect-intro` | protect | — |
+| 57 | `tech-free-zones` | protect | 66 |
+| 58 | `slow-phones` | protect | 70 |
+| 59 | `protection-threats` | protect | 87 |
+| 60 | `parental-controls` | protect | — |
+| 61 | `parental-gaps` | protect | — |
+| 62 | `kahfguard-website` | protect | 88 |
+| 63 | `kahf-browser-video` | protect | 90 |
+| 64 | `choose-browser` | protect | 91 |
+| 65 | `kahf-browser-hero` | protect | 92 |
+| 66 | `kahf-browser-new-tab` | protect | 93 |
+| 67 | `browser-comparison` | protect | 94 |
+| 68 | `youtube-hide-content` | protect | 95 |
+| 69 | `youtube-train` | protect | 96 |
+| 70 | `kahf-kids-app` | protect | 97 |
+| 71 | `kid-google` | protect | — |
+| 72 | `wa-privacy` | protect | — |
+| 73 | `safety-checklist` | protect | 105 |
+| 74 | `trends-intro` | evidence | — |
+| 75 | `depression-chart` | evidence | 106 |
+| 76 | `self-harm-chart` | evidence | 107 |
+| 77 | `suicide-rate-chart` | evidence | 108 |
+| 78 | `suicide-rate-social-apps` | evidence | 109 |
+| 79 | `remember-this` | evidence | 110 |
+| 80 | `tahrim-66-6` | evidence | — |
+| 81 | `closing` | evidence | 112 |
 
 Removed (were hidden): PowerPoint #2 (three panels), #4 (684,932 years), #48 (How to treat device addiction? title), #98, the live screen-time counter, the screen-time calculator and the "shepherd" closing slide.

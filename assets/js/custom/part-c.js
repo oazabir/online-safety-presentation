@@ -404,12 +404,6 @@ if (v93) {
     unstep: function (el) { var P = el.__p93; if (P) { P.menu.classList.remove('on'); P.ping.classList.remove('go'); } }
   });
 })();
-/* 54 divider is retitled "Drugs, Grooming and Suicide" (the deck order and sections live in slides-data.js) */
-if (byId['drugs-grooming-suicide']) {
-  var t54 = elData('drugs-grooming-suicide', 'e2');             // longer title: slightly smaller + wider box so it stays on one line
-  t54.paras[0].runs = [{ t: 'Drugs, Grooming and Suicide', sz: 108, c: '#F4F1EA' }];
-  t54.w = 80;
-}
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
@@ -3026,4 +3020,81 @@ Deck.registerSlide('dont-drug-kids', {
     unstep: function (el, i) { show(el, i - 1); }
   });
 })();
+})();
+
+/* ---------------------------------------------------------------- #26 persuasive-technology ("How to make games addictive")
+   Was a plain four-bullet list beside the Candy Crush clip. Now: the clip (still the base video element, so autoplay/stepplay
+   are untouched) is resized into a glowing phone-like card on the left; the four hooks become icon cards that rise in
+   one after another on the right under a big display headline. No click builds; everything is a CSS entrance. */
+(function () {
+'use strict';
+if (!window.Deck || !window.DECK_DATA) return;
+var D = window.DECK_DATA, slide = null;
+D.slides.forEach(function (s) { if (s.id === 'persuasive-technology') slide = s; });
+if (!slide) return;
+var vid = null;
+slide.els.forEach(function (e) { if (e.id === 'e5') vid = e; });
+if (vid) { vid.x = 110 / 19.2; vid.y = 88 / 10.8; vid.w = 660 / 19.2; vid.h = 880 / 10.8; }   // 3:4 card, left
+
+var SV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+var HOOKS = [
+  { c: '255,77,94', t: 'Persuasive technology', d: 'Apps and games deliberately designed with psychological hooks (variable rewards, social validation, etc.)',
+    i: SV + '<path d="M12 3.5v10.5a4.5 4.5 0 0 1-9 0v-1.5"/><path d="M3 12.5l-1.6 2.2M3 12.5l1.8 1.6"/><circle cx="12" cy="2.6" r="1.1"/><path d="M14.5 9.5l3-3M17.5 13l3.5-3.5"/></svg>' },
+  { c: '34,211,238', t: 'Autoplay features', d: 'Content that automatically continues without requiring a conscious decision',
+    i: SV + '<circle cx="12" cy="12" r="9"/><path d="M10 8.4v7.2l5.8-3.6z" fill="currentColor"/></svg>' },
+  { c: '167,139,250', t: 'Personalized algorithms', d: 'Content tailored specifically to capture and maintain attention',
+    i: SV + '<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>' },
+  { c: '255,176,32', t: 'Gamification elements', d: 'Achievement systems, streaks, and rewards that encourage continued engagement',
+    i: SV + '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>' }
+];
+
+var css = [
+  '.ps26{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink);overflow:hidden}',
+  '.ps26-bg{position:absolute;inset:0;background:radial-gradient(ellipse 760px 560px at 1500px 330px,rgba(167,139,250,.13),transparent 70%)}',
+  '.ps26-root .vid .in{border-radius:44px;box-shadow:0 40px 90px -20px rgba(0,0,0,.85),0 0 90px rgba(255,77,94,.28);outline:2px solid rgba(255,255,255,.22);outline-offset:-2px}',
+  '.ps26 *{box-sizing:border-box}',
+  '.ps26 .rv{opacity:0}.ps26.go .rv{animation:ps26-in .8s cubic-bezier(.22,.8,.3,1) var(--d,0s) both}',
+  '@keyframes ps26-in{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}',
+  '.ps26-t{position:absolute;left:880px;top:62px;width:960px;margin:0;font:600 84px/1 var(--f-display);letter-spacing:-.025em;color:var(--ink)}',
+  '.ps26-t em{font-style:normal;position:relative;background:linear-gradient(100deg,#ffd27a,#ff8a5c 55%,#ff3b4e);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.05em}',
+  '.ps26-t em::after{content:"";position:absolute;left:2px;right:0;bottom:-6px;height:8px;border-radius:8px;background:linear-gradient(90deg,#ff8a5c,#ff3b4e);box-shadow:0 0 24px rgba(255,77,94,.7);transform-origin:0 50%;transform:scaleX(0)}',
+  '.ps26.go .ps26-t em::after{animation:ps26-ul .9s cubic-bezier(.65,0,.35,1) .9s both}',
+  '@keyframes ps26-ul{to{transform:scaleX(1)}}',
+  '.ps26-l{position:absolute;left:880px;top:268px;width:960px;display:flex;flex-direction:column;gap:18px}',
+  '.ps26-cd{position:relative;display:flex;align-items:center;gap:30px;height:164px;padding:0 36px 0 32px;border-radius:30px;overflow:hidden;',
+  '  background:linear-gradient(100deg,rgba(var(--c),.17),rgba(255,255,255,.04) 62%);box-shadow:inset 0 0 0 1.5px rgba(var(--c),.42),0 18px 40px -18px rgba(0,0,0,.7)}',
+  '.ps26-cd::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:rgb(var(--c));box-shadow:0 0 22px rgba(var(--c),.9)}',
+  '.ps26-ic{flex:none;display:flex;align-items:center;justify-content:center;width:96px;height:96px;border-radius:50%;color:rgb(var(--c));',
+  '  background:radial-gradient(circle at 35% 30%,rgba(var(--c),.34),rgba(var(--c),.10));box-shadow:inset 0 0 0 2px rgba(var(--c),.55),0 0 34px rgba(var(--c),.35)}',
+  '.ps26-ic svg{width:54px;height:54px}',
+  '.ps26-tx{min-width:0}',
+  '.ps26-tx b{display:block;font:700 42px/1.1 var(--f-display);letter-spacing:-.012em;color:var(--ink);margin-bottom:8px}',
+  '.ps26-tx span{display:block;font:500 29px/1.28 var(--f-body);color:#c4ccd0}',
+  '.ps26.go .ps26-ic{animation:ps26-pop .7s cubic-bezier(.2,1.6,.4,1) calc(var(--d,0s) + .25s) both}',
+  '@keyframes ps26-pop{from{transform:scale(.4)}to{transform:none}}',
+  '.ps26.still *,.ps26.still .rv{animation:none!important;opacity:1!important;transform:none!important}',
+  '.ps26.still .ps26-t em::after{transform:scaleX(1)}'
+].join('\n');
+if (!document.getElementById('pc-ps26-css')) { var st = document.createElement('style'); st.id = 'pc-ps26-css'; st.textContent = css; document.head.appendChild(st); }
+
+Deck.registerSlide('persuasive-technology', {
+  keepBase: true,
+  render: function (el, ctx) {
+    ['e7', 'e2'].forEach(function (id) { var n = ctx.view.map[id]; if (n) n.style.display = 'none'; });
+    ctx.root.classList.add('ps26-root');
+    var still = ctx.static || ctx.reduced;
+    var r = document.createElement('div'); r.className = 'ps26' + (still ? ' still' : ''); el.appendChild(r);
+    r.innerHTML = '<div class="ps26-bg"></div>' +
+      '<h2 class="ps26-t rv" style="--d:.1s">How to make games<br><em>addictive</em></h2>' +
+      '<div class="ps26-l">' + HOOKS.map(function (k, i) {
+        return '<div class="ps26-cd rv" style="--c:' + k.c + ';--d:' + (0.45 + i * 0.28) + 's"><div class="ps26-ic">' + k.i + '</div>' +
+          '<div class="ps26-tx"><b>' + k.t + '</b><span>' + k.d + '</span></div></div>';
+      }).join('') + '</div>';
+    el.__ps26 = r;
+  },
+  enter: function (el, ctx) {
+    var r = el.__ps26; if (!r || ctx.static || ctx.reduced) return;
+    void r.offsetWidth; r.classList.add('go');
+  }
+});
 })();
