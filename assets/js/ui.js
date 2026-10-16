@@ -186,10 +186,11 @@ var Pres = {};
 Pres.init = function () {
   document.body.classList.add('presenter'); document.title = 'Presenter — ' + document.title;
   var pv = $('#pv');
-  pv.innerHTML = '<div><div class="lbl">Current</div><div class="box" id="pc"></div><div class="lbl" id="pst" style="margin-top:8px"></div></div>' +
-    '<div><div class="lbl">Next</div><div class="box" id="pn"></div></div><div class="notes" id="pnotes"></div>' +
+  pv.innerHTML = '<div class="left"><div class="cell"><div class="lbl">Current</div><div class="box" id="pc"></div><div class="lbl" id="pst" style="margin:8px 0 0"></div></div>' +
+    '<div class="cell nx"><div class="lbl">Next</div><div class="box" id="pn"></div></div></div>' +
+    '<div class="right"><div class="notes" id="pnotes"></div>' +
     '<div class="bar"><button id="pp">← Prev</button><button id="pxn">Next →</button><b id="ptm">00:00</b><span id="pcl"></span><span id="ppos" style="flex:1;text-align:right"></span>' +
-    '<button id="prs">Reset timer</button></div>';
+    '<button id="prs">Reset timer</button></div></div>';
   Pres.t0 = Date.now();
   $('#pp').onclick = function () { send({ type: 'cmd', cmd: 'prev' }); };
   $('#pxn').onclick = function () { send({ type: 'cmd', cmd: 'next' }); };
@@ -202,8 +203,14 @@ Pres.init = function () {
   send({ type: 'hello' });
   setTimeout(function () { if (!Pres.got) send({ type: 'hello' }); }, 800);
 };
+Pres.fit = function () {   // largest 16:9 box that fits each left-hand cell (label heights subtracted)
+  [['#pc', 52], ['#pn', 26]].forEach(function (c) {
+    var box = $(c[0]), cell = box.parentNode;
+    box.style.width = Math.max(120, Math.min(cell.clientWidth, (cell.clientHeight - c[1]) * 16 / 9)) + 'px';
+  });
+};
 Pres.update = function (m) {
-  Pres.got = true; 
+  Pres.got = true; Pres.last = m; Pres.fit();
   var s = Deck.find(m.key); if (!s) return;
   var o = Deck.order(), nx = o.filter(function (x) { return x.pos > s.pos; })[0];
   var key = m.key + ':' + m.step;
@@ -221,7 +228,7 @@ function fillBox(box, slide, step) {
   try { Deck.renderStatic(slide, tin, step); } catch (e) { tin.textContent = 'slide ' + slide.key; }
   tin.style.transform = 'scale(' + (box.clientWidth / 1920) + ')';
 }
-addEventListener('resize', function () { if (Deck.mode === 'presenter') { Pres.key = null; } });
+addEventListener('resize', function () { if (Deck.mode === 'presenter') { Pres.key = null; if (Pres.last) Pres.update(Pres.last); } });
 
 /* ---------------------------------------------------------------- keyboard */
 var numBuf = '', numT;

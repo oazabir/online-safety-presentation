@@ -683,6 +683,8 @@ function headline(n, hideIds, game, o) {
 }
 headline('fortnite', ['e4', 'e5'], 'Fortnite', { x: 255, y: 34, fs: 124 });
 headline('roblox', ['e4', 'e5'], 'Roblox', { x: 1362, y: 360, fs: 150 });
+// both Roblox clips wait for the click (the left one had auto:true, so it started by itself when arriving via Back)
+var rbV = elData('roblox', 'e3'); if (rbV) rbV.auto = false;
 headline('roblox-countries', ['e4', 'e5'], 'Roblox', { x: 196, y: 66, fs: 120, row: true });
 headline('roblox-news', ['e4', 'e5'], 'Roblox', { x: 196, y: 40, fs: 120 });
 /* #41 slide 31 - the question */
