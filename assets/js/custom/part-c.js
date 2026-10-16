@@ -1390,10 +1390,10 @@ function kahfUrlEnter(u, ctx) {
   var S = 320 / 924;                                   // screenshot px -> card px (screenshots are 924 wide, cropped to 1560 tall)
   var CARDS = [
     { img: 'last-seen', lab: 'Last seen &amp; online', val: 'Nobody', rows: [[766, 906], [1192, 1330]] },
-    { img: 'profile-picture', lab: 'Profile picture', val: 'My contacts', rows: [[484, 624]] },
-    { img: 'status', lab: 'Status', val: 'Only share with&hellip;', rows: [[660, 838]] },
+    { img: 'privacy', lab: 'Read receipts', val: 'Off', rows: [[955, 1092]], toggle: [698, 990, 150, 67] },
     { img: 'groups', lab: 'Groups', val: 'My contacts', rows: [[484, 624]] },
-    { img: 'privacy', lab: 'Read receipts', val: 'Off', rows: [[955, 1092]], toggle: [698, 990, 150, 67] }
+    { img: 'profile-picture', lab: 'Profile picture', val: 'My contacts', rows: [[484, 624]] },
+    { img: 'status', lab: 'Status', val: 'Only share with&hellip;', rows: [[660, 838]] }
   ];
   var CSSW = [
     '.wa{position:absolute;inset:0;font-family:var(--f-body);color:#F4F1EA}',
@@ -1418,7 +1418,7 @@ function kahfUrlEnter(u, ctx) {
     '.wa .fg{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 3px rgba(20,20,20,.55),0 8px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none}',
     '.wa .rp{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:3px solid rgba(37,211,102,.9);opacity:0;pointer-events:none}',
     '.wa.focus .card:not(.rr){opacity:.45;filter:saturate(.6)}',
-    '.wa.focus .card.rr{transform:scale(1.2) translateX(-26px);z-index:3}'
+    '.wa.focus .card.rr{transform:scale(1.2);z-index:3}'
   ].join('\n');
   var st = document.createElement('style'); st.id = 'part-c-wa-css'; st.textContent = CSSW; document.head.appendChild(st);
   var LOCK = '<svg viewBox="0 0 24 24" fill="#25D366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>';
@@ -1460,7 +1460,7 @@ function kahfUrlEnter(u, ctx) {
         c.card.animate([{ opacity: 0, transform: 'translateY(70px)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 250 + i * 300, easing: ease, fill: 'backwards' });
         ctx.timeout(function () { c.his.forEach(function (x) { x.style.opacity = 1; x.animate([{ opacity: 0, transform: 'scale(1.08)' }, { opacity: 1, transform: 'none' }], { duration: 450 }); }); }, 900 + i * 300);
       });
-      var rr = s.cards[4];
+      var rr = s.cards.filter(function (c) { return c.tg; })[0];
       ctx.timeout(function () { s.r.classList.add('focus'); }, 3300);
       ctx.timeout(function () {                                     // a finger comes in from below and taps the switch
         rr.fg.animate([{ opacity: 0, transform: 'translate(70px,120px)' }, { opacity: 1, transform: 'translate(0,0)', offset: .7 }, { opacity: 1, transform: 'scale(.78)', offset: .85 }, { opacity: 1, transform: 'scale(1)' }],
@@ -1482,11 +1482,11 @@ function kahfUrlEnter(u, ctx) {
   });
   function waStart(s) {
     s.cards.forEach(function (c) { c.his.forEach(function (x) { x.style.opacity = 0; }); });
-    var rr = s.cards[4]; rr.tg.classList.remove('off'); rr.was.style.display = 'none'; rr.val.lastChild.textContent = 'On';
+    var rr = s.cards.filter(function (c) { return c.tg; })[0]; rr.tg.classList.remove('off'); rr.was.style.display = 'none'; rr.val.lastChild.textContent = 'On';
   }
   function waFinal(s) {
     s.cards.forEach(function (c) { c.card.style.opacity = ''; c.his.forEach(function (x) { x.style.opacity = 1; }); });
-    var rr = s.cards[4]; rr.tg.classList.add('off'); rr.was.style.display = ''; rr.val.lastChild.textContent = 'Off';
+    var rr = s.cards.filter(function (c) { return c.tg; })[0]; rr.tg.classList.add('off'); rr.was.style.display = ''; rr.val.lastChild.textContent = 'Off';
   }
 })();
 
