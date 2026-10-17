@@ -98,6 +98,11 @@ Edit `notes.json` (keys are slide ids, in show order; see `SLIDES.md`). Served o
 `python3 scripts/sync_notes.py` after editing (it also checks the JSON is valid). Unknown ids are warned about in the console.
 Don't put `notes` in slide data or `insertSlide` specs; a note given there is only a fallback when `notes.json` has none.
 
+### Presenter "Next" screenshots
+When a click only builds the current slide, the presenter's Next box shows `media/steps/<slide-id>-<step>.webp` (640×360 screenshots taken
+3 s after pressing Next); it falls back to a static render if the file is missing, and shows the next slide when there are no builds left.
+After changing a slide's builds/animation, regenerate: `python3 scripts/capture_steps.py 0 1 <slide-id>` (see the script header).
+
 ### Change text or images of an un-customised slide
 Prefer a small patch in a custom file (look up the element via `DECK_DATA.slides` by `id`, mutate `els`
 before `Deck.start()`), as part-b/part-c already do. Avoid hand-editing `slides-data.js`: it is one 110 KB line.

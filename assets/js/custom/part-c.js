@@ -1469,31 +1469,47 @@ function kahfUrlEnter(u, ctx) {
     },
     enter: function (el, ctx) {
       var s = el.__wa; if (!s) return;
-      if (cameBack || ctx.reduced) { waFinal(s); return; }
+      if (cameBack || ctx.reduced) { waFinal(s); s.done = true; return; }
       var ease = 'cubic-bezier(.2,.8,.25,1)';
       s.cards.forEach(function (c, i) {
         c.card.style.opacity = '';
         c.card.animate([{ opacity: 0, transform: 'translateY(70px)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 250 + i * 300, easing: ease, fill: 'backwards' });
         ctx.timeout(function () { c.his.forEach(function (x) { x.style.opacity = 1; x.animate([{ opacity: 0, transform: 'scale(1.08)' }, { opacity: 1, transform: 'none' }], { duration: 450 }); }); }, 900 + i * 300);
       });
-      var rr = s.cards.filter(function (c) { return c.tg; })[0];
-      ctx.timeout(function () { s.r.classList.add('focus'); }, 3300);
-      ctx.timeout(function () {                                     // a finger comes in from below and taps the switch
+    },
+    steps: 1,
+    step: function (el, i, ctx) {                                   // click 1: the read-receipts switch is turned off
+      var s = el.__wa; if (!s || s.done) return;
+      if (ctx.reduced || ctx.static) { waFinal(s); s.done = true; return; }
+      var rr = s.cards.filter(function (c) { return c.tg; })[0], tm = s.tm = [];
+      function at(fn, ms) { tm.push(ctx.timeout(fn, ms)); }
+      s.done = true;
+      s.r.classList.add('focus');
+      at(function () {                                              // a finger comes in from below and taps the switch
         rr.fg.animate([{ opacity: 0, transform: 'translate(70px,120px)' }, { opacity: 1, transform: 'translate(0,0)', offset: .7 }, { opacity: 1, transform: 'scale(.78)', offset: .85 }, { opacity: 1, transform: 'scale(1)' }],
           { duration: 1200, easing: 'ease-out', fill: 'forwards' });
-      }, 4100);
-      ctx.timeout(function () {
+      }, 800);
+      at(function () {
         rr.tg.classList.add('off');
         rr.rp.animate([{ opacity: .95, transform: 'scale(.6)' }, { opacity: 0, transform: 'scale(2.6)' }], { duration: 700, easing: 'ease-out' });
         rr.his.forEach(function (x) { x.style.opacity = 1; });
-      }, 5100);
-      ctx.timeout(function () {
+      }, 1800);
+      at(function () {
         rr.was.style.display = ''; rr.was.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
         rr.val.lastChild.textContent = 'Off';
         rr.val.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 500, easing: 'cubic-bezier(.3,1.5,.5,1)' });
         rr.fg.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(40px,80px)' }], { duration: 600, fill: 'forwards' });
-      }, 5500);
-      ctx.timeout(function () { s.r.classList.remove('focus'); }, 7600);
+      }, 2200);
+      at(function () { s.r.classList.remove('focus'); }, 4300);
+    },
+    unstep: function (el) {
+      var s = el.__wa; if (!s) return;
+      (s.tm || []).forEach(clearTimeout); s.tm = [];
+      s.done = false; s.r.classList.remove('focus');
+      var rr = s.cards.filter(function (c) { return c.tg; })[0];
+      rr.fg.getAnimations().forEach(function (an) { an.cancel(); }); rr.fg.style.opacity = 0;
+      waStart(s);
+      s.cards.forEach(function (c) { c.his.forEach(function (x) { x.style.opacity = 1; }); });
     }
   });
   function waStart(s) {
