@@ -406,6 +406,8 @@ if (v93) {
 })();
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
+// kids-videos (#21) is louder than the rest: 5%
+D.slides.forEach(function (s) { if (s.id === 'kids-videos') s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.05; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
 D.slides.forEach(function (s) {
   if (s.id !== 'hours-per-year' || !s.steps[0]) return;
