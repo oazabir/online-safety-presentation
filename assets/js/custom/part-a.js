@@ -304,6 +304,16 @@ Deck.registerSlide('signs-of-addiction', {
     clear.classList.add('pe'); clear.style.pointerEvents = 'auto';
     Array.prototype.forEach.call(r.querySelectorAll('.sg-row'), function (x) { x.style.pointerEvents = 'auto'; });
     upd();
+    el.__sg = { r: r, upd: upd };
+  },
+  steps: 5,                                           // each Next ticks the next sign (Back unticks it)
+  step: function (el, i) {
+    var s = el.__sg, row = s && s.r.querySelectorAll('.sg-row')[i - 1]; if (!row) return;
+    row.classList.add('on'); s.upd();
+  },
+  unstep: function (el, i) {
+    var s = el.__sg, row = s && s.r.querySelectorAll('.sg-row')[i - 1]; if (!row) return;
+    row.classList.remove('on'); s.upd();
   }
 });
 
