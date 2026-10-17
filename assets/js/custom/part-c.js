@@ -406,6 +406,18 @@ if (v93) {
 })();
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
+/* #50/#51 (Susan chat): blur "nūd£" so kids can't read it but adults can still make it out */
+D.slides.forEach(function (s) {
+  if (s.id !== 'susan-tricked' && s.id !== 'susan-blackmailed') return;
+  s.els.forEach(function (e) {
+    if (e.k !== 'text') return;
+    (e.paras || []).forEach(function (p) {
+      var runs = p.runs, i = runs.findIndex(function (r) { return r.t === 'nūd'; });
+      if (i < 0 || !runs[i + 1] || runs[i + 1].t !== '£') return;
+      runs.splice(i, 2, Object.assign({}, runs[i], { t: 'nūd£', blur: 3.5 }));
+    });
+  });
+});
 // kids-videos (#21) is louder than the rest: 5%
 D.slides.forEach(function (s) { if (s.id === 'kids-videos') s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.05; }); });
 /* #8: reveal the 5 equation lines faster so the 1752 count finishes within ~2 s of arriving (count timing in part-a) */
