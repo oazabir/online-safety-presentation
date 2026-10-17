@@ -216,19 +216,19 @@ Pres.update = function (m) {
   var key = m.key + ':' + m.step;
   if (Pres.key !== key) {
     Pres.key = key;
-    fillBox($('#pc'), s, m.step);
-    if (m.step < m.total) fillNextStep($('#pn'), s, m.step + 1, key); else fillBox($('#pn'), nx, 0);
+    fillShot($('#pc'), s, m.step, key);
+    if (m.step < m.total) fillShot($('#pn'), s, m.step + 1, key); else fillShot($('#pn'), nx, 0, key);
     $('#pnotes').textContent = s.notes || '(no speaker notes for this slide)';
     $('#pst').textContent = m.total ? 'Build step ' + m.step + ' / ' + m.total : 'No builds on this slide';
     $('#ppos').textContent = 'Slide ' + (s.hidden ? 'hidden' : (o.indexOf(s) + 1) + ' of ' + o.length);
   }
 };
-/* "Next" when the click only builds the current slide: a real screenshot of that state (media/steps/<id>-<step>.webp,
-   captured by pressing Next with the full animations); a static render is only the fallback when the file is missing. */
-function fillNextStep(box, slide, step, key) {
-  box.innerHTML = '';
+/* A slide in a given build state, as the screenshot media/steps/<id>-<step>.webp taken while presenting (the real animated
+   state: -0 is the slide as it first appears). A static render (which draws the final state) is only the fallback when the file is missing. */
+function fillShot(box, slide, step, key) {
+  box.innerHTML = ''; if (!slide) { box.textContent = 'End'; return; }
   var im = h('img', 'pshot', box); im.alt = '';
-  im.onerror = function () { if (Pres.key === key) fillBox(box, slide, step); };
+  im.onerror = function () { if (Pres.key === key && box.firstChild === im) fillBox(box, slide, step); };
   im.src = 'media/steps/' + encodeURIComponent(slide.key) + '-' + step + '.webp';
 }
 function fillBox(box, slide, step) {
