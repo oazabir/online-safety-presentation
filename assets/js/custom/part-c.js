@@ -1039,13 +1039,13 @@ var freeBadge;
   if (document.getElementById('pc-kb-css')) return;
   var st = document.createElement('style'); st.id = 'pc-kb-css';
   st.textContent = [
-    '.pc-kb-name{position:absolute;left:48px;top:52px;padding:16px 40px 20px;border-radius:26px;transform:rotate(-4deg);z-index:5;white-space:nowrap;',
-    '  font:700 104px/1 var(--f-display);letter-spacing:-.02em;color:#fff;',
-    '  background:linear-gradient(160deg,rgba(14,52,30,.96),rgba(6,26,16,.97));box-shadow:0 0 0 3px #2EBA4C,0 0 46px rgba(46,186,76,.6),0 24px 60px rgba(0,0,0,.6)}',
+    '.pc-kb-name{position:absolute;left:44px;top:34px;padding:10px 26px 13px;border-radius:18px;transform:rotate(-3deg);z-index:5;white-space:nowrap;',
+    '  font:700 58px/1 var(--f-display);letter-spacing:-.02em;color:#fff;',
+    '  background:linear-gradient(160deg,rgba(14,52,30,.96),rgba(6,26,16,.97));box-shadow:0 0 0 2px #2EBA4C,0 0 28px rgba(46,186,76,.5),0 14px 36px rgba(0,0,0,.55)}',
     '.pc-kb-name span{color:#6dff8f;text-shadow:0 0 34px rgba(46,186,76,.75)}',
     '.pc-kb-name.pre{opacity:0}',
     '.pc-kb-name.go{animation:pc-kb-pop .7s cubic-bezier(.3,1.4,.5,1) both}',
-    '@keyframes pc-kb-pop{0%{opacity:0;transform:rotate(-4deg) translateY(-40px) scale(.7)}100%{opacity:1;transform:rotate(-4deg) none}}'
+    '@keyframes pc-kb-pop{0%{opacity:0;transform:rotate(-3deg) translateY(-30px) scale(.7)}100%{opacity:1;transform:rotate(-3deg) none}}'
   ].join('\n');
   document.head.appendChild(st);
 })();
@@ -2391,16 +2391,16 @@ Deck.registerSlide('dont-drug-kids', {
 
   browserTable({
     slide: 'browser-comparison', title: 'Kahf Browser vs other browsers', kicker: 'Built for family safety',
-    head: '<em>Kahf</em> Browser vs other browsers', lead: 'Family features', pill: 'Built for families', score: 'Family-safe', legend: ['y', 'n'],
+    head: '<em>Kahf</em> Browser vs other browsers', lead: 'Family features', pill: 'Built for families', score: 'Family-safe', legend: ['y', 'p', 'n'],
     L: 140, FC: 640, CW: 200, TOP: 250, HH: 140, RH: 92,
-    cols: [['Kahf', logo(SRC162, 758, 98)]].concat([['Chrome', 1206], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; })),
+    cols: [['Kahf', 'background-image:url(media/kahfbrowser/kahf-logo.svg);background-size:42px auto;background-position:center']].concat([['Chrome', 1206], ['Edge', 1587], ['Firefox', 1777], ['Safari', 1967]].map(function (b) { return [b[0], logo(SRC158, b[1], 60)]; })),
     extra: freeBadge,
     rows: [
       ['Hides inappropriate images', 'ynnnn'],
-      ['Safe Search', 'ynnnn'],
+      ['Safe Search', 'ypppn'],   // Chrome/Edge/Firefox: limited
       ['Safe YouTube', 'ynnnn'],
-      ['Ads &amp; trackers blocked', 'ynnnn'],
-      ['Blocks harmful sites', 'ynnnn']
+      ['Ads &amp; trackers blocked', 'ynnnp'],   // Safari: trackers only
+      ['Blocks harmful sites', 'ypppp']   // limited everywhere else
     ],
   });
 })();
