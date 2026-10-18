@@ -1,6 +1,6 @@
 # Slide map
 
-Every slide has a **number** (its position in the show, 1-81, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-80, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -74,21 +74,22 @@ use it; `—` marks slides that were added after the conversion.
 | 63 | `kahf-browser-video` | protect | 90 |
 | 64 | `choose-browser` | protect | 91 |
 | 65 | `kahf-browser-hero` | protect | 92 |
-| 66 | `kahf-browser-new-tab` | protect | 93 |
-| 67 | `browser-comparison` | protect | 94 |
-| 68 | `youtube-hide-content` | protect | 95 |
-| 69 | `youtube-train` | protect | 96 |
-| 70 | `kahf-kids-app` | protect | 97 |
-| 71 | `kid-google` | protect | — |
-| 72 | `wa-privacy` | protect | — |
-| 73 | `safety-checklist` | protect | 105 |
-| 74 | `trends-intro` | evidence | — |
-| 75 | `depression-chart` | evidence | 106 |
-| 76 | `self-harm-chart` | evidence | 107 |
-| 77 | `suicide-rate-chart` | evidence | 108 |
-| 78 | `suicide-rate-social-apps` | evidence | 109 |
-| 79 | `remember-this` | evidence | 110 |
-| 80 | `tahrim-66-6` | evidence | — |
-| 81 | `closing` | evidence | 112 |
+| 66 | `browser-comparison` | protect | 94 |
+| 67 | `youtube-hide-content` | protect | 95 |
+| 68 | `youtube-train` | protect | 96 |
+| 69 | `kahf-kids-app` | protect | 97 |
+| 70 | `kid-google` | protect | — |
+| 71 | `wa-privacy` | protect | — |
+| 72 | `safety-checklist` | protect | 105 |
+| 73 | `trends-intro` | evidence | — |
+| 74 | `depression-chart` | evidence | 106 |
+| 75 | `self-harm-chart` | evidence | 107 |
+| 76 | `suicide-rate-chart` | evidence | 108 |
+| 77 | `suicide-rate-social-apps` | evidence | 109 |
+| 78 | `remember-this` | evidence | 110 |
+| 79 | `tahrim-66-6` | evidence | — |
+| 80 | `closing` | evidence | 112 |
+
+Hidden (kept in the deck, not shown when presenting, no number): `kahf-browser-new-tab` (PowerPoint #93, was 66; set in part-c.js).
 
 Removed (were hidden): PowerPoint #2 (three panels), #4 (684,932 years), #48 (How to treat device addiction? title), #98, the live screen-time counter, the screen-time calculator and the "shepherd" closing slide.

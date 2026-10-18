@@ -404,6 +404,8 @@ if (v93) {
     unstep: function (el) { var P = el.__p93; if (P) { P.menu.classList.remove('on'); P.ping.classList.remove('go'); } }
   });
 })();
+/* slide 66 (kahf-browser-new-tab) is hidden: kept in the deck, skipped when presenting (unhide: delete this line) */
+D.slides.forEach(function (s) { if (s.id === 'kahf-browser-new-tab') s.hidden = true; });
 // every video in the deck plays at 10% volume (muted ones stay muted)
 D.slides.forEach(function (s) { s.els.forEach(function (e) { if (e.k === 'video') e.vol = 0.1; }); });
 /* #50/#51 (Susan chat): blur "nūd£" so kids can't read it but adults can still make it out */
@@ -1032,6 +1034,22 @@ var freeBadge;
 
 })();
 
+/* "Kahf Browser" name badge on the kahfbrowser.com hero slide: overlaps the window's top-left corner (the FREE seal is on the right) */
+(function () {
+  if (document.getElementById('pc-kb-css')) return;
+  var st = document.createElement('style'); st.id = 'pc-kb-css';
+  st.textContent = [
+    '.pc-kb-name{position:absolute;left:48px;top:52px;padding:16px 40px 20px;border-radius:26px;transform:rotate(-4deg);z-index:5;white-space:nowrap;',
+    '  font:700 104px/1 var(--f-display);letter-spacing:-.02em;color:#fff;',
+    '  background:linear-gradient(160deg,rgba(14,52,30,.96),rgba(6,26,16,.97));box-shadow:0 0 0 3px #2EBA4C,0 0 46px rgba(46,186,76,.6),0 24px 60px rgba(0,0,0,.6)}',
+    '.pc-kb-name span{color:#6dff8f;text-shadow:0 0 34px rgba(46,186,76,.75)}',
+    '.pc-kb-name.pre{opacity:0}',
+    '.pc-kb-name.go{animation:pc-kb-pop .7s cubic-bezier(.3,1.4,.5,1) both}',
+    '@keyframes pc-kb-pop{0%{opacity:0;transform:rotate(-4deg) translateY(-40px) scale(.7)}100%{opacity:1;transform:rotate(-4deg) none}}'
+  ].join('\n');
+  document.head.appendChild(st);
+})();
+
 /* #92 (on-screen 61) kahfbrowser.com hero. media/kahfbrowser/hero-base.webp is the live hero with the headline removed;
    the headline is rebuilt from cut-outs of the site's own glyphs (hl-*.webp, 3x) laid out in the site's css px (1491 wide)
    and driven by the site's word rotator: calmer -> safer -> decent every 2.6 s, outgoing word drops out while the next
@@ -1064,10 +1082,13 @@ var freeBadge;
       var web = h('img', '', row); web.src = 'media/kahfbrowser/hl-web.webp'; web.alt = '';
       web.style.cssText = 'width:' + WEB.w + 'px;margin:0 ' + WEB.mr + 'px 0 ' + GAP2 + 'px';
       el.__hl = { rot: rot, ws: ws };
+      var nm = h('div', 'pc-kb-name' + (ctx.static || ctx.reduced ? '' : ' pre'), el, '<span>Kahf</span> Browser'); nm.setAttribute('aria-label', 'Kahf Browser');   // say which browser this slide is about
+      el.__name = nm;
       el.__free = freeBadge(el, ctx, !ctx.static && !ctx.reduced);   // same gold FREE seal as #94, on the window's top-right corner
     },
     enter: function (el, ctx) {
       if (el.__free) el.__free();
+      if (el.__name) ctx.timeout(function () { el.__name.classList.remove('pre'); el.__name.classList.add('go'); }, 500);
       var s = el.__hl; if (!s || ctx.static || ctx.reduced) return;
       var i = 0;
       s.ws.forEach(function (n, j) { n.classList.toggle('on', j === 0); n.classList.remove('out'); });

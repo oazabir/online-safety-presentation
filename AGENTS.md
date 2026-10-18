@@ -48,7 +48,7 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
    (ids like `part-a-css`, class prefixes `pa-`, `pc-` …), registers/inserts slides, and may patch `DECK_DATA` in
    place (look slides up with `byId['<id>']`).
 4. **Hidden slides** (`hidden: true`) are supported (kept in `Deck.slides`, skipped by `Deck.order()` and numbered 0), but the
-   deck currently has none: the old hidden ones (counter, calculator, alternate closer, …) were deleted.
+   deck has one: `kahf-browser-new-tab` (set in part-c.js); the old hidden ones (counter, calculator, alternate closer, …) were deleted.
 5. Later scripts win: `registerSlide` merges with `Object.assign`, so part-c can override part-a/b for the same slide.
 
 ## Running and previewing
