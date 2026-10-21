@@ -66,6 +66,28 @@ addCss('pf-css', [
   '  font:400 25px/1.42 var(--f-body);color:var(--ink2)}',
   '.pf-end .law b{color:#fff;font-weight:600}',
   '.pf-s.k2 .pf-tl{opacity:0}.pf-s.k2 .pf-end{opacity:1;transform:none}',
+  /* Sewell's entrance (.intro, set on a forward enter): the glow blooms, the "14" swings in, the header rises line by line,
+     the phone lifts in tilted and settles, then each timeline dot pops and its line draws down to the next */
+  '.pf-s.intro .pf-glow{animation:pf-bloom 2.2s cubic-bezier(.2,.8,.2,1) both}',
+  '@keyframes pf-bloom{0%{opacity:0;transform:scale(.4)}55%{opacity:.75}100%{opacity:.5;transform:none}}',
+  '.pf-s.intro .pf-ghost{animation:pf-g14 1.8s cubic-bezier(.16,1,.3,1) .1s both}',
+  '@keyframes pf-g14{from{opacity:0;transform:translateX(-140px) scale(1.25)}to{opacity:1;transform:none}}',
+  '.pf-s.intro .pf-k{animation:pf-kin .7s cubic-bezier(.2,.8,.2,1) .35s both}',
+  '@keyframes pf-kin{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}',
+  '.pf-s.intro .pf-nm{transform-origin:0 100%;animation:pf-nmin 1s cubic-bezier(.16,1,.3,1) .5s both}',
+  '@keyframes pf-nmin{from{opacity:0;transform:translateY(60px) rotate(2deg)}to{opacity:1;transform:none}}',
+  '.pf-s.intro .pf-sb{animation:pf-up .8s cubic-bezier(.2,.8,.2,1) .85s both}',
+  '@keyframes pf-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}',
+  '.pf-s.intro .pf-ph{transform-origin:50% 100%;animation:pf-phin 1.6s cubic-bezier(.16,1,.3,1) .45s both}',
+  '@keyframes pf-phin{0%{opacity:0;transform:translateY(260px) rotate(7deg) scale(.9)}60%{opacity:1}100%{opacity:1;transform:none}}',
+  '.pf-s.intro .pf-sc>:not(.pf-blk){animation:pf-up .6s ease 1.5s both}',   // not the blackout: its fill would pin it visible
+  '.pf-s.intro .chips{animation:pf-up .8s ease 4.6s both}',
+  '.pf-s.intro .pf-ti::before{transform:scale(0)}',
+  '.pf-s.intro .pf-ti.on::before{transform:none;transition:transform .5s cubic-bezier(.2,1.8,.4,1) .1s}',
+  '.pf-s.intro .pf-ti::after{transform:scaleY(0);transform-origin:50% 0}',
+  '.pf-s.intro .pf-ti.on::after{transform:none;transition:transform .8s cubic-bezier(.6,0,.3,1) .45s}',
+  '.pf-s.intro .pf-ti.red.on .t{animation:pf-thud .9s cubic-bezier(.2,1.4,.4,1) .15s both}',
+  '@keyframes pf-thud{0%{opacity:0;transform:scale(1.35)}100%{opacity:1;transform:none}}',
   /* ---- phone + Character.AI-style chat (generic look, no logo) */
   '.pf-ph{position:absolute;left:1262px;top:58px;width:470px;height:956px;border-radius:68px;background:#141418;padding:11px;box-sizing:border-box;',
   '  box-shadow:0 0 0 2px #3a3a42,0 40px 90px rgba(0,0,0,.65),0 0 160px rgba(255,77,77,.16)}',
@@ -331,9 +353,11 @@ Deck.insertSlide({
     var P = el.__pf; if (!P) return;
     P.ctx = ctx; P.inst = cameBack || ctx.reduced;
     ctx.timeout(function () { P.inst = false; }, 0);         // Back: the engine replays every step right after enter
+    P.root.classList.remove('intro');
     if (P.inst) return;
+    void P.root.offsetWidth; P.root.classList.add('intro');
     var at = sched(P);
-    P.items.forEach(function (it, i) { at(500 + i * 900, function () { it.classList.add('on'); }); });
+    P.items.forEach(function (it, i) { at(1500 + i * 850, function () { it.classList.add('on'); }); });
   },
   step: function (el, i, ctx) {
     var P = el.__pf; if (!P) return;
