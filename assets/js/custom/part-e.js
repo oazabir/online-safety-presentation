@@ -233,3 +233,163 @@ Deck.insertSlide({
   unstep: function (el, i) { showCards(el, i - 1); }
 });
 })();
+
+/* ============================================================================
+   Safe screen time (inserted after 'tech-free-zones', before 'slow-phones').
+   Three age tiles (under 2 / 2-4 / 5-17) with the recommended daily ceiling, then ONE click brings in the
+   evidence (Madigan 2019, Schmidt-Persson 2024) and the honest caveat: ceilings, not proven cut-offs.
+   Sources: WHO 2019 (under 5s), CSEP 24-hour movement guidelines (5-17), JAMA Pediatrics, JAMA Network Open.
+   ============================================================================ */
+(function () {
+'use strict';
+if (!window.Deck || !window.DECK_DATA) return;
+
+function h(tag, cls, parent, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; }
+function addCss(id, rules) { if (document.getElementById(id)) return; var st = document.createElement('style'); st.id = id; st.textContent = rules.join('\n'); document.head.appendChild(st); }
+
+var TILES = [
+  { age: 'Under 2', val: 'None', unit: 'no routine screen time', hrs: 0, by: 'World Health Organization', note: 'Babies learn from faces, voices and touch.', c: 'var(--red)' },
+  { age: 'Ages 2 – 4', val: '1', unit: 'hour a day, at most', hrs: 1, by: 'World Health Organization', note: 'Less is better. Watch together.', c: 'var(--amber)' },
+  { age: 'Ages 5 – 17', val: '2', unit: 'hours a day, recreational', hrs: 2, by: 'Canadian 24-Hour Movement Guidelines', note: 'Schoolwork is not counted.', c: 'var(--green)' }
+];
+var EVID = [
+  { big: '2,441', unit: 'children followed', by: 'Madigan et al.', j: 'JAMA Pediatrics, 2019',
+    d: 'More screen time at ages <b>2 and 3</b> predicted weaker developmental scores at age 5.' },
+  { big: '3 h', unit: 'a week, for 2 weeks', by: 'Schmidt-Persson et al.', j: 'JAMA Network Open, 2024',
+    d: 'Randomized trial, <b>181 children</b>: cutting leisure screens eased psychological symptoms.' }
+];
+
+/* child portraits for the age tiles: flat vector, drawn in a 200x200 box and clipped to a circle by CSS */
+var SK = '#e6b08a', SKD = '#c98f68', HAIR = '#3a2418', INK = '#2b1d16';
+function face(cx, cy, dx, ey, mouth) {   // eyes with a catch-light + cheeks + mouth, centred on cx
+  return '<circle cx="' + (cx - dx) + '" cy="' + ey + '" r="5.5" fill="' + INK + '"/><circle cx="' + (cx + dx) + '" cy="' + ey + '" r="5.5" fill="' + INK + '"/>' +
+    '<circle cx="' + (cx - dx + 1.8) + '" cy="' + (ey - 2) + '" r="1.8" fill="#fff"/><circle cx="' + (cx + dx + 1.8) + '" cy="' + (ey - 2) + '" r="1.8" fill="#fff"/>' +
+    '<circle cx="' + (cx - dx - 10) + '" cy="' + (ey + 20) + '" r="8.5" fill="#ff7a70" opacity=".4"/><circle cx="' + (cx + dx + 10) + '" cy="' + (ey + 20) + '" r="8.5" fill="#ff7a70" opacity=".4"/>' + mouth;
+}
+var ART = [
+  /* baby: big round head, one curl of hair, cream onesie, pacifier */
+  '<svg viewBox="0 0 200 200"><rect width="200" height="200" fill="#ffd9d6"/>' +
+  '<ellipse cx="100" cy="212" rx="80" ry="56" fill="#f6f1e7"/><path d="M62 176q38 20 76 0" fill="none" stroke="#e3d9c6" stroke-width="4" stroke-linecap="round"/>' +
+  '<rect x="86" y="140" width="28" height="30" rx="12" fill="' + SKD + '"/>' +
+  '<circle cx="44" cy="106" r="10" fill="' + SK + '"/><circle cx="156" cy="106" r="10" fill="' + SK + '"/>' +
+  '<circle cx="100" cy="100" r="58" fill="' + SK + '"/>' +
+  '<path d="M92 46C88 30 110 28 108 44" fill="none" stroke="' + HAIR + '" stroke-width="5" stroke-linecap="round"/>' +
+  face(100, 100, 21, 100, '<path d="M90 124q10 8 20 0" fill="none" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>') +
+  '</svg>',
+  /* toddler: short dark hair, open smile, amber tee, teddy bear in the arms */
+  '<svg viewBox="0 0 200 200"><rect width="200" height="200" fill="#ffe9b8"/>' +
+  '<ellipse cx="100" cy="214" rx="74" ry="58" fill="#ffb020"/>' +
+  '<rect x="87" y="140" width="26" height="28" rx="11" fill="' + SKD + '"/>' +
+  '<circle cx="50" cy="108" r="9" fill="' + SK + '"/><circle cx="150" cy="108" r="9" fill="' + SK + '"/>' +
+  '<circle cx="100" cy="102" r="50" fill="' + SK + '"/>' +
+  '<path d="M49 100C44 48 156 48 151 100C143 80 124 72 100 74C76 72 57 80 49 100Z" fill="' + HAIR + '"/>' +
+  face(100, 102, 19, 106, '<path d="M87 124q13 20 26 0z" fill="#7a2a2a"/><path d="M95 133q5 4 10 0" fill="none" stroke="#ff8f8f" stroke-width="4" stroke-linecap="round"/>') +
+  '<circle cx="150" cy="148" r="17" fill="#b87a4b"/><circle cx="138" cy="135" r="7" fill="#b87a4b"/><circle cx="162" cy="135" r="7" fill="#b87a4b"/>' +
+  '<ellipse cx="150" cy="178" rx="24" ry="26" fill="#b87a4b"/><ellipse cx="150" cy="153" rx="8" ry="6" fill="#e8c39a"/><circle cx="150" cy="150" r="2.6" fill="' + INK + '"/>' +
+  '<circle cx="143" cy="144" r="2.3" fill="' + INK + '"/><circle cx="157" cy="144" r="2.3" fill="' + INK + '"/>' +
+  '</svg>',
+  /* school-age child: neat hair, backpack straps, reading a book */
+  '<svg viewBox="0 0 200 200"><rect width="200" height="200" fill="#c9f5e2"/>' +
+  '<ellipse cx="100" cy="220" rx="72" ry="62" fill="#2f80ed"/>' +
+  '<rect x="64" y="160" width="15" height="46" rx="7" fill="#ffb020"/><rect x="121" y="160" width="15" height="46" rx="7" fill="#ffb020"/>' +
+  '<rect x="88" y="132" width="24" height="30" rx="10" fill="' + SKD + '"/>' +
+  '<circle cx="55" cy="96" r="9" fill="' + SK + '"/><circle cx="145" cy="96" r="9" fill="' + SK + '"/>' +
+  '<ellipse cx="100" cy="94" rx="46" ry="50" fill="' + SK + '"/>' +
+  '<path d="M52 90C46 36 154 36 148 90C142 70 128 60 112 62C100 56 84 60 76 66C64 70 56 78 52 90Z" fill="' + HAIR + '"/>' +
+  face(100, 94, 18, 96, '<path d="M88 116q12 11 24 0" fill="none" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>') +
+  '<path d="M66 156h68v38H66z" fill="#f6f1e7" stroke="#d9cdb4" stroke-width="3" stroke-linejoin="round"/><path d="M100 156v38" stroke="#d9cdb4" stroke-width="3"/>' +
+  '<path d="M74 168h18M74 178h18M108 168h18M108 178h18" stroke="#b9ad92" stroke-width="3" stroke-linecap="round"/>' +
+  '<circle cx="64" cy="172" r="8" fill="' + SK + '"/><circle cx="136" cy="172" r="8" fill="' + SK + '"/>' +
+  '</svg>'
+];
+
+var WHO = 'https://www.who.int/news-room/detail/24-04-2019-to-grow-up-healthy-children-need-to-sit-less-and-play-more';
+var CSEP = 'https://csepguidelines.ca/guidelines/children-youth/';
+var JP = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6439882/';
+var JN = 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11245724/';
+
+addCss('pe-sst-css', [
+  '.sst{position:absolute;inset:0;font-family:var(--f-body);color:var(--ink)}',
+  '.sst-k{position:absolute;left:110px;top:78px;font:700 24px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--green)}',
+  '.sst-t{position:absolute;left:106px;top:116px;margin:0;font:600 92px/1 var(--f-display);letter-spacing:-.03em;color:#fff;white-space:nowrap}',
+  '.sst-t em{font-style:italic;color:var(--green);text-shadow:0 0 44px rgba(46,229,157,.4)}',
+  '.sst-s{position:absolute;left:110px;top:236px;font:400 30px/1.3 var(--f-body);color:var(--ink2)}',
+  '.sst-s b{color:#fff;font-weight:600}',
+  /* ---- age tiles */
+  '.sst-row{position:absolute;left:110px;right:110px;top:300px;height:384px;display:flex;gap:28px}',
+  '.sst-tl{position:relative;flex:1;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;padding:30px 36px 0;box-sizing:border-box;',
+  '  background:rgba(14,23,28,.86);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),var(--shadow)}',
+  '.sst-tl::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--c)}',
+  '.sst-ph{position:absolute;right:30px;top:30px;width:172px;height:172px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 5px var(--c),0 0 44px -4px var(--c)}',
+  '.sst-ph svg{display:block;width:100%;height:100%}',
+  '.sst-ag{font:700 26px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}',
+  '.sst-v{margin-top:18px;font:600 150px/.9 var(--f-display);letter-spacing:-.045em;color:#fff;font-variant-numeric:tabular-nums}',
+  '.sst-v.w{font-size:112px;padding-top:28px;letter-spacing:-.03em}',
+  '.sst-u{margin-top:14px;font:500 28px/1.2 var(--f-body);color:var(--ink2)}',
+  '.sst-pp{display:flex;gap:10px;margin-top:22px}',
+  '.sst-pp i{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.1)}',
+  '.sst-pp i.on{background:var(--c);box-shadow:0 0 16px -2px var(--c)}',
+  '.sst-nt{margin-top:auto;padding:16px 0 20px;border-top:1px solid rgba(255,255,255,.08);font:400 21px/1.3 var(--f-body);color:var(--muted)}',
+  '.sst-nt b{display:block;margin-bottom:3px;font:700 15px/1.2 var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}',
+  /* ---- evidence (click 1) */
+  '.sst-ev{position:absolute;left:110px;right:110px;top:708px;height:150px;display:flex;gap:28px;transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}',
+  '.sst-ev.off{opacity:0;transform:translateY(26px)}',
+  '.sst-cd{flex:1;display:flex;align-items:center;border-radius:22px;overflow:hidden;background:rgba(14,23,28,.86);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),var(--shadow)}',
+  '.sst-nm{flex:0 0 210px;text-align:center;color:var(--green)}',
+  '.sst-nm .v{font:700 66px/.95 var(--f-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}',
+  '.sst-nm .u{margin-top:8px;font:700 14px/1.2 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}',
+  '.sst-bd{flex:1;min-width:0;padding:0 28px 0 28px;border-left:1px solid rgba(255,255,255,.08)}',
+  '.sst-by{font:600 27px/1.15 var(--f-body);color:#fff;white-space:nowrap}',
+  '.sst-by span{display:block;margin-top:5px;font:italic 500 20px/1 var(--f-body);color:var(--muted)}',
+  '.sst-d{margin-top:8px;font:400 22px/1.3 var(--f-body);color:var(--ink2)}',
+  '.sst-d b{color:#fff;font-weight:600}',
+  '.sst-cv{position:absolute;left:110px;right:110px;top:882px;height:68px;border-radius:16px;display:flex;align-items:center;padding:0 26px;box-sizing:border-box;',
+  '  background:linear-gradient(90deg,rgba(46,229,157,.2),rgba(46,229,157,.05));box-shadow:inset 4px 0 0 var(--green);',
+  '  font:400 25px/1.25 var(--f-body);color:var(--ink2);transition:opacity .7s ease .25s,transform .8s cubic-bezier(.2,.8,.2,1) .25s}',
+  '.sst-cv.off{opacity:0;transform:translateY(20px)}',
+  '.sst-cv b{color:#fff;font-weight:700}.sst-cv em{font-style:normal;color:var(--green);font-weight:700}',
+  '.sst .chip.src em,.sst .chip.src span{display:none}',   /* host + long URL path would wrap the four chips into two rows; the badge is still the full link */
+  '.sst.inst *{transition:none!important}'
+]);
+
+function showEv(el, on) {
+  var g = el.__sst; if (!g) return;
+  g.ev.classList.toggle('off', !on); g.cv.classList.toggle('off', !on);
+}
+
+Deck.insertSlide({
+  after: 'tech-free-zones', id: 'safe-screen-time', title: 'Safe screen time', section: 'protect', tr: { type: 'fade', ms: 800 }, loop: false, steps: 1,
+  render: function (el, ctx) {
+    var r = h('div', 'sst inst', el);
+    h('div', 'sst-k', r, 'Recommended screen time');
+    h('h2', 'sst-t', r, 'The daily <em>ceiling</em>');
+    h('div', 'sst-s', r, 'Recreational screens, per day. <b>Not a target to reach: a limit to stay under.</b>');
+    var row = h('div', 'sst-row', r);
+    TILES.forEach(function (t, i) {
+      var c = h('div', 'sst-tl', row,
+        '<div class="sst-ph">' + ART[i] + '</div>' +
+        '<div class="sst-ag">' + t.age + '</div>' +
+        '<div class="sst-v' + (t.val.length > 1 ? ' w' : '') + '">' + t.val + '</div>' +
+        '<div class="sst-u">' + t.unit + '</div>' +
+        '<div class="sst-pp">' + [0, 1, 2].map(function (n) { return '<i' + (n < t.hrs ? ' class="on"' : '') + '></i>'; }).join('') + '</div>' +
+        '<div class="sst-nt"><b>' + t.by + '</b>' + t.note + '</div>');
+      c.style.setProperty('--c', t.c);
+    });
+    var ev = h('div', 'sst-ev off', r);
+    EVID.forEach(function (e) {
+      h('div', 'sst-cd', ev,
+        '<div class="sst-nm"><div class="v">' + e.big + '</div><div class="u">' + e.unit + '</div></div>' +
+        '<div class="sst-bd"><div class="sst-by">' + e.by + '<span>' + e.j + '</span></div><div class="sst-d">' + e.d + '</div></div>');
+    });
+    var cv = h('div', 'sst-cv off', r,
+      '<span><b>Ceilings, not cliffs.</b> These are expert recommendations; no study proves one exact safe number. <em>Less is better.</em></span>');
+    var box = h('div', 'chips', r);
+    [[WHO, 'WHO'], [CSEP, 'CSEP'], [JP, 'JAMA Pediatrics'], [JN, 'JAMA Netw. Open']].forEach(function (u) { box.appendChild(Deck.sourceChip(u[0], u[1])); });
+    el.__sst = { ev: ev, cv: cv };
+    if (ctx.static) showEv(el, true);
+    void r.offsetWidth; r.classList.remove('inst');
+  },
+  step: function (el) { showEv(el, true); },
+  unstep: function (el) { showEv(el, false); }
+});
+})();

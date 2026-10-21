@@ -25,7 +25,7 @@ assets/js/custom/part-a.js  hand-built slides for the first third of the deck
 assets/js/custom/part-b.js  hand-built slides for the rest of the deck
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
 assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (`gallup-teen-hours`, `hours-per-year`, `hours-tiles`, `game-dangers`)
-assets/js/custom/topic-bar.js  bottom topic progress bar (6 topics, `TOPICS[].from` = first slide; `T` toggles it)
+assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
                             (hours/ and games/ = Codex-generated photos for #10 and #44)

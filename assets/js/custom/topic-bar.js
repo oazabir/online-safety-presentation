@@ -1,6 +1,6 @@
 /* ============================================================================
    topic-bar.js - bottom "chapter" progress bar.
-   The deck is split into six major topics. Each topic starts at the slide named
+   The deck is split into seven major topics. Each topic starts at the slide named
    in `from` (slide id) and runs until the next topic
    starts, so a topic is always one contiguous run of slides in show order.
    Each segment fills as the talk moves through its slides; earlier topics stay
@@ -15,6 +15,7 @@ var TOPICS = [
   { from: 'why-intro', label: 'Why It’s Addictive', color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
   { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose
   { from: 'harm-intro', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial, grooming, Susan
+  { from: 'ai-intro', label: 'Killing Our Children', mark: 'AI', color: '#b65cff' },   // AI chatbots: Sewell, Juliana, Adam, Nina, J.F. (not on the agenda map, so no number)
   { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist
   { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
@@ -47,10 +48,11 @@ var st = document.createElement('style'); st.id = 'topic-bar-css'; st.textConten
 
 var bar = document.createElement('nav');
 bar.id = 'topicbar'; bar.setAttribute('aria-label', 'Talk progress by topic');
-var segs = TOPICS.map(function (t, i) {
+var num = 0;   // numbered like the agenda map's stops; a topic with `mark` shows that instead and is not counted
+var segs = TOPICS.map(function (t) {
   var b = document.createElement('button'); b.type = 'button'; b.className = 'tb-seg'; b.tabIndex = -1;   // keys belong to the deck
   b.style.setProperty('--tb-c', t.color);
-  b.innerHTML = '<span class="tb-lab"><b>' + (i + 1) + '</b><span></span></span><span class="tb-trk"><i></i></span>';
+  b.innerHTML = '<span class="tb-lab"><b>' + (t.mark || ++num) + '</b><span></span></span><span class="tb-trk"><i></i></span>';
   b.querySelector('.tb-lab span').textContent = t.label;
   b.addEventListener('click', function (ev) {
     ev.stopPropagation(); b.blur();
@@ -80,7 +82,7 @@ function update() {
     sg.el.classList.toggle('done', i < ti);
     sg.el.classList.toggle('cur', i === ti);
     var n2 = vis.filter(function (s) { return s.pos >= lo && s.pos < hi; }).length;
-    sg.el.title = TOPICS[i].label + ' · ' + n2 + ' slides';
+    sg.el.title = (TOPICS[i].mark ? TOPICS[i].mark + " " : "") + TOPICS[i].label + ' · ' + n2 + ' slides';
   });
 }
 Deck.on('show', update);
