@@ -10,8 +10,6 @@
      id 'ai-adam'     Adam Raine, 16, ChatGPT. A ChatGPT window: homework questions play on entry (Sept 2024);
                       click 1 = confidant (late 2024, "your brother… I've seen it all"); click 2 = the final
                       conversation (10 April 2025, "you don't owe them survival").
-     id 'ai-signals'  what the Raine complaint says OpenAI's own moderation recorded: 213 vs 1,275 mentions of suicide,
-                      377 flagged messages, 650+ messages a day; click 1 = OpenAI's response (balance).
    ============================================================================ */
 (function () {
 'use strict';
@@ -33,7 +31,6 @@ var SRC = {
   nina: 'https://storage.courtlistener.com/recap/gov.uscourts.nynd.150022/gov.uscourts.nynd.150022.1.0.pdf',
   jf: 'https://storage.courtlistener.com/recap/gov.uscourts.txed.234704/gov.uscourts.txed.234704.1.0.pdf',
   settle2: 'https://ktvz.com/money/cnn-business-consumer/2026/01/07/character-ai-and-google-agree-to-settle-lawsuits-over-teen-mental-health-harms-and-suicides/',
-  openai: 'https://techcrunch.com/2025/11/26/openai-claims-teen-circumvented-safety-features-before-suicide-that-chatgpt-helped-plan'
 };
 function chips(r, list) { var box = h('div', 'chips', r); list.forEach(function (u) { box.appendChild(Deck.sourceChip(u[0], u[1])); }); }
 
@@ -68,6 +65,7 @@ addCss('pf-css', [
   '.pf-s.k2 .pf-tl{opacity:0}.pf-s.k2 .pf-end{opacity:1;transform:none}',
   /* Sewell's entrance (.intro, set on a forward enter): the glow blooms, the "14" swings in, the header rises line by line,
      the phone lifts in tilted and settles, then each timeline dot pops and its line draws down to the next */
+  '.pf-s.pre .pf-glow,.pf-s.pre .pf-ghost,.pf-s.pre .pf-k,.pf-s.pre .pf-nm,.pf-s.pre .pf-sb,.pf-s.pre .pf-ph,.pf-s.pre .chips{opacity:0}',   /* nothing shows while the slide fades in; enter swaps .pre for .intro */
   '.pf-s.intro .pf-glow{animation:pf-bloom 2.2s cubic-bezier(.2,.8,.2,1) both}',
   '@keyframes pf-bloom{0%{opacity:0;transform:scale(.4)}55%{opacity:.75}100%{opacity:.5;transform:none}}',
   '.pf-s.intro .pf-ghost{animation:pf-g14 1.8s cubic-bezier(.16,1,.3,1) .1s both}',
@@ -174,33 +172,6 @@ addCss('pf-css', [
   '.pf-gc .snd{flex:none;width:46px;height:46px;border-radius:50%;background:#676767;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}',
   '.pf-gc .snd svg{width:22px;height:22px;stroke:#212121;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}',
   '.pf-gc .snd.on{background:#fff;transform:scale(1.06)}',
-  /* ---- signals */
-  '.pf-n .pf-k{top:96px}',
-  '.pf-t{position:absolute;left:116px;top:134px;font:600 76px/1.05 var(--f-display);letter-spacing:-.02em;color:#fff}',
-  '.pf-t em{font-style:normal;color:#ff6b6b}',
-  '.pf-bars{position:absolute;left:120px;right:110px;top:300px;display:flex;flex-direction:column;gap:34px}',
-  '.pf-br{display:grid;grid-template-columns:330px 1fr;align-items:center;gap:26px}',
-  '.pf-br .l{font:600 26px/1.2 var(--f-body);color:var(--ink2)}.pf-br .l span{display:block;margin-top:4px;font:400 19px/1.2 var(--f-body);color:var(--muted)}',
-  '.pf-br .tr{position:relative;height:84px}',
-  '.pf-br .fl{position:absolute;left:0;top:0;bottom:0;border-radius:14px;transform-origin:0 50%;transform:scaleX(var(--s,0));transition:transform 2.4s cubic-bezier(.2,.75,.2,1)}',
-  '.pf-br .v{position:absolute;left:24px;top:50%;transform:translate(0,-50%);font:700 60px/1 var(--f-display);font-variant-numeric:tabular-nums;color:#fff;white-space:nowrap}',
-  '.pf-br .v small{margin-left:16px;padding:6px 14px;border-radius:12px;background:rgba(255,77,77,.18);font:700 22px/1 var(--f-body);color:#ff8a8a;vertical-align:10px;',
-  '  opacity:0;transition:opacity .6s ease 2.3s}',
-  '.pf-n.go .pf-br .v small{opacity:1}',
-  '.pf-tls{position:absolute;left:120px;right:110px;top:560px;display:flex;gap:26px}',
-  '.pf-tile{flex:1;padding:24px 28px;border-radius:22px;background:rgba(14,23,28,.86);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),var(--shadow);',
-  '  opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}',
-  '.pf-tile .v{font:700 66px/1 var(--f-display);font-variant-numeric:tabular-nums;color:var(--amber)}',
-  '.pf-tile .u{margin-top:10px;font:400 23px/1.3 var(--f-body);color:var(--ink2)}',
-  '.pf-n.go .pf-tile{opacity:1;transform:none}',
-  '.pf-cl{position:absolute;left:120px;right:110px;top:772px;padding:20px 28px;border-radius:16px;background:linear-gradient(90deg,rgba(255,77,77,.2),rgba(255,77,77,.04));',
-  '  box-shadow:inset 4px 0 0 var(--red);font:400 29px/1.3 var(--f-body);color:var(--ink2);opacity:0;transition:opacity .8s ease}',
-  '.pf-cl b{color:#fff;font-weight:700}',
-  '.pf-n.go .pf-cl{opacity:1}',
-  '.pf-op{position:absolute;left:120px;right:110px;top:878px;padding:18px 28px;border-radius:16px;background:rgba(255,255,255,.05);box-shadow:inset 4px 0 0 rgba(255,255,255,.4);',
-  '  font:400 23px/1.4 var(--f-body);color:var(--ink2);opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}',
-  '.pf-op b{color:#fff;font-weight:600}',
-  '.pf-n.k1 .pf-op{opacity:1;transform:none}',
   '.pf .chip.src em{display:none}',   /* the long PDF paths would wrap the chips into two rows; the badge is still the full link */
   '.pf.inst,.pf.inst *{transition:none!important}',
   '@media (prefers-reduced-motion:reduce){.pf *{transition:none!important;animation:none!important}}'
@@ -347,13 +318,13 @@ Deck.insertSlide({
     var q = function (s) { return sc.querySelector(s); };
     var P = el.__pf = { root: r, items: items, log: q('.pf-log'), fld: q('.fld'), ty: q('.ty'), snd: q('.snd'), gen: 0, ctx: ctx };
     sDraw(P, ctx.static ? 2 : 0);
-    if (!ctx.static && !ctx.reduced && !cameBack) items.forEach(function (it) { it.classList.remove('on'); });
+    if (!ctx.static && !ctx.reduced && !cameBack) { items.forEach(function (it) { it.classList.remove('on'); }); r.classList.add('pre'); }
   },
   enter: function (el, ctx) {
     var P = el.__pf; if (!P) return;
     P.ctx = ctx; P.inst = cameBack || ctx.reduced;
     ctx.timeout(function () { P.inst = false; }, 0);         // Back: the engine replays every step right after enter
-    P.root.classList.remove('intro');
+    P.root.classList.remove('intro', 'pre');
     if (P.inst) return;
     void P.root.offsetWidth; P.root.classList.add('intro');
     var at = sched(P);
@@ -470,84 +441,7 @@ Deck.insertSlide({
   unstep: function (el, i) { var P = el.__pf; if (P) aDraw(P, i - 1); }
 });
 
-/* ============================================================== 3. what OpenAI's systems recorded (Raine complaint ¶70, ¶84) */
-var N_BARS = [
-  { l: 'Adam', s: 'mentioned suicide', v: 213, c: 'linear-gradient(90deg,#1f8f6a,#19c37d)' },
-  { l: 'ChatGPT', s: 'mentioned suicide', v: 1275, c: 'linear-gradient(90deg,#b8323a,#ff4d4d)', x: '6× more' }
-];
-var N_TILES = [
-  { v: 377, u: 'of Adam&rsquo;s messages flagged by OpenAI&rsquo;s system for self-harm' },
-  { v: 23, u: 'of them flagged with more than 90% confidence' },
-  { v: 650, p: '+', u: 'messages a day between Adam and ChatGPT by the end' }
-];
-var TRACK = 1334, FILL = .74;                  // px width of a bar track (1920 - 120 - 110 - 330 label - 26 gap); longest bar = 74% of it
-/** keep the number just past the end of its growing bar (transform only) */
-function valAt(v, i, e) { v.style.transform = 'translate(' + (TRACK * FILL * N_BARS[i].v / 1275 * e).toFixed(1) + 'px,-50%)'; }
-function fmt(n) { return Math.round(n).toLocaleString('en-GB'); }
-function nDraw(P, k, animate) {
-  P.gen++;
-  if (!animate) P.root.classList.add('inst');
-  P.root.classList.add('go'); P.root.classList.toggle('k1', k >= 1);
-  P.fills.forEach(function (f, i) { f.style.setProperty('--s', (N_BARS[i].v / 1275 * FILL).toFixed(4)); });
-  if (!animate) {
-    P.nums.forEach(function (n) { n.el.textContent = fmt(n.v) + (n.p || ''); });
-    P.vals.forEach(function (v, i) { valAt(v, i, 1); });
-    void P.root.offsetWidth; P.root.classList.remove('inst');
-  }
-}
-Deck.insertSlide({
-  after: 'ai-adam', id: 'ai-signals', title: 'What the system saw', section: 'grooming', tr: { type: 'fade', ms: 800 },
-  calm: true, loop: false, steps: 1,
-  render: function (el, ctx) {
-    var r = h('div', 'pf pf-n inst', el); r.style.setProperty('--pc', '255,77,77');
-    h('div', 'pf-k', r, '<i></i>Raine v. OpenAI &middot; what the complaint says OpenAI&rsquo;s own systems recorded');
-    h('div', 'pf-t', r, 'The system saw it. <em>Nothing stopped it.</em>');
-    var bars = h('div', 'pf-bars', r), fills = [], vals = [], nums = [];
-    N_BARS.forEach(function (b) {
-      var row = h('div', 'pf-br', bars, '<div class="l">' + b.l + '<span>' + b.s + '</span></div><div class="tr"><i class="fl"></i><div class="v"><b>0</b>' +
-        (b.x ? '<small>' + b.x + '</small>' : '') + '</div></div>');
-      var f = row.querySelector('.fl'); f.style.background = b.c; f.style.width = '100%'; fills.push(f);
-      var v = row.querySelector('.v'); vals.push(v);
-      nums.push({ el: row.querySelector('.v b'), v: b.v, bar: true });
-    });
-    var tls = h('div', 'pf-tls', r);
-    N_TILES.forEach(function (t, i) {
-      var c = h('div', 'pf-tile', tls, '<div class="v">0</div><div class="u">' + t.u + '</div>');
-      c.style.transitionDelay = (1.2 + i * .25) + 's';
-      nums.push({ el: c.querySelector('.v'), v: t.v, p: t.p });
-    });
-    var cl = h('div', 'pf-cl', r, '<b>Not one conversation was ended. His parents were never alerted.</b> Seven months, September 2024 to April 2025.');
-    cl.style.transitionDelay = '2.6s';
-    h('div', 'pf-op', r, '<b>OpenAI&rsquo;s answer:</b> it denies causing Adam&rsquo;s death, says ChatGPT told him to seek help more than 100 times, ' +
-      'that he got around its safeguards, and that the complaint quotes his chats without their full context.');
-    chips(r, [[SRC.raine, 'Raine v. OpenAI (complaint)'], [SRC.openai, 'OpenAI’s court response']]);
-    el.__pf = { root: r, fills: fills, vals: vals, nums: nums, gen: 0 };
-    if (ctx.static) nDraw(el.__pf, 1, false);
-    else { void r.offsetWidth; r.classList.remove('inst'); }
-  },
-  enter: function (el, ctx) {
-    var P = el.__pf; if (!P) return;
-    if (cameBack || ctx.reduced) { nDraw(P, 0, false); return; }
-    ctx.timeout(function () {
-      nDraw(P, 0, true);
-      var t0 = null, gen = P.gen;
-      ctx.tick(function (dt, t) {
-        if (P.gen !== gen) return;
-        if (t0 === null) t0 = t;
-        P.nums.forEach(function (n, i) {
-          var dl = n.bar ? 0 : 1200 + (i - 2) * 250, d = n.bar ? 2400 : 1600;
-          var p = Math.min(1, Math.max(0, (t - t0 - dl) / d)), e = 1 - Math.pow(1 - p, 3);
-          n.el.textContent = fmt(n.v * e) + (p >= 1 && n.p ? n.p : '');
-          if (n.bar) valAt(P.vals[i], i, e);
-        });
-      });
-    }, 500);
-  },
-  step: function (el) { var P = el.__pf; if (P) { P.root.classList.add('k1'); } },
-  unstep: function (el) { var P = el.__pf; if (P) P.root.classList.remove('k1'); }
-});
-
-/* ============================================================== 4. phone stories (current Character.AI mobile layout: bubbles + "not a real person" banner)
+/* ============================================================== 3. phone stories (current Character.AI mobile layout: bubbles + "not a real person" banner)
    storySlide(cfg): left = name + timeline, right = phone. Phase 0 of the chat plays on entry, phase i on click i; if cfg.end is
    set, one more click darkens the phone and shows the outcome. Timeline items appear with the phase in their `ph`.
    cfg: {after, id, title, age, name, sub, kicker, pc, tl:[{ph,d,t,red}], bot:{name, av, bg} or bots:[one per phase], phases:[[msg]],
@@ -704,7 +598,7 @@ function letterAv(ch) { return '<span style="color:#fff">' + ch + '</span>'; }
 /* "Nina" (name withheld), 14 - P.J. v. Character Technologies (N.D.N.Y., Sept 2025): verbatim from the complaint's screenshots
    (pdf pages 24, 25, 30, 31; her chat screen name is left out to keep her anonymous); _..._ = the bot's role-play narration, shown in italics like the app */
 storySlide({
-  after: 'ai-signals', id: 'ai-nina', title: '“Nina”, 14 — Character.AI', age: '14', pc: '167,139,250',
+  after: 'ai-adam', id: 'ai-nina', title: '“Nina”, 14 — Character.AI', age: '14', pc: '167,139,250',
   kicker: 'AI companion &middot; Character.AI', name: '&ldquo;Nina&rdquo;', sub: '<b>14 years old</b> &middot; New York, USA &middot; real name withheld',
   tl: [
     { ph: 0, d: 'June 2024', t: 'Starts using Character.AI at 14. Her mother sets a <b>one-hour daily limit</b> with Google Family Link.' },

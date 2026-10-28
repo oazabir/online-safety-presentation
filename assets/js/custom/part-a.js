@@ -54,7 +54,7 @@ var CSS = [
 '.pa1-photo figcaption{width:50%;text-align:left;text-wrap:balance;margin-top:20px;font:800 29px/1.23 "Cover Nunito",var(--f-body);color:#33423c}',
 '.pa1-arrow{position:absolute;left:345px;top:419px;width:240px;height:174px;overflow:visible;color:#cf644e;pointer-events:none}',
 '.pa1-photo-note{position:absolute;left:52px;top:-125px;font:500 italic 35px var(--f-display);color:var(--cover-yellow);transform:rotate(-6deg)}',
-'.pa1-footer{position:absolute;left:110px;right:100px;top:905px;display:grid;grid-template-columns:560px 660px 1fr;gap:30px;align-items:center}',
+'.pa1-footer{position:absolute;left:110px;right:100px;top:905px;display:grid;grid-template-columns:560px 540px 1fr;gap:30px;align-items:center}',
 '.pa1-who{position:relative;padding-left:25px;border-left:5px solid var(--cover-yellow);transform:rotate(-1deg)}',
 '.pa1-who .n{font:700 48px/1 "Cover Baloo",var(--f-display);color:#fff4de}',
 '.pa1-who .r{margin-top:8px;font-size:25px;font-weight:700;color:var(--cover-accent)}',
@@ -224,7 +224,7 @@ Deck.registerSlide('title', {
       '<figure class="pa1-photo rv" style="--d:.2s"><span class="pa1-photo-note">Together… but miles apart?</span><div class="pa1-paper"><i class="pa1-tape" aria-hidden="true"></i><div class="pa1-frame"><img src="media/image3.webp" alt="A family sitting together, each looking at a screen"></div><figcaption>Let\'s discuss how not to make our families look like this</figcaption><svg class="pa1-arrow" viewBox="0 0 240 174" aria-hidden="true"><path d="M12 139 C64 171 151 160 154 117 C156 81 101 82 111 115 C122 149 216 114 188 20" fill="none" stroke="#fff4de" stroke-width="13" stroke-linecap="round"/><path d="M12 139 C64 171 151 160 154 117 C156 81 101 82 111 115 C122 149 216 114 188 20" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M167 39 Q183 28 187 12 Q197 30 211 38 L190 32Z" fill="currentColor" stroke="#fff4de" stroke-width="3" stroke-linejoin="round"/></svg></div></figure>' +
       '<div class="pa1-footer rv" style="--d:.35s"><div class="pa1-who"><div class="n">Omar AL Zabir</div><div class="r">Co-Founder CTO of Kahf.co</div></div>' +
       '<p class="pa1-experience">Ex-Engineering Manager, Child Safety<br>Messenger &amp; Instagram</p>' +
-      '<p class="pa1-education">M.Sc. from Oxford<br>MA Islamic Studies</p></div>';
+      '<p class="pa1-education">MSc in Software Engineering from Oxford<br>MA Islamic Studies</p></div>';
     go(r, ctx);
   }
 });
