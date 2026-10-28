@@ -2947,7 +2947,7 @@ Deck.registerSlide('dont-drug-kids', {
       t: 'Drugs, Grooming<br><em>and Suicide</em>', s: 'The dangers hiding behind the screen.',
       items: ['What the numbers say', 'The Lost Screen Memorial', 'How grooming works', 'Kayleigh’s story', 'Meet “Susan”', 'Never alone online'],
 },
-    { stop: 4, after: 'ai-jf', id: 'protect-intro', section: 'protect', S: 1.5, X: 1380, Y: 600,
+    { stop: 4, after: 'ai-adam', id: 'protect-intro', section: 'protect', S: 1.5, X: 1380, Y: 600,
       t: 'Practical<br><em>Protection</em>', s: 'What you can do at home, starting tomorrow.',
       items: ['Tech-free zones', 'The first phone', 'Parental controls', 'Safe browsers', 'WhatsApp privacy', 'A family checklist'],
 },
