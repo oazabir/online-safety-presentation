@@ -11,7 +11,7 @@ Deck.only = [
   'title', 'agenda-journey', 'year-gone', 'gallup-teen-hours',
   'hours-per-year', 'what-in-1700-hours', 'hours-tiles', 'phones-everywhere',
   'screen-time-research', 'couples-on-phones', 'dq-institute-report', 'kids-online-risks',
-  'why-intro', 'device-vs-drug-addiction', 'dopamine-pathways', 'why-addictive',
+  'why-intro', 'dopamine-meet', 'dopamine-spikes', 'dopamine-crash', 'why-addictive',
   'kids-videos', 'bright-colors', 'intense-colors-effect',
   'games-made-addictive', 'persuasive-technology', 'popular-games', 'fortnite',
   'roblox', 'roblox-strangers', 'game-dangers', 'treat-intro',

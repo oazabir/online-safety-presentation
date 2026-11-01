@@ -2937,7 +2937,7 @@ Deck.registerSlide('dont-drug-kids', {
   var CHAPTERS = [
     { stop: 1, after: 'signs-of-addiction', id: 'why-intro', section: 'why', S: 1.5, X: 600, Y: 700, rt: true,
       t: 'Why it’s<br><em>Addictive</em>', s: 'Why our children can’t put them down.',
-      items: ['Device vs drug addiction', 'What screens do to the brain', 'Videos made for toddlers', 'How games are made addictive', 'Fortnite and Roblox', 'Two rules before any game'],
+      items: ['Meet dopamine', 'How phones make spikes','Videos made for toddlers', 'How games are made addictive', 'Fortnite and Roblox', 'Two rules before any game'],
 },
     { stop: 2, after: 'game-dangers', id: 'treat-intro', section: 'treat', S: 1.5, X: 1380, Y: 620,
       t: 'How to<br><em>Treat It</em>', s: 'It starts with us, not with them.',

@@ -2,7 +2,7 @@
 
 Two versions of the talk share these slides (chosen on the start screen, or `index.html?edition=adult` / `?edition=child`): the **Adult version** shows all of them; the **Child version** (ages 10-14, ~30 min) shows only the slides with a number in the *Child #* column (list in `assets/js/custom/child.js`, notes in `notes-child.json`). `—` in *Child #* means hidden in the Child version.
 
-Every slide has a **number** (its position in the show, 1-86, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-88, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -28,76 +28,80 @@ use it; `—` marks slides that were added after the conversion.
 | 15 | `teen-tantrums` | problem | 23 | — |
 | 16 | `signs-of-addiction` | problem | 24 | — |
 | 17 | `why-intro` | why | — | 13 |
-| 18 | `device-vs-drug-addiction` | why | 27 | 14 |
-| 19 | `dopamine-pathways` | why | 28 | 15 |
-| 20 | `why-addictive` | why | 31 | 16 |
-| 21 | `kids-videos` | why | 32 | 17 |
-| 22 | `bright-colors` | why | 33 | 18 |
-| 23 | `ms-rachel` | why | 34 | — |
-| 24 | `intense-colors-effect` | why | 35 | 19 |
-| 25 | `games-made-addictive` | why | 36 | 20 |
-| 26 | `persuasive-technology` | why | 37 | 21 |
-| 27 | `popular-games` | why | 38 | 22 |
-| 28 | `fortnite` | why | 39 | 23 |
-| 29 | `roblox` | why | 40 | 24 |
-| 30 | `roblox-strangers` | why | 41 | 25 |
-| 31 | `roblox-countries` | why | 42 | — |
-| 32 | `roblox-news` | why | 43 | — |
-| 33 | `game-dangers` | why | 44 | 26 |
-| 34 | `treat-intro` | treat | — | 27 |
-| 35 | `child-is-victim` | treat | 49 | — |
-| 36 | `not-born-addict` | treat | 50 | — |
-| 37 | `dont-drug-kids` | treat | 51 | — |
-| 38 | `three-things` | treat | — | 28 |
-| 39 | `gray-research` | treat | — | 29 |
-| 40 | `boring-devices-color` | treat | 71 | 30 |
-| 41 | `boring-devices-bw` | treat | 72 | 31 |
-| 42 | `top-10-games` | treat | 73 | 32 |
-| 43 | `less-exciting-games` | treat | 74 | 33 |
-| 44 | `harm-intro` | grooming | — | — |
-| 45 | `knife-vs-phone` | grooming | 55 | — |
-| 46 | `lost-screen-memorial` | grooming | 45 | 34 |
-| 47 | `child-grooming` | grooming | 56 | — |
-| 48 | `kayleigh-haywood` | grooming | 57 | 35 |
-| 49 | `meet-susan` | grooming | 58 | 36 |
-| 50 | `susan-tricked` | grooming | 59 | 37 |
-| 51 | `susan-blackmailed` | grooming | 60 | 38 |
-| 52 | `photo-spot-the-risk` | grooming | 61 | 39 |
-| 53 | `photo-how-about-now` | grooming | 62 | 40 |
-| 54 | `never-alone` | grooming | 63 | 41 |
-| 55 | `night-contact-abuse` | grooming | 64 | 42 |
-| 56 | `ai-intro` | grooming | — | 43 |
-| 57 | `ai-sewell` | grooming | — | 44 |
-| 58 | `ai-juliana` | grooming | — | 45 |
-| 59 | `ai-adam` | grooming | — | — |
-| 60 | `ai-realistic` | grooming | — | 46 |
-| 61 | `protect-intro` | protect | — | 47 |
-| 62 | `tech-free-zones` | protect | 66 | 48 |
-| 63 | `safe-screen-time` | protect | — | 49 |
-| 64 | `slow-phones` | protect | 70 | — |
-| 65 | `protection-threats` | protect | 87 | 50 |
-| 66 | `parental-controls` | protect | — | — |
-| 67 | `parental-gaps` | protect | — | — |
-| 68 | `kahfguard-website` | protect | 88 | 51 |
-| 69 | `kahf-browser-video` | protect | 90 | — |
-| 70 | `choose-browser` | protect | 91 | — |
-| 71 | `kahf-browser-hero` | protect | 92 | 52 |
-| 72 | `browser-comparison` | protect | 94 | — |
-| 73 | `youtube-hide-content` | protect | 95 | — |
-| 74 | `youtube-train` | protect | 96 | — |
-| 75 | `kahf-kids-app` | protect | 97 | — |
-| 76 | `kid-google` | protect | — | — |
-| 77 | `wa-privacy` | protect | — | 53 |
-| 78 | `safety-checklist` | protect | 105 | — |
-| 79 | `trends-intro` | evidence | — | — |
-| 80 | `depression-chart` | evidence | 106 | — |
-| 81 | `self-harm-chart` | evidence | 107 | — |
-| 82 | `suicide-rate-chart` | evidence | 108 | — |
-| 83 | `suicide-rate-social-apps` | evidence | 109 | — |
-| 84 | `remember-this` | evidence | 110 | 54 |
-| 85 | `tahrim-66-6` | evidence | — | 55 |
-| 86 | `closing` | evidence | 112 | — |
+| 18 | `dopamine-meet` | why | — | 14 |
+| 19 | `dopamine-spikes` | why | — | 15 |
+| 20 | `dopamine-crash` | why | — | 16 |
+| 21 | `dopamine-pathways` | why | 28 | — |
+| 22 | `why-addictive` | why | 31 | 17 |
+| 23 | `kids-videos` | why | 32 | 18 |
+| 24 | `bright-colors` | why | 33 | 19 |
+| 25 | `ms-rachel` | why | 34 | — |
+| 26 | `intense-colors-effect` | why | 35 | 20 |
+| 27 | `games-made-addictive` | why | 36 | 21 |
+| 28 | `persuasive-technology` | why | 37 | 22 |
+| 29 | `popular-games` | why | 38 | 23 |
+| 30 | `fortnite` | why | 39 | 24 |
+| 31 | `roblox` | why | 40 | 25 |
+| 32 | `roblox-strangers` | why | 41 | 26 |
+| 33 | `roblox-countries` | why | 42 | — |
+| 34 | `roblox-news` | why | 43 | — |
+| 35 | `game-dangers` | why | 44 | 27 |
+| 36 | `treat-intro` | treat | — | 28 |
+| 37 | `child-is-victim` | treat | 49 | — |
+| 38 | `not-born-addict` | treat | 50 | — |
+| 39 | `dont-drug-kids` | treat | 51 | — |
+| 40 | `three-things` | treat | — | 29 |
+| 41 | `gray-research` | treat | — | 30 |
+| 42 | `boring-devices-color` | treat | 71 | 31 |
+| 43 | `boring-devices-bw` | treat | 72 | 32 |
+| 44 | `top-10-games` | treat | 73 | 33 |
+| 45 | `less-exciting-games` | treat | 74 | 34 |
+| 46 | `harm-intro` | grooming | — | — |
+| 47 | `knife-vs-phone` | grooming | 55 | — |
+| 48 | `lost-screen-memorial` | grooming | 45 | 35 |
+| 49 | `child-grooming` | grooming | 56 | — |
+| 50 | `kayleigh-haywood` | grooming | 57 | 36 |
+| 51 | `meet-susan` | grooming | 58 | 37 |
+| 52 | `susan-tricked` | grooming | 59 | 38 |
+| 53 | `susan-blackmailed` | grooming | 60 | 39 |
+| 54 | `photo-spot-the-risk` | grooming | 61 | 40 |
+| 55 | `photo-how-about-now` | grooming | 62 | 41 |
+| 56 | `never-alone` | grooming | 63 | 42 |
+| 57 | `night-contact-abuse` | grooming | 64 | 43 |
+| 58 | `ai-intro` | grooming | — | 44 |
+| 59 | `ai-sewell` | grooming | — | 45 |
+| 60 | `ai-juliana` | grooming | — | 46 |
+| 61 | `ai-adam` | grooming | — | — |
+| 62 | `ai-realistic` | grooming | — | 47 |
+| 63 | `protect-intro` | protect | — | 48 |
+| 64 | `tech-free-zones` | protect | 66 | 49 |
+| 65 | `safe-screen-time` | protect | — | 50 |
+| 66 | `slow-phones` | protect | 70 | — |
+| 67 | `protection-threats` | protect | 87 | 51 |
+| 68 | `parental-controls` | protect | — | — |
+| 69 | `parental-gaps` | protect | — | — |
+| 70 | `kahfguard-website` | protect | 88 | 52 |
+| 71 | `kahf-browser-video` | protect | 90 | — |
+| 72 | `choose-browser` | protect | 91 | — |
+| 73 | `kahf-browser-hero` | protect | 92 | 53 |
+| 74 | `browser-comparison` | protect | 94 | — |
+| 75 | `youtube-hide-content` | protect | 95 | — |
+| 76 | `youtube-train` | protect | 96 | — |
+| 77 | `kahf-kids-app` | protect | 97 | — |
+| 78 | `kid-google` | protect | — | — |
+| 79 | `wa-privacy` | protect | — | 54 |
+| 80 | `safety-checklist` | protect | 105 | — |
+| 81 | `trends-intro` | evidence | — | — |
+| 82 | `depression-chart` | evidence | 106 | — |
+| 83 | `self-harm-chart` | evidence | 107 | — |
+| 84 | `suicide-rate-chart` | evidence | 108 | — |
+| 85 | `suicide-rate-social-apps` | evidence | 109 | — |
+| 86 | `remember-this` | evidence | 110 | 55 |
+| 87 | `tahrim-66-6` | evidence | — | 56 |
+| 88 | `closing` | evidence | 112 | — |
 
 Hidden (kept in the deck, not shown when presenting, no number): `kahf-browser-new-tab` (PowerPoint #93, was 66; set in part-c.js).
+
+Removed: `device-vs-drug-addiction` (PowerPoint #27, the "Device addiction vs Drug Addiction" split screen; replaced by the three dopamine slides in part-g.js).
 
 Removed (were hidden): PowerPoint #2 (three panels), #4 (684,932 years), #48 (How to treat device addiction? title), #98, the live screen-time counter, the screen-time calculator and the "shepherd" closing slide.

@@ -27,6 +27,7 @@ assets/js/custom/part-a.js  hand-built slides for the first third of the deck
 assets/js/custom/part-b.js  hand-built slides for the rest of the deck
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
 assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (`gallup-teen-hours`, `hours-per-year`, `hours-tiles`, `game-dangers`)
+assets/js/custom/part-g.js  dopamine for children: `dopamine-meet`, `dopamine-spikes`, `dopamine-crash` (after `why-intro`; shared timeline graph)
 assets/js/custom/child.js   Child version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
 assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
@@ -48,7 +49,7 @@ slide to the Child version, add its id to `child.js` and a note to `notes-child.
 
 ## How the deck is built (mental model)
 
-1. **`slides-data.js`** is the base deck, converted from the original PowerPoint: 68 slides in show order, each an
+1. **`slides-data.js`** is the base deck, converted from the original PowerPoint: 66 slides in show order, each an
    `els[]` list of pictures/text/shapes/videos positioned in % of a 1920×1080 stage, plus `steps[]` click-builds.
    Every slide (data or inserted) has a unique, stable **`id`** (`roblox`, `meet-susan`) — the key used everywhere
    (`Deck.goto('roblox')`, `registerSlide('roblox', …)`, URL `#/roblox`). The slide **number** `n` (1…N) is just its

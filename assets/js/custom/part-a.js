@@ -87,33 +87,6 @@ var CSS = [
 '@keyframes pa-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}',
 '.sg-clear{position:absolute;left:840px;top:972px}',
 
-/* ---- slide 27 split */
-'.sp-side{position:absolute;inset:0}',
-'.sp-L{clip-path:polygon(0 0,1120px 0,800px 1080px,0 1080px);background:radial-gradient(900px 800px at 25% 55%,#0B3B45,#05161C 70%)}',
-'.sp-R{clip-path:polygon(1120px 0,1920px 0,1920px 1080px,800px 1080px);background:radial-gradient(900px 800px at 78% 55%,#5b1020,#1c0912 70%)}',
-'.sp-ring{position:absolute;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;border:3px solid rgba(var(--c),.7);animation:pa-ring 6s linear infinite;animation-delay:var(--d)}',
-'.sp-h{position:absolute;font-family:var(--f-display);font-weight:700;line-height:.98;letter-spacing:-.02em}',
-'.sp-h small{display:block;font:700 34px var(--f-body);letter-spacing:.3em;text-transform:uppercase;margin-bottom:18px}',
-'.sp-L .sp-h{left:90px;top:360px;font-size:150px;color:#fff;text-shadow:0 0 60px rgba(34,211,238,.7)}',
-'.sp-L .sp-h small{color:var(--cyan)}',
-'.sp-R .sp-h{right:80px;top:360px;font-size:150px;text-align:right;color:#fff;text-shadow:0 0 60px rgba(255,77,77,.7)}',
-'.sp-R .sp-h small{color:var(--red)}',
-'.sp-seam{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}',
-'.sp-vs{position:absolute;left:960px;top:540px;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;display:grid;place-items:center;font:italic 600 92px var(--f-display);color:#fff;',
-'  background:radial-gradient(circle at 35% 30%,#fff3,#05080B 70%);box-shadow:0 0 0 3px rgba(255,255,255,.8),0 0 80px 10px rgba(255,255,255,.35)}',
-'@keyframes pa-slamL{from{transform:translateX(-220px);opacity:0}to{transform:none;opacity:1}}',
-'@keyframes pa-slamR{from{transform:translateX(220px);opacity:0}to{transform:none;opacity:1}}',
-'@keyframes pa-pop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}',
-'.pa.go .sp-L .sp-h{animation:pa-slamL .9s cubic-bezier(.2,.9,.2,1) .15s both}',
-'.pa.go .sp-R .sp-h{animation:pa-slamR .9s cubic-bezier(.2,.9,.2,1) .15s both}',
-'.pa.go .sp-vs{animation:pa-pop .7s cubic-bezier(.2,.9,.2,1) .85s both}',
-'@keyframes pa-spark{from{transform:translate(1120px,-40px)}to{transform:translate(800px,1090px)}}',
-'.sp-spark{position:absolute;left:-16px;top:-16px;width:32px;height:32px;border-radius:50%;background:#fff;box-shadow:0 0 30px 14px rgba(255,255,255,.8);animation:pa-spark 3.4s ease-in-out infinite alternate}',
-'@keyframes pa-beat{0%,100%{transform:scale(1)}14%{transform:scale(1.07)}28%{transform:scale(1)}42%{transform:scale(1.045)}}',
-'.sp-R .sp-h{animation-name:pa-slamR}',
-'.pa.go .sp-R .sp-hh{display:block;animation:pa-beat 2.2s ease-in-out 1.2s infinite}',
-'.pa.go .sp-L .sp-hh{display:block;animation:pa-np 3s ease-in-out 1.2s infinite}',
-
 /* ---- slide 28 chart */
 '.dp-card{position:absolute;left:1010px;top:40px;width:870px;height:610px;transform:scale(.8);transform-origin:0 0;border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.03));box-shadow:inset 0 0 0 1px var(--glass-b),var(--shadow)}',
 '.dp-card svg{position:absolute;left:0;top:0;width:870px;height:610px;overflow:visible}',
@@ -314,25 +287,6 @@ Deck.registerSlide('signs-of-addiction', {
   unstep: function (el, i) {
     var s = el.__sg, row = s && s.r.querySelectorAll('.sg-row')[i - 1]; if (!row) return;
     row.classList.remove('on'); s.upd();
-  }
-});
-
-/* ================================================================ SLIDE 27 - split screen */
-Deck.registerSlide('device-vs-drug-addiction', {
-  loop: false,
-  render: function (el, ctx) {
-    var r = root(el, 'pa27', ctx);
-    function rings(cx, cy, c) { var s = ''; for (var i = 0; i < 4; i++) s += '<div class="sp-ring" style="left:' + cx + 'px;top:' + cy + 'px;--c:' + c + ';--d:' + (-i * 1.5) + 's"></div>'; return s; }
-    r.innerHTML =
-      '<div class="sp-side sp-L">' + rings(430, 250, '34,211,238') + '<div class="sp-pts"></div><div class="sp-h"><small>Screens</small><span class="sp-hh">Device<br>addiction</span></div></div>' +
-      '<div class="sp-side sp-R">' + rings(1500, 830, '255,77,77') + '<div class="sp-pts2"></div><div class="sp-h"><small>Substances</small><span class="sp-hh">Drug<br>Addiction</span></div></div>' +
-      '<div class="sp-seam"><svg width="1920" height="1080"><line x1="1120" y1="0" x2="800" y2="1080" stroke="#fff" stroke-width="5" opacity=".9"/><line x1="1120" y1="0" x2="800" y2="1080" stroke="#fff" stroke-width="22" opacity=".18"/></svg><div class="sp-spark"></div></div>' +
-      '<div class="sp-vs">vs</div>';
-    if (!ctx.static) {
-      particles(r.querySelector('.sp-pts'), 22, 27, ['34,211,238', '255,255,255'], { t: 14 });
-      particles(r.querySelector('.sp-pts2'), 22, 28, ['255,77,77', '255,170,120'], { t: 14 });
-    }
-    go(r, ctx);
   }
 });
 
