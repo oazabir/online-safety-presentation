@@ -879,8 +879,8 @@ function website(n, src, iw, ih, url, rgb, more) {
   Deck.registerSlide(n, spec);
 }
 
-/* #88 (on-screen 62) kahfguard.com hero (media/kahfguard-hero.webp: headless Chrome 1440x745 css px at 2x, carousel
-   frame 1, Oct 2026) full screen; 5 s after entry it shrinks to the top and three endorsements from the site's "Trusted
+/* #88 (on-screen 62) kahfguard.com hero (media/kahfguard-hero.webp: headless Chrome 1600x828 css px at 1.5x, carousel
+   frame 3 (parental controls), chat button hidden, Nov 2026) full screen; 5 s after entry it shrinks to the top and three endorsements from the site's "Trusted
    by community leaders and scholars" section come in along the bottom (photos: media/scholars/, 256-300 px from the
    site). Arriving with Back shows the end state. Each face fades up, its speech bubble
    pops out of it with typing dots, then the quote arrives word by word while the face's ring pulses; bubbles keep
@@ -960,7 +960,7 @@ var SCHOLARS = [
     T(function () { c.classList.remove('talk'); }, t0 + 850 + nw * 30 + 700);
   }
 
-  website('kahfguard-website', 'media/kahfguard-hero.webp?v=2026-10', HERO.w, HERO.h, 'kahfguard.com', G, {
+  website('kahfguard-website', 'media/kahfguard-hero.webp?v=2026-11', HERO.w, HERO.h, 'kahfguard.com', G, {
     after: function (el, ctx, stg, box) {
       var sc = SMALL.w / box.w;   // .small maps the full-screen window onto a SMALL.w window centred at SMALL.y
       stg.style.cssText = '--s:' + sc + ';--tx:' + ((W - SMALL.w) / 2 - box.x * sc) + 'px;--ty:' + (SMALL.y - box.y * sc) + 'px';

@@ -20,8 +20,8 @@ Deck.only = [
   'meet-susan', 'susan-tricked', 'susan-blackmailed', 'photo-spot-the-risk',
   'photo-how-about-now', 'never-alone', 'night-contact-abuse', 'ai-intro',
   'ai-sewell', 'ai-juliana', 'ai-realistic', 'protect-intro',
-  'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahfguard-website',
-  'kahf-browser-hero', 'wa-privacy',
+  'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahf-browser-hero',
+  'kahfguard-website', 'wa-privacy',
   'scam-parcel-sms', 'scam-hi-mum', 'scam-roblox-email', 'scam-whatsapp-code', 'scam-netflix-email',
   'remember-this', 'tahrim-66-6'
 ];

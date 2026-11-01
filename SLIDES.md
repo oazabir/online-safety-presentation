@@ -82,11 +82,11 @@ use it; `—` marks slides that were added after the conversion.
 | 69 | `protection-threats` | protect | 87 | 52 |
 | 70 | `parental-controls` | protect | — | — |
 | 71 | `parental-gaps` | protect | — | — |
-| 72 | `kahfguard-website` | protect | 88 | 53 |
-| 73 | `kahf-browser-video` | protect | 90 | — |
-| 74 | `choose-browser` | protect | 91 | — |
-| 75 | `kahf-browser-hero` | protect | 92 | 54 |
-| 76 | `browser-comparison` | protect | 94 | — |
+| 72 | `choose-browser` | protect | 91 | — |
+| 73 | `kahf-browser-hero` | protect | 92 | 53 |
+| 74 | `browser-comparison` | protect | 94 | — |
+| 75 | `kahfguard-website` | protect | 88 | 54 |
+| 76 | `kahf-browser-video` | protect | 90 | — |
 | 77 | `youtube-hide-content` | protect | 95 | — |
 | 78 | `youtube-train` | protect | 96 | — |
 | 79 | `kahf-kids-app` | protect | 97 | — |
