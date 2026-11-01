@@ -732,15 +732,31 @@ Deck.insertSlide({
   leave: function (el) { if (el.__ai0) el.__ai0.classList.remove('go', 'now'); }
 });
 /* ---------------------------------------------------------------- 'ai-realistic' (after 'ai-adam'): how real AI looks and sounds now.
-   A title and the clip media/DessaProcessed2.mp4 (126 s, 720x480, with sound); plays on entry, the ⏯ / 🔊 buttons appear on hover.
+   A title, the clip media/DessaProcessed2.mp4 (126 s, 720x480, with sound) on the left and what it shows on the right.
+   The clip waits on its poster until Next (step 1) plays it; Back pauses and rewinds it. The ⏯ / 🔊 buttons appear on hover.
    Static renders (overview, thumbnails) show the poster frame. */
 addCss('pf-real-css', [
   '.pf-rl{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#0d1220,#040508 70%);font-family:var(--f-body);color:var(--ink)}',
   '.pf-rl .pf-k{left:50%;top:44px;transform:translateX(-50%)}',
   '.pf-rl .t{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 72px/1.05 var(--f-display);letter-spacing:-.02em;color:#fff}',
   '.pf-rl .t em{font-style:normal;color:#ff6b6b}',
-  '.pf-rl .el.vid{position:absolute;left:330px;top:190px;width:1260px;height:840px}',
-  '.pf-rl .vid .in{position:absolute;inset:0}'
+  '.pf-rl .el.vid{position:absolute;left:60px;top:190px;width:1260px;height:840px}',
+  '.pf-rl .vid .in{position:absolute;inset:0}',
+  /* big play badge over the poster until Next starts the clip */
+  '.pf-rl .pl{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;background:rgba(8,12,20,.6);border:2px solid rgba(255,255,255,.5);display:grid;place-items:center;pointer-events:none;transition:opacity .4s,transform .4s var(--ease);z-index:4}',
+  '.pf-rl .pl:after{content:"";margin-left:12px;border-style:solid;border-width:30px 0 30px 50px;border-color:transparent transparent transparent #fff}',
+  '.pf-rl.on .pl{opacity:0;transform:scale(1.25)}',
+  /* side text: what the clip is; leader lines point at the person (top of the frame) and the AI voice panel (bottom) */
+  '.pf-rl .sd{position:absolute;left:1380px;width:500px}',
+  '.pf-rl .lead{top:200px;font:600 46px/1.15 var(--f-display);color:#fff;letter-spacing:-.01em}',
+  '.pf-rl .end{top:910px;font:500 34px/1.25 var(--f-body);color:var(--ink2)}',
+  '.pf-rl .end b{color:#ff6b6b;font-weight:700}',
+  '.pf-rl .lb{transform:translateY(-50%)}',
+  '.pf-rl .lb .c{display:inline-flex;align-items:center;gap:12px;padding:10px 18px;border-radius:999px;font:700 22px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(var(--lc),.55);background:rgba(var(--lc),.12);color:rgb(var(--lc))}',
+  '.pf-rl .lb .c i{width:10px;height:10px;border-radius:50%;background:rgb(var(--lc))}',
+  '.pf-rl .lb p{margin:12px 0 0;font:500 28px/1.3 var(--f-body);color:var(--ink2)}',
+  '.pf-rl .ln{position:absolute;z-index:3;height:0;border-top:2px dashed rgba(var(--lc),.6)}',
+  '.pf-rl .ln:before{content:"";position:absolute;left:-6px;top:-7px;width:12px;height:12px;border-radius:50%;background:rgb(var(--lc))}'
 ]);
 Deck.insertSlide({
   after: 'ai-adam', id: 'ai-realistic', title: 'How real AI has become', section: 'grooming', tr: { type: 'fade', ms: 900 },
@@ -749,6 +765,16 @@ Deck.insertSlide({
     var r = h('div', 'pf pf-rl', el); r.style.setProperty('--pc', '255,77,77');
     h('div', 'pf-k', r, '<i></i>AI &middot; look and listen');
     h('div', 't', r, 'Can you tell it&rsquo;s <em>AI</em>?');
+    // leader lines start at the right edge of the person (x 455/720, y 134/480 of the frame) and of the AI panel (540/720, 331/480)
+    [[870, 424, '52,211,153'], [1015, 769, '255,107,107']].forEach(function (a) {
+      var l = h('div', 'ln', r); l.style.left = a[0] + 'px'; l.style.top = a[1] + 'px'; l.style.width = (1360 - a[0]) + 'px'; l.style.setProperty('--lc', a[2]);
+    });
+    h('div', 'sd lead', r, 'A human is chatting with an AI below.');
+    var lh = h('div', 'sd lb', r, '<span class="c"><i></i>Human</span><p>A real person, on camera</p>');
+    lh.style.top = '424px'; lh.style.setProperty('--lc', '52,211,153');
+    var la = h('div', 'sd lb', r, '<span class="c"><i></i>AI</span><p>A computer voice, talking back live</p>');
+    la.style.top = '769px'; la.style.setProperty('--lc', '255,107,107');
+    h('div', 'sd end', r, 'See how <b>realistic</b> AI has become.');
     var box = h('div', 'el vid', r), inn = h('div', 'in', box);
     if (ctx.static) { var im = h('img', '', inn); im.src = 'media/posters/ai-realistic.jpg'; im.style.cssText = 'width:100%;height:100%;object-fit:contain;background:#000'; return; }
     var v = document.createElement('video');
@@ -757,10 +783,18 @@ Deck.insertSlide({
     var vc = h('div', 'vc', box); vc.setAttribute('data-noadvance', '');
     var pp = h('button', '', vc, '&#9199;'); pp.title = 'Play / pause'; pp.dataset.act = 'pp';
     var mu = h('button', '', vc, '&#128266;'); mu.title = 'Mute / unmute'; mu.dataset.act = 'mu';
-    el.__v = box;
+    h('div', 'pl', box);
+    v.addEventListener('play', function () { r.classList.add('on'); });   // the ⏯ button also hides the badge
+    el.__v = box; el.__rl = r;
   },
-  enter: function (el, ctx) {
-    if (el.__v && !ctx.static) ctx.timeout(function () { Deck.Media.play(el.__v); }, 1000);
+  steps: 1,
+  step: function (el) {
+    // arriving with Back re-runs this step to show the built state: leave the clip on its poster then
+    if (el.__v && !cameBack) Deck.Media.play(el.__v);
+  },
+  unstep: function (el) {
+    var v = el.__v && el.__v.querySelector('video'); if (!v) return;
+    v.pause(); v.currentTime = 0; el.__rl.classList.remove('on');
   }
 });
 })();
