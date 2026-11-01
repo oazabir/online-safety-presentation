@@ -12,7 +12,7 @@ Deck.only = [
   'hours-per-year', 'what-in-1700-hours', 'hours-tiles', 'phones-everywhere',
   'screen-time-research', 'screen-glow-brain', 'couples-on-phones', 'dq-institute-report', 'kids-online-risks',
   'why-intro', 'dopamine-meet', 'dopamine-spikes', 'dopamine-crash', 'why-addictive',
-  'kids-videos', 'bright-colors', 'intense-colors-effect',
+  'kids-videos', 'bright-colors', 'intense-colors-effect', 'shorts-slowed',
   'games-made-addictive', 'persuasive-technology', 'popular-games', 'fortnite',
   'roblox', 'roblox-strangers', 'game-dangers', 'treat-intro',
   'three-things', 'gray-research', 'boring-devices-color', 'boring-devices-bw',
