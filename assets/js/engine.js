@@ -9,7 +9,7 @@
 'use strict';
 var DATA = window.DECK_DATA, W = DATA.w, H = DATA.h;
 var EASE = 'cubic-bezier(.65,0,.35,1)';
-var Deck = window.Deck = { version: '1.0.0', W: W, H: H, slides: [], byKey: {}, cur: null, view: null, includeHidden: false,
+var Deck = window.Deck = { version: '1.0.0', edition: window.DECK_EDITION || 'adult', W: W, H: H, slides: [], byKey: {}, cur: null, view: null, includeHidden: false,
   scale: 1, mode: 'main', listeners: {}, busy: false };
 
 /* ---------------------------------------------------------------- 0. util */
@@ -35,10 +35,10 @@ Deck.insertSlide = function (spec) { if (!spec || !spec.id || spec.after === und
 Deck.notes = {};
 /** Loads notes.json, so notes can be edited without touching code. fetch() cannot read local files, so when the deck is opened
  *  from disk (file://) it falls back to assets/js/notes-data.js (window.DECK_NOTES, made by scripts/sync_notes.py). */
-Deck.loadNotes = function (url) {
+Deck.loadNotes = function (url, fallbackVar) {
   return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .catch(function () {
-      if (window.DECK_NOTES) return window.DECK_NOTES;
+      if (window[fallbackVar || 'DECK_NOTES']) return window[fallbackVar || 'DECK_NOTES'];
       console.warn('speaker notes: could not read ' + url + ' - serve the folder over http, or run scripts/sync_notes.py');
       return {};
     }).then(function (map) { Deck.notes = map || {}; });
@@ -67,6 +67,7 @@ function buildList() {
     });
   }
   pending.forEach(function (sp) { console.warn('insertSlide: unknown anchor', sp.after, 'for', sp.id); });
+  if (Deck.only) list.forEach(function (s) { if (Deck.only.indexOf(s.key) < 0) s.hidden = true; });   // edition filter (custom/child.js)
   var ids = {}, num = 0;
   list.forEach(function (s, i) {
     if (ids[s.key]) console.warn('duplicate slide id', s.key);

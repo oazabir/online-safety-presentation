@@ -31,7 +31,7 @@ with sync_playwright() as p:
                           args=['--autoplay-policy=no-user-gesture-required', '--mute-audio'])
     pg = b.new_page(viewport={'width': W, 'height': H})
     pg.on('pageerror', lambda e: L('PAGEERROR', e))
-    pg.goto(URL + '?cap' + str(worker))
+    pg.goto(URL + '?edition=adult&cap' + str(worker))
     pg.add_style_tag(content=HIDE)
     pg.wait_for_function('window.Deck && Deck.cur')
     keys = pg.evaluate('Deck.order().map(s=>s.key)')

@@ -178,7 +178,7 @@ Deck.on('step', function () { flashCounter(); });
 function openPresenter() {
   if (Sync.win && !Sync.win.closed) { Sync.win.focus(); return; }
   var base = location.href.split('#')[0].split('?')[0];
-  Sync.win = window.open(base + '?presenter', 'kahf-presenter', 'width=1360,height=820');
+  Sync.win = window.open(base + '?presenter&edition=' + Deck.edition, 'kahf-presenter', 'width=1360,height=820');
   if (!Sync.win) Deck.toast('Pop-up blocked - allow pop-ups for the presenter view', 3000); else Deck.toast('Presenter view opened');
 }
 

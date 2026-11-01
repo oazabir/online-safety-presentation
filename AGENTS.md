@@ -14,9 +14,11 @@ writing slide code. This file explains how the pieces fit together and how to ch
 index.html                  shell: DOM hooks + ordered <script> tags (load order matters)
 assets/css/deck.css         all base styling, design tokens, transitions
 assets/fonts/               Fraunces (display), Inter (body), JetBrains Mono — local woff2
+assets/js/edition.js        start-screen chooser: Adult version (all slides) or Child version (ages 10-14, ~30 min); `?edition=adult|child`
 assets/js/slides-data.js    window.DECK_DATA = {w,h,slides:[{id,section,tr,els,steps,...}]}, in show order
-notes.json                  SPEAKER NOTES: {"slide-id": "text"}, the one place to edit them (read by `Deck.loadNotes` in boot.js)
-assets/js/notes-data.js     GENERATED copy of notes.json for file:// (`python3 scripts/sync_notes.py`); don't edit
+notes-child.json            SPEAKER NOTES for the Child version (same format; only the slides listed in child.js)
+notes.json                  SPEAKER NOTES (Adult version): {"slide-id": "text"}, the one place to edit them (read by `Deck.loadNotes` in boot.js)
+assets/js/notes-data.js, notes-child-data.js   GENERATED copies of the two notes files for file:// (`python3 scripts/sync_notes.py`); don't edit
 assets/js/engine.js         Deck core: render, transitions, build steps, registerSlide/insertSlide, goto
 assets/js/loops.js          ambient animation loops (orbs, aurora, embers, …), auto-assigned per slide
 assets/js/ui.js             presenter tools: keys, overview, presenter window, laser, spotlight, magnifier
@@ -25,6 +27,7 @@ assets/js/custom/part-a.js  hand-built slides for the first third of the deck
 assets/js/custom/part-b.js  hand-built slides for the rest of the deck
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
 assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (`gallup-teen-hours`, `hours-per-year`, `hours-tiles`, `game-dangers`)
+assets/js/custom/child.js   Child version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
 assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
@@ -33,6 +36,15 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
 ```
 
 `.remember/` is tool state, not part of the deck (git-ignored).
+
+## Two versions (editions)
+
+`index.html` with no `?edition=` shows a chooser (**Adult version** / **Child version**); the choice reloads the page as `?edition=adult|child`
+(`window.DECK_EDITION`, `Deck.edition`). The presenter window is opened with the same edition. The Adult version shows every slide with
+`notes.json`. The Child version sets `Deck.only` in `custom/child.js`, which makes the engine hide every other slide (so numbers, overview and
+arrow keys skip them), and reads `notes-child.json`. Slide code is shared: a fix to a slide shows in both. Code that must differ checks
+`Deck.edition` (topic-bar.js, the name strip on `ai-intro`). Slide numbers differ between versions, so link by id (`#/roblox`). To add a
+slide to the Child version, add its id to `child.js` and a note to `notes-child.json`. Run `python3 scripts/sync_notes.py` after editing notes.
 
 ## How the deck is built (mental model)
 
