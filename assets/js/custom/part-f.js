@@ -731,4 +731,36 @@ Deck.insertSlide({
   },
   leave: function (el) { if (el.__ai0) el.__ai0.classList.remove('go', 'now'); }
 });
+/* ---------------------------------------------------------------- 'ai-realistic' (after 'ai-adam'): how real AI looks and sounds now.
+   A title and the clip media/DessaProcessed2.mp4 (126 s, 720x480, with sound); plays on entry, the ⏯ / 🔊 buttons appear on hover.
+   Static renders (overview, thumbnails) show the poster frame. */
+addCss('pf-real-css', [
+  '.pf-rl{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#0d1220,#040508 70%);font-family:var(--f-body);color:var(--ink)}',
+  '.pf-rl .pf-k{left:50%;top:44px;transform:translateX(-50%)}',
+  '.pf-rl .t{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 72px/1.05 var(--f-display);letter-spacing:-.02em;color:#fff}',
+  '.pf-rl .t em{font-style:normal;color:#ff6b6b}',
+  '.pf-rl .el.vid{position:absolute;left:330px;top:190px;width:1260px;height:840px}',
+  '.pf-rl .vid .in{position:absolute;inset:0}'
+]);
+Deck.insertSlide({
+  after: 'ai-adam', id: 'ai-realistic', title: 'How real AI has become', section: 'grooming', tr: { type: 'fade', ms: 900 },
+  calm: true, loop: false,
+  render: function (el, ctx) {
+    var r = h('div', 'pf pf-rl', el); r.style.setProperty('--pc', '255,77,77');
+    h('div', 'pf-k', r, '<i></i>AI &middot; look and listen');
+    h('div', 't', r, 'Can you tell it&rsquo;s <em>AI</em>?');
+    var box = h('div', 'el vid', r), inn = h('div', 'in', box);
+    if (ctx.static) { var im = h('img', '', inn); im.src = 'media/posters/ai-realistic.jpg'; im.style.cssText = 'width:100%;height:100%;object-fit:contain;background:#000'; return; }
+    var v = document.createElement('video');
+    v.playsInline = true; v.preload = 'auto'; v.volume = .9; v.poster = 'media/posters/ai-realistic.jpg'; v.src = 'media/DessaProcessed2.mp4';
+    v.style.objectFit = 'contain'; inn.appendChild(v);
+    var vc = h('div', 'vc', box); vc.setAttribute('data-noadvance', '');
+    var pp = h('button', '', vc, '&#9199;'); pp.title = 'Play / pause'; pp.dataset.act = 'pp';
+    var mu = h('button', '', vc, '&#128266;'); mu.title = 'Mute / unmute'; mu.dataset.act = 'mu';
+    el.__v = box;
+  },
+  enter: function (el, ctx) {
+    if (el.__v && !ctx.static) ctx.timeout(function () { Deck.Media.play(el.__v); }, 1000);
+  }
+});
 })();
