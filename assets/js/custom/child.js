@@ -21,7 +21,9 @@ Deck.only = [
   'photo-how-about-now', 'never-alone', 'night-contact-abuse', 'ai-intro',
   'ai-sewell', 'ai-juliana', 'ai-realistic', 'protect-intro',
   'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahfguard-website',
-  'kahf-browser-hero', 'wa-privacy', 'remember-this', 'tahrim-66-6'
+  'kahf-browser-hero', 'wa-privacy',
+  'scam-parcel-sms', 'scam-hi-mum', 'scam-roblox-email', 'scam-whatsapp-code', 'scam-netflix-email',
+  'remember-this', 'tahrim-66-6'
 ];
 /* Susan chat (susan-tricked, and susan-blackmailed which repeats it scrolled up): wording for 10-12 year olds. Same lesson
    (a fake friend, a threat, "don't tell your parents", a demand for more photos), nothing sexual. Bubble sizes are unchanged,

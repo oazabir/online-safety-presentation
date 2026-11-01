@@ -2,7 +2,7 @@
 
 Two versions of the talk share these slides (chosen on the start screen, or `index.html?edition=adult` / `?edition=child`): the **Adult version** shows all of them; the **Child version** (ages 10-14, ~30 min) shows only the slides with a number in the *Child #* column (list in `assets/js/custom/child.js`, notes in `notes-child.json`). `—` in *Child #* means hidden in the Child version.
 
-Every slide has a **number** (its position in the show, 1-90, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-95, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -92,15 +92,20 @@ use it; `—` marks slides that were added after the conversion.
 | 79 | `kahf-kids-app` | protect | 97 | — |
 | 80 | `kid-google` | protect | — | — |
 | 81 | `wa-privacy` | protect | — | 55 |
-| 82 | `safety-checklist` | protect | 105 | — |
-| 83 | `trends-intro` | evidence | — | — |
-| 84 | `depression-chart` | evidence | 106 | — |
-| 85 | `self-harm-chart` | evidence | 107 | — |
-| 86 | `suicide-rate-chart` | evidence | 108 | — |
-| 87 | `suicide-rate-social-apps` | evidence | 109 | — |
-| 88 | `remember-this` | evidence | 110 | 56 |
-| 89 | `tahrim-66-6` | evidence | — | 57 |
-| 90 | `closing` | evidence | 112 | — |
+| 82 | `scam-parcel-sms` | protect | — | 56 |
+| 83 | `scam-hi-mum` | protect | — | 57 |
+| 84 | `scam-roblox-email` | protect | — | 58 |
+| 85 | `scam-whatsapp-code` | protect | — | 59 |
+| 86 | `scam-netflix-email` | protect | — | 60 |
+| 87 | `safety-checklist` | protect | 105 | — |
+| 88 | `trends-intro` | evidence | — | — |
+| 89 | `depression-chart` | evidence | 106 | — |
+| 90 | `self-harm-chart` | evidence | 107 | — |
+| 91 | `suicide-rate-chart` | evidence | 108 | — |
+| 92 | `suicide-rate-social-apps` | evidence | 109 | — |
+| 93 | `remember-this` | evidence | 110 | 61 |
+| 94 | `tahrim-66-6` | evidence | — | 62 |
+| 95 | `closing` | evidence | 112 | — |
 
 Hidden (kept in the deck, not shown when presenting, no number): `kahf-browser-new-tab` (PowerPoint #93, was 66; set in part-c.js).
 
