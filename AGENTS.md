@@ -28,6 +28,8 @@ assets/js/custom/part-b.js  hand-built slides for the rest of the deck
 assets/js/custom/part-c.js  latest revision pass; loaded after a/b so it overrides them
 assets/js/custom/part-d.js  interactive rebuilds of on-screen 4, 5, 7, 33 (`gallup-teen-hours`, `hours-per-year`, `hours-tiles`, `game-dangers`)
 assets/js/custom/part-g.js  dopamine for children: `dopamine-meet`, `dopamine-spikes`, `dopamine-crash` (after `why-intro`; shared timeline graph)
+assets/js/custom/part-h.js  bedtime screens: `phones-everywhere` (live bedroom scene), `screen-time-research`, and `screen-glow-brain`
+                            (eye -> body clock -> melatonin cutaway + graph), inserted after it
 assets/js/custom/child.js   Child version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
 assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last

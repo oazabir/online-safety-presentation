@@ -8,9 +8,9 @@
 'use strict';
 if (!window.Deck || Deck.edition !== 'child') return;
 Deck.only = [
-  'title', 'agenda-journey', 'year-gone', 'gallup-teen-hours',
+  'title', 'agenda-journey', 'gallup-teen-hours',
   'hours-per-year', 'what-in-1700-hours', 'hours-tiles', 'phones-everywhere',
-  'screen-time-research', 'couples-on-phones', 'dq-institute-report', 'kids-online-risks',
+  'screen-time-research', 'screen-glow-brain', 'couples-on-phones', 'dq-institute-report', 'kids-online-risks',
   'why-intro', 'dopamine-meet', 'dopamine-spikes', 'dopamine-crash', 'why-addictive',
   'kids-videos', 'bright-colors', 'intense-colors-effect',
   'games-made-addictive', 'persuasive-technology', 'popular-games', 'fortnite',
