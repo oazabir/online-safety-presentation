@@ -19,7 +19,7 @@ Deck.only = [
   'top-10-games', 'less-exciting-games', 'lost-screen-memorial', 'kayleigh-haywood',
   'meet-susan', 'susan-tricked', 'susan-blackmailed', 'photo-spot-the-risk',
   'photo-how-about-now', 'never-alone', 'night-contact-abuse', 'ai-intro',
-  'ai-sewell', 'ai-juliana', 'protect-intro',
+  'ai-sewell', 'ai-juliana', 'ai-realistic', 'protect-intro',
   'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahfguard-website',
   'kahf-browser-hero', 'wa-privacy', 'remember-this', 'tahrim-66-6'
 ];

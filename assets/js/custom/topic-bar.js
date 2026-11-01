@@ -15,7 +15,7 @@ var TOPICS = [
   { from: 'why-intro', label: 'Why It’s Addictive', color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
   { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose
   { from: 'lost-screen-memorial', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial, grooming, Susan
-  { from: 'ai-intro', label: 'Killing Our Children', mark: 'AI', color: '#b65cff' },   // AI chatbots: Sewell, Juliana, Adam (not on the agenda map, so no number)
+  { from: 'ai-intro', label: 'Destroying Our Children', mark: 'AI', color: '#b65cff' },   // AI chatbots: Sewell, Juliana, Adam (not on the agenda map, so no number)
   { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist
   { from: 'remember-this', label: 'Remember This', color: 'var(--ink)'    }    // research charts, close
 ];

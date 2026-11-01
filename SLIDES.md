@@ -2,7 +2,7 @@
 
 **Branch `teens-10-14` shows the 10-14 edition only: the slides with a number in the *Teens #* column, in this order (`assets/js/custom/teens.js`). The # column is the full parent deck's numbering; `—` in Teens # means hidden in this edition.**
 
-Every slide has a **number** (its position in the show, 1-85, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-86, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -69,33 +69,34 @@ use it; `—` marks slides that were added after the conversion.
 | 56 | `ai-intro` | grooming | — | 43 |
 | 57 | `ai-sewell` | grooming | — | 44 |
 | 58 | `ai-juliana` | grooming | — | 45 |
-| 59 | `ai-adam` | grooming | — | — |
-| 60 | `protect-intro` | protect | — | 46 |
-| 61 | `tech-free-zones` | protect | 66 | 47 |
-| 62 | `safe-screen-time` | protect | — | 48 |
-| 63 | `slow-phones` | protect | 70 | — |
-| 64 | `protection-threats` | protect | 87 | 49 |
-| 65 | `parental-controls` | protect | — | — |
-| 66 | `parental-gaps` | protect | — | — |
-| 67 | `kahfguard-website` | protect | 88 | 50 |
-| 68 | `kahf-browser-video` | protect | 90 | — |
-| 69 | `choose-browser` | protect | 91 | — |
-| 70 | `kahf-browser-hero` | protect | 92 | 51 |
-| 71 | `browser-comparison` | protect | 94 | — |
-| 72 | `youtube-hide-content` | protect | 95 | — |
-| 73 | `youtube-train` | protect | 96 | — |
-| 74 | `kahf-kids-app` | protect | 97 | — |
-| 75 | `kid-google` | protect | — | — |
-| 76 | `wa-privacy` | protect | — | 52 |
-| 77 | `safety-checklist` | protect | 105 | — |
-| 78 | `trends-intro` | evidence | — | — |
-| 79 | `depression-chart` | evidence | 106 | — |
-| 80 | `self-harm-chart` | evidence | 107 | — |
-| 81 | `suicide-rate-chart` | evidence | 108 | — |
-| 82 | `suicide-rate-social-apps` | evidence | 109 | — |
-| 83 | `remember-this` | evidence | 110 | 53 |
-| 84 | `tahrim-66-6` | evidence | — | 54 |
-| 85 | `closing` | evidence | 112 | — |
+| 59 | `ai-realistic` | grooming | — | 46 |
+| 60 | `ai-adam` | grooming | — | — |
+| 61 | `protect-intro` | protect | — | 47 |
+| 62 | `tech-free-zones` | protect | 66 | 48 |
+| 63 | `safe-screen-time` | protect | — | 49 |
+| 64 | `slow-phones` | protect | 70 | — |
+| 65 | `protection-threats` | protect | 87 | 50 |
+| 66 | `parental-controls` | protect | — | — |
+| 67 | `parental-gaps` | protect | — | — |
+| 68 | `kahfguard-website` | protect | 88 | 51 |
+| 69 | `kahf-browser-video` | protect | 90 | — |
+| 70 | `choose-browser` | protect | 91 | — |
+| 71 | `kahf-browser-hero` | protect | 92 | 52 |
+| 72 | `browser-comparison` | protect | 94 | — |
+| 73 | `youtube-hide-content` | protect | 95 | — |
+| 74 | `youtube-train` | protect | 96 | — |
+| 75 | `kahf-kids-app` | protect | 97 | — |
+| 76 | `kid-google` | protect | — | — |
+| 77 | `wa-privacy` | protect | — | 53 |
+| 78 | `safety-checklist` | protect | 105 | — |
+| 79 | `trends-intro` | evidence | — | — |
+| 80 | `depression-chart` | evidence | 106 | — |
+| 81 | `self-harm-chart` | evidence | 107 | — |
+| 82 | `suicide-rate-chart` | evidence | 108 | — |
+| 83 | `suicide-rate-social-apps` | evidence | 109 | — |
+| 84 | `remember-this` | evidence | 110 | 54 |
+| 85 | `tahrim-66-6` | evidence | — | 55 |
+| 86 | `closing` | evidence | 112 | — |
 
 Hidden (kept in the deck, not shown when presenting, no number): `kahf-browser-new-tab` (PowerPoint #93, was 66; set in part-c.js).
 
