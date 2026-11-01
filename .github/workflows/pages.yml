@@ -1,0 +1,53 @@
+# Deploys the deck to GitHub Pages on every push to main.
+# The deck is static (no build step): copy only the files the deck needs into _site and publish that.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push cancels a queued (not running) one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check speaker notes are valid and in sync
+        run: |
+          python3 scripts/sync_notes.py
+          git diff --exit-code -- assets/js/notes-data.js assets/js/notes-child-data.js || {
+            echo "::warning::notes-data.js / notes-child-data.js were out of date with the notes JSON; deploying the regenerated copies"; }
+
+      - name: Stage site
+        run: |
+          mkdir _site
+          cp -R index.html notes.json notes-child.json assets media _site/
+          touch _site/.nojekyll
+          du -sh _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
