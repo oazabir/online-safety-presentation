@@ -14,10 +14,10 @@ var TOPICS = [
   { from: 'title', label: 'The Problem',       color: 'var(--cyan)'   },   // life lost to screens, sleep, family, signs of addiction
   { from: 'why-intro', label: 'Why It’s Addictive', color: 'var(--orange)' },   // dopamine, kids’ videos, how games are built, Roblox
   { from: 'treat-intro', label: 'How to Treat It', color: 'var(--amber)'  },   // the child is the victim; we let it happen; boring devices, games to avoid/choose
-  { from: 'harm-intro', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial, grooming, Susan
+  { from: 'lost-screen-memorial', label: 'Drugs, Grooming and Suicide', color: 'var(--red)' },   // knife vs phone, Lost Screen Memorial, grooming, Susan
   { from: 'ai-intro', label: 'Killing Our Children', mark: 'AI', color: '#b65cff' },   // AI chatbots: Sewell, Juliana, Adam (not on the agenda map, so no number)
   { from: 'protect-intro', label: 'Practical Protection', color: 'var(--green)' },   // chapter intro, tech-free zones, slow phones, parental controls, browsers, YouTube, checklist
-  { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
+  { from: 'remember-this', label: 'Remember This', color: 'var(--ink)'    }    // research charts, close
 ];
 
 var css = [

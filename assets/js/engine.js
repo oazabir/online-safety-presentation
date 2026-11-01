@@ -67,6 +67,7 @@ function buildList() {
     });
   }
   pending.forEach(function (sp) { console.warn('insertSlide: unknown anchor', sp.after, 'for', sp.id); });
+  if (Deck.only) list.forEach(function (s) { if (Deck.only.indexOf(s.key) < 0) s.hidden = true; });   // edition filter (custom/teens.js)
   var ids = {}, num = 0;
   list.forEach(function (s, i) {
     if (ids[s.key]) console.warn('duplicate slide id', s.key);

@@ -604,7 +604,7 @@ var GHOSTS = [
   { t: 'You’re just that important to me', x: 560, y: 80, dl: -14 },
   { t: 'I love you too, Daenero.', x: 820, y: 930, dl: -19 }
 ];
-var KIDS = [['Sewell', 14], ['Juliana', 13], ['Adam', 16]];
+var KIDS = [['Sewell', 14], ['Juliana', 13]];
 var GRAIN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 addCss('pf-ai0-css', [
