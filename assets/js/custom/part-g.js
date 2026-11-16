@@ -8,8 +8,8 @@
                            a message, a level-up, a mystery box: each pops on the phone, flies to the graph and fires a
                            tall spike; click 5 = notification after notification, spike after spike.
      id 'dopamine-crash'   click 1 = a spike, then a dip below normal (the crash); 2 = again and again: spikes shrink,
-                           crashes deepen; 3 = the brain turns its "fun volume" down and everyday things go grey;
-                           4 = the loop (bored -> phone -> spike -> crash); 5 = the good news: breaks turn it back up.
+                           crashes deepen; 3 = everyday things go grey ("Boring…");
+                           4 = the loop (bored -> phone -> spike -> crash); 5 = the good news: breaks bring the colour back.
    The graphs are timelines (Graph below): each click animates the line forward to that step's fixed end, so a thumbnail,
    arriving with Back and reduced motion all draw the same picture instantly. Curves are illustrative, not measured data.
    ============================================================================ */
@@ -160,32 +160,27 @@ addCss('pg-css', [
   '.pg3-an text{font:600 22px var(--f-body)}',
   '.pg3-fc{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.3);transition:opacity .35s,transform .6s cubic-bezier(.2,1.6,.4,1)}',
   '.pg3-fc.on{opacity:1;transform:none}',
-  '.pg3-kn{left:1260px;top:110px;width:540px;height:514px}',
-  '.pg3-kn .hd{position:absolute;left:36px;top:28px;font:600 36px/1.1 var(--f-display);color:#fff}',
-  '.pg3-kn .hd em{font-style:italic;color:var(--amber)}',
-  '.pg3-kn .sh{position:absolute;left:36px;top:76px;font:400 22px var(--f-body);color:var(--muted)}',
-  '.pg3-kn svg{position:absolute;left:120px;top:118px;overflow:visible}',
-  '.pg3-kn .num{font:600 64px var(--f-display);fill:#fff}',
-  '.pg3-kn .tk{stroke:rgba(255,255,255,.35);stroke-width:3;stroke-linecap:round}',
-  '.pg3-kn .tl{font:600 20px var(--f-body);fill:var(--muted)}',
-  '.pg3-gn{position:absolute;left:50%;top:438px;display:flex;align-items:center;gap:10px;padding:10px 22px;border-radius:99px;white-space:nowrap;',
+  '.pg3-gn{position:absolute;left:50%;top:336px;display:flex;align-items:center;gap:10px;padding:10px 22px;border-radius:99px;white-space:nowrap;',
   '  background:rgba(46,229,157,.14);box-shadow:inset 0 0 0 2px rgba(46,229,157,.6);font:600 23px/1 var(--f-body);color:#fff;',
   '  opacity:0;transform:translate(-50%,12px);transition:opacity .6s,transform .6s}',
   '.pg3-gn b{color:var(--green)}',
   '.pg3.k5 .pg3-gn{opacity:1;transform:translate(-50%,0)}',
-  '.pg3-ev{left:1260px;top:648px;width:540px;height:168px;overflow:hidden}',
-  '.pg3-ev .row{position:absolute;left:20px;right:20px;top:20px;display:flex;justify-content:space-between}',
+  '.pg3-ev{left:1260px;top:396px;width:540px;height:420px;overflow:hidden}',
+  '.pg3-ev .hd{position:absolute;left:36px;top:32px;font:600 36px/1.1 var(--f-display);color:#fff}',
+  '.pg3-ev .hd em{font-style:italic;color:var(--amber)}',
+  '.pg3-ev .sh{position:absolute;left:36px;top:80px;font:400 22px var(--f-body);color:var(--muted)}',
+  '.pg3-ev .row{position:absolute;left:20px;right:20px;top:146px;display:flex;justify-content:space-between}',
   '.pg3-tl{position:relative;width:118px;text-align:center}',
-  '.pg3-tl .ic{position:relative;width:70px;height:70px;margin:0 auto}',
+  '.pg3-tl .ic{position:relative;width:84px;height:84px;margin:0 auto}',
   '.pg3-tl .ic i{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;transition:opacity 1.2s}',
   '.pg3-tl .ic .c{background:rgba(var(--c),.18);box-shadow:inset 0 0 0 2px rgba(var(--c),.7)}',
   '.pg3-tl .ic .c svg{stroke:rgb(var(--c))}',
   '.pg3-tl .ic .g{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 2px rgba(255,255,255,.18);opacity:0}',
   '.pg3-tl .ic .g svg{stroke:#6d7377}',
-  '.pg3-tl svg{width:36px;height:36px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}',
+  '.pg3-tl svg{width:42px;height:42px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}',
   '.pg3-tl span{display:block;margin-top:10px;font:500 19px/1.2 var(--f-body);color:var(--ink2);transition:opacity 1.2s}',
   '.pg3.k3:not(.k5) .pg3-tl .c{opacity:0}.pg3.k3:not(.k5) .pg3-tl .g{opacity:1}.pg3.k3:not(.k5) .pg3-tl span{opacity:.45}',
-  '.pg3-st{position:absolute;left:50%;top:50%;padding:6px 26px;border:4px solid rgba(255,77,77,.85);border-radius:12px;font:800 38px/1 var(--f-body);',
+  '.pg3-st{position:absolute;left:50%;top:200px;padding:6px 26px;border:4px solid rgba(255,77,77,.85);border-radius:12px;font:800 38px/1 var(--f-body);',
   '  letter-spacing:.12em;text-transform:uppercase;color:rgba(255,110,110,.95);background:rgba(20,8,10,.55);',
   '  opacity:0;transform:translate(-50%,-50%) rotate(-8deg) scale(1.6);transition:opacity .4s .5s,transform .5s cubic-bezier(.3,1.4,.5,1) .5s}',
   '.pg3.k3:not(.k5) .pg3-st{opacity:1;transform:translate(-50%,-50%) rotate(-8deg)}',
@@ -480,13 +475,10 @@ function sparks(r, x0, y0, x1, y1, n) {
 
 /* ================================================================ 3. The crash */
 (function () {
-  var T = [1.2, 6.4, 17.2, 17.2, 17.2, 17.2];         // clicks 3-5 change the knob, the everyday things and the loop, not the line
+  var T = [1.2, 6.4, 17.2, 17.2, 17.2, 17.2];         // clicks 3-5 change the everyday things and the loop, not the line
   var EV = [ev(1.6, 'crash'), ev(7, 'crash', { a: .85, d: .72, dl: 3.4 }), ev(10.2, 'crash', { a: .72, d: .86, dl: 3.4 }), ev(13.4, 'crash', { a: .6, d: 1, dl: 3.6 })];
-  var KNOB = [10, 10, 10, 3, 3, 8];                     // fun volume after each step
   var THINGS = [['sun', 'Playing outside', '255,176,32'], ['book', 'Reading', '34,211,238'], ['family', 'Family time', '255,120,160'], ['ball', 'Sport', '46,229,157']];
   var LOOP = [['Feel bored', '124,140,255'], ['Grab the phone', '34,211,238'], ['Spike!', '255,122,26'], ['Crash', '255,77,77']];
-  var R = 115, ARC = R * Math.PI * 1.5;
-  function pt(a, rr) { a = a * Math.PI / 180; return [(150 + rr * Math.sin(a)).toFixed(1), (150 - rr * Math.cos(a)).toFixed(1)]; }
   function face(x, y, happy) {
     // the outer group places the face; the inner one pops (its CSS transform would override a transform attribute)
     return '<g transform="translate(' + x.toFixed(1) + ',' + y.toFixed(1) + ')"><g class="pg3-fc"><circle r="27" fill="' + (happy ? '#FFD23F' : '#9AA4FF') + '"/>' +
@@ -512,28 +504,15 @@ function sparks(r, x0, y0, x1, y1, n) {
           '<line x1="' + lo[0][0] + '" y1="' + (lo[0][1] + 18) + '" x2="' + (lo[2][0] + 10) + '" y2="' + (lo[2][1] + 18) + '" stroke="#AEB8FF" stroke-width="3" stroke-dasharray="8 8"/>' +
           '<text x="' + (lo[2][0] + 26) + '" y="' + (lo[2][1] + 30) + '" fill="#AEB8FF">Crashes get deeper</text></g>';
       var r = h('div', 'pg pg3' + (ctx.static ? ' static' : ''), el);
-      var ticks = '', i;
-      for (i = 0; i <= 10; i++) { var a = pt(-135 + 27 * i, R + 16), b = pt(-135 + 27 * i, R + 28); ticks += '<line class="tk" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/>'; }
-      var s0 = pt(-135, R), s1 = pt(135, R), z = pt(-135, R + 50), t10 = pt(135, R + 50), arc = 'M' + s0 + 'A' + R + ' ' + R + ' 0 1 1 ' + s1;
       r.innerHTML =
         '<div class="pg-glow" style="left:180px;top:520px;width:900px;height:360px;background:radial-gradient(closest-side,rgba(124,140,255,.2),transparent)"></div>' +
         '<div class="pg-k"><i></i>What goes up…</div>' +
         '<div class="pg-t">Then comes the <em>crash</em></div>' +
         '<div class="pg-sb" style="top:276px;width:1080px">After a spike, dopamine drops <b>below normal</b>. So you reach for the phone again.</div>' +
         '<div class="pg-card pg3-g"><div class="pg-ch">Your dopamine</div>' + g.html(ann) + '</div>' +
-        '<div class="pg-card pg3-kn"><div class="hd">Your brain’s <em>fun volume</em></div><div class="sh">How exciting normal things feel</div>' +
-          '<svg width="300" height="300" viewBox="0 0 300 300">' + ticks +
-            '<path d="' + arc + '" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="18" stroke-linecap="round"/>' +
-            '<path class="va" d="' + arc + '" fill="none" stroke-width="18" stroke-linecap="round" stroke-dasharray="0 9999"/>' +
-            '<circle cx="150" cy="150" r="86" fill="#1d2329" stroke="rgba(255,255,255,.18)" stroke-width="2"/>' +
-            '<circle cx="150" cy="150" r="76" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="8" stroke-dasharray="3 7"/>' +
-            '<g class="pt"><circle cx="150" cy="84" r="9" fill="#fff"/></g>' +
-            '<text class="num" x="150" y="172" text-anchor="middle">10</text>' +
-            '<text class="tl" x="' + z[0] + '" y="' + z[1] + '" text-anchor="middle">0</text><text class="tl" x="' + t10[0] + '" y="' + t10[1] + '" text-anchor="middle">10</text>' +
-          '</svg><div class="pg3-gn"><b>↑</b> Screen breaks turn it back up</div></div>' +
-        '<div class="pg-card pg3-ev"><div class="row">' + THINGS.map(function (x) {
+        '<div class="pg-card pg3-ev"><div class="hd">Everyday <em>fun</em></div><div class="sh">How normal things feel</div><div class="row">' + THINGS.map(function (x) {
           return '<div class="pg3-tl" style="--c:' + x[2] + '"><div class="ic"><i class="c">' + sico(x[0]) + '</i><i class="g">' + sico(x[0]) + '</i></div><span>' + x[1] + '</span></div>';
-        }).join('') + '</div><div class="pg3-st">Boring…</div></div>' +
+        }).join('') + '</div><div class="pg3-st">Boring…</div><div class="pg3-gn"><b>↑</b> Screen breaks bring the fun back</div></div>' +
         '<div class="pg-card pg3-lp"><div class="lt">The loop<em>round and round</em></div>' +
           // pills at 250 + 360k (290 wide); the way back runs under them, broken around its label
           '<svg width="1680" height="156"><path class="ar" d="M1475 88V124Q1475 140 1459 140H1060M810 140H411Q395 140 395 124V96"/><path class="ar" d="M385 104L395 90L405 104"/>' +
@@ -549,33 +528,20 @@ function sparks(r, x0, y0, x1, y1, n) {
         a1f[1].classList.toggle('on', t >= l1[0]);
         a2.classList.toggle('on', t >= T[2] - .3);
       };
-      var st = el.__pg = { r: r, g: g, T: T, kv: 10, kt: 10, va: r.querySelector('.va'), pt: r.querySelector('.pt'), num: r.querySelector('.num') };
-      if (ctx.static) { r.classList.add('k3', 'k4', 'k5'); st.kv = st.kt = KNOB[5]; }
-      knob(st);
+      var st = el.__pg = { r: r, g: g, T: T };
+      if (ctx.static) r.classList.add('k3', 'k4', 'k5');
       g.set(ctx.static ? T[5] : T[0], false);
     },
     enter: function (el, ctx) {
       var st = el.__pg; if (!st) return;
       if (ctx.reduced) return;
-      drive(st, ctx, function (dt) {                   // the knob turns at 3 units a second
-        if (Math.abs(st.kv - st.kt) < 1e-3) return;
-        st.kv = st.kv < st.kt ? Math.min(st.kt, st.kv + 3 * dt) : Math.max(st.kt, st.kv - 3 * dt);
-        knob(st);
-      });
+      drive(st, ctx);
     },
     steps: 5,
-    step: function (el, i, ctx) { var st = el.__pg; if (!st) return; for (var k = 3; k <= i; k++) st.r.classList.add('k' + k); goTo(st, i, ctx); setKnob(st, i, ctx); },
-    unstep: function (el, i, ctx) { var st = el.__pg; if (!st) return; goTo(st, i - 1, ctx, true); setKnob(st, i - 1, ctx, true); }
+    step: function (el, i, ctx) { var st = el.__pg; if (!st) return; for (var k = 3; k <= i; k++) st.r.classList.add('k' + k); goTo(st, i, ctx); },
+    unstep: function (el, i, ctx) { var st = el.__pg; if (!st) return; goTo(st, i - 1, ctx, true); }
   });
 
-  function setKnob(st, k, ctx, back) { st.kt = KNOB[k]; if (back || jumps(ctx)) { st.kv = st.kt; knob(st); } }
-  function knob(st) {
-    var v = st.kv;
-    st.va.setAttribute('stroke-dasharray', (ARC * v / 10).toFixed(1) + ' 9999');
-    st.va.setAttribute('stroke', v >= 6.5 ? '#2EE59D' : v >= 4.5 ? '#FFB020' : '#FF4D4D');
-    st.pt.setAttribute('transform', 'rotate(' + (-135 + 27 * v).toFixed(1) + ' 150 150)');
-    st.num.textContent = Math.round(v);
-  }
 })();
 
 })();
