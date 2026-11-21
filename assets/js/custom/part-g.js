@@ -1,6 +1,6 @@
 /* ============================================================================
    part-g.js - dopamine, told so a 10-year-old gets it (both versions). Three slides inserted after 'why-intro'; the Adult
-   version follows them with the research slide 'dopamine-pathways' (the Child version hides it, see child.js).
+   version follows them with the research slide 'dopamine-pathways' (the Teen version hides it, see teen.js).
      id 'dopamine-meet'    a brain whose glowing dopamine "messengers" flow from the VTA to the reward centre and the
                            thinking brain; clicks 1-3 = tasty food, a hug, winning a match: each sends a burst of messengers
                            and draws a gentle hill on the dopamine meter.

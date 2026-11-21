@@ -1,5 +1,5 @@
 /* ============================================================================
-   child.js - the Child version (ages 10-14, about 30 minutes): when the chooser (edition.js) picks `child`, only the slides listed in
+   child.js - the Child version (ages 10-12, a family session with a parent beside the child): when the chooser (edition.js) picks `child`, only the slides listed in
    `Deck.only` are shown, in their original order. Every other slide stays in the deck, hidden (not shown, not numbered, skipped by the
    arrow keys and the overview). The Adult version shows everything. Its speaker notes are in notes-child.json.
    To bring a slide back, add its id to the list below (ids and numbers for both versions: SLIDES.md).
@@ -8,10 +8,12 @@
 'use strict';
 if (!window.Deck || Deck.edition !== 'child') return;
 Deck.only = [
-  'title', 'agenda-journey', 'gallup-teen-hours',
-  'hours-per-year', 'what-in-1700-hours', 'hours-tiles', 'phones-everywhere',
-  'screen-time-research', 'screen-glow-brain', 'couples-on-phones', 'dq-institute-report', 'kids-online-risks',
-  'why-intro', 'dopamine-meet', 'dopamine-spikes', 'dopamine-crash', 'why-addictive',
+  'title', 'agenda-journey',
+  'kid-screen-time', 'kid-books',                 // child-only (child-extra.js): sliders for TV / games hours, then "N hours = N books"
+  'hours-tiles',
+  'kid-light', 'kid-sleep',                       // child-only (child-extra.js): bright light into the eyes, then a bad night
+  'dq-institute-report', 'kids-online-risks',
+  'why-intro', 'why-addictive',
   'kids-videos', 'bright-colors', 'intense-colors-effect', 'shorts-slowed',
   'games-made-addictive', 'persuasive-technology', 'popular-games', 'fortnite',
   'roblox', 'roblox-strangers', 'game-dangers', 'treat-intro',
@@ -23,7 +25,7 @@ Deck.only = [
   'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahf-browser-hero',
   'kahfguard-website', 'wa-privacy',
   'scam-parcel-sms', 'scam-hi-mum', 'scam-roblox-email', 'scam-whatsapp-code', 'scam-netflix-email', 'scam-fake-captcha',
-  'remember-this', 'tahrim-66-6'
+  'remember-this'
 ];
 /* Susan chat (susan-tricked, and susan-blackmailed which repeats it scrolled up): wording for 10-12 year olds. Same lesson
    (a fake friend, a threat, "don't tell your parents", a demand for more photos), nothing sexual. Bubble sizes are unchanged,

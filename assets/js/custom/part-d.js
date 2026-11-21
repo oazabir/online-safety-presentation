@@ -20,7 +20,7 @@ if (!window.Deck || !window.DECK_DATA) return;
 var D = window.DECK_DATA;
 var byId = {}; D.slides.forEach(function (s) { byId[s.id] = s; });
 var GALLUP = 'https://news.gallup.com/poll/512576/teens-spend-average-hours-social-media-per-day.aspx';
-var S = { hpd: 4.8 };                       // hours of screen time per day, shared by [5] and [7]
+var S = Deck.hoursState = { hpd: 4.8 };     // hours of screen time per day, shared by [5] and [7] (and set by the Child version's kid-screen-time slide)
 
 function h(tag, cls, parent, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; }
 function addCss(id, rules) { if (document.getElementById(id)) return; var st = document.createElement('style'); st.id = id; st.textContent = rules.join('\n'); document.head.appendChild(st); }

@@ -1,18 +1,19 @@
 /* ============================================================================
    edition.js - which version of the talk to show. Loaded before the engine.
-   The URL decides: index.html?edition=adult (full talk for parents) or ?edition=child (ages 10-14, about 30 minutes). With neither,
+   The URL decides: index.html?edition=adult (full talk for parents), ?edition=teen (about 30 minutes) or ?edition=child (ages 10-12, with a parent). With neither,
    a chooser is shown and the deck waits (boot.js does nothing); picking a card reloads the page with ?edition=... (and the same #/slide).
    The presenter window is opened with the same edition (ui.js). window.DECK_EDITION is null while the chooser is up.
    ============================================================================ */
 (function () {
 'use strict';
-var m = /[?&]edition=(adult|child)(?:&|$)/.exec(location.search);
+var m = /[?&]edition=(adult|teen|child)(?:&|$)/.exec(location.search);
 window.DECK_EDITION = m ? m[1] : null;
 if (window.DECK_EDITION) return;
 
 var CARDS = [
   { id: 'adult', n: '1', t: 'Adult version', s: 'For parents and carers. The full talk.' },
-  { id: 'child', n: '2', t: 'Child version', s: 'For ages 10&ndash;14. Shorter, about 30 minutes.' }
+  { id: 'teen', n: '2', t: 'Teen version', s: 'For teenagers. Shorter, about 30 minutes.' },
+  { id: 'child', n: '3', t: 'Child version', s: 'For ages 10&ndash;12, with a parent beside them.' }
 ];
 var st = document.createElement('style');
 st.textContent = [
@@ -35,14 +36,14 @@ document.head.appendChild(st);
 var box = document.createElement('div'); box.id = 'edpick'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Choose a version');
 box.innerHTML = '<h1>Online Safety &amp; Device Addiction<small>Choose a version</small></h1><div class="row">' +
   CARDS.map(function (c) { return '<button type="button" data-ed="' + c.id + '"><div class="k">' + c.n + '</div><div class="t">' + c.t + '</div><div class="s">' + c.s + '</div></button>'; }).join('') +
-  '</div><div class="h">Press 1 or 2, or click</div>';
+  '</div><div class="h">Press 1, 2 or 3, or click</div>';
 function choose(id) { location.href = location.href.split('#')[0].split('?')[0] + '?edition=' + id + location.hash; }
 box.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('button[data-ed]'); if (b) choose(b.getAttribute('data-ed')); });
 addEventListener('keydown', function (e) {
   if (!document.getElementById('edpick')) return;
   e.stopImmediatePropagation();                       // the deck's own key handlers must not run while the chooser is up (Enter/Tab keep their default on the buttons)
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === '1') choose('adult'); else if (e.key === '2') choose('child');
+  if (e.key === '1') choose('adult'); else if (e.key === '2') choose('teen'); else if (e.key === '3') choose('child');
 }, true);
 function mount() { document.body.appendChild(box); var f = box.querySelector('button'); if (f) f.focus(); }
 if (document.body) mount(); else addEventListener('DOMContentLoaded', mount);

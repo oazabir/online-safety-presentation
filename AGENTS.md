@@ -14,11 +14,12 @@ writing slide code. This file explains how the pieces fit together and how to ch
 index.html                  shell: DOM hooks + ordered <script> tags (load order matters)
 assets/css/deck.css         all base styling, design tokens, transitions
 assets/fonts/               Fraunces (display), Inter (body), JetBrains Mono — local woff2
-assets/js/edition.js        start-screen chooser: Adult version (all slides) or Child version (ages 10-14, ~30 min); `?edition=adult|child`
+assets/js/edition.js        start-screen chooser: Adult version (all slides), Teen version (~30 min) or Child version (ages 10-12, with a parent); `?edition=adult|teen|child`
 assets/js/slides-data.js    window.DECK_DATA = {w,h,slides:[{id,section,tr,els,steps,...}]}, in show order
-notes-child.json            SPEAKER NOTES for the Child version (same format; only the slides listed in child.js)
+notes-teen.json            SPEAKER NOTES for the Teen version (same format; only the slides listed in teen.js)
+notes-child.json           SPEAKER NOTES for the Child version (only the slides listed in child.js)
 notes.json                  SPEAKER NOTES (Adult version): {"slide-id": "text"}, the one place to edit them (read by `Deck.loadNotes` in boot.js)
-assets/js/notes-data.js, notes-child-data.js   GENERATED copies of the two notes files for file:// (`python3 scripts/sync_notes.py`); don't edit
+assets/js/notes-data.js, notes-teen-data.js, notes-child-data.js   GENERATED copies of the three notes files for file:// (`python3 scripts/sync_notes.py`); don't edit
 assets/js/engine.js         Deck core: render, transitions, build steps, registerSlide/insertSlide, goto
 assets/js/loops.js          ambient animation loops (orbs, aurora, embers, …), auto-assigned per slide
 assets/js/ui.js             presenter tools: keys, overview, presenter window, laser, spotlight, magnifier
@@ -34,7 +35,9 @@ assets/js/custom/part-i.js  `shorts-slowed` (after `intense-colors-effect`): one
 assets/js/custom/part-j.js  "Spot the scam" (after `wa-privacy`): 5 HTML-drawn scam messages (SMS, WhatsApp, email) + a fake
                             "verify you are human" page (`scam-fake-captcha`, ClickFix: Win+R, Ctrl+V, Enter played out), `scam-*`; each click
                             circles one warning sign, the last stamps SCAM and shows what to do instead
-assets/js/custom/child.js   Child version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
+assets/js/custom/teen.js   Teen version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
+assets/js/custom/child.js  Child version (ages 10-12, family session): same mechanism as teen.js, its own `Deck.only` list
+assets/js/custom/child-extra.js  slides that exist only in the Child version: `kid-screen-time` (TV/games sliders -> hours a month/year, shared via `Deck.hoursState`), `kid-books`, `kid-light`, `kid-sleep` (images: `media/child/`, made with the Codex CLI)
 assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
@@ -44,14 +47,14 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
 
 `.remember/` is tool state, not part of the deck (git-ignored).
 
-## Two versions (editions)
+## Three versions (editions)
 
-`index.html` with no `?edition=` shows a chooser (**Adult version** / **Child version**); the choice reloads the page as `?edition=adult|child`
+`index.html` with no `?edition=` shows a chooser (**Adult version** / **Teen version** / **Child version**); the choice reloads the page as `?edition=adult|teen|child`
 (`window.DECK_EDITION`, `Deck.edition`). The presenter window is opened with the same edition. The Adult version shows every slide with
-`notes.json`. The Child version sets `Deck.only` in `custom/child.js`, which makes the engine hide every other slide (so numbers, overview and
-arrow keys skip them), and reads `notes-child.json`. Slide code is shared: a fix to a slide shows in both. Code that must differ checks
+`notes.json`. The Teen and Child versions each set `Deck.only` in `custom/teen.js` / `custom/child.js` (the Child version, for ages 10-12 in a family session with a parent beside them, started as a copy of the Teen list and diverges from it), which makes the engine hide every other slide (so numbers, overview and
+arrow keys skip them), and read `notes-teen.json` / `notes-child.json`. Slide code is shared: a fix to a slide shows in both. Code that must differ checks
 `Deck.edition` (topic-bar.js, the name strip on `ai-intro`). Slide numbers differ between versions, so link by id (`#/roblox`). To add a
-slide to the Child version, add its id to `child.js` and a note to `notes-child.json`. Run `python3 scripts/sync_notes.py` after editing notes.
+slide to a version, add its id to its list (`teen.js` / `child.js`) and a note to its notes file, and update the matching column in `SLIDES.md`. Run `python3 scripts/sync_notes.py` after editing notes.
 
 ## How the deck is built (mental model)
 

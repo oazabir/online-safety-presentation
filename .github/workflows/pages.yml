@@ -26,13 +26,13 @@ jobs:
       - name: Check speaker notes are valid and in sync
         run: |
           python3 scripts/sync_notes.py
-          git diff --exit-code -- assets/js/notes-data.js assets/js/notes-child-data.js || {
-            echo "::warning::notes-data.js / notes-child-data.js were out of date with the notes JSON; deploying the regenerated copies"; }
+          git diff --exit-code -- assets/js/notes-data.js assets/js/notes-teen-data.js assets/js/notes-child-data.js || {
+            echo "::warning::notes-data.js / notes-teen-data.js / notes-child-data.js were out of date with the notes JSON; deploying the regenerated copies"; }
 
       - name: Stage site
         run: |
           mkdir _site
-          cp -R index.html notes.json notes-child.json assets media _site/
+          cp -R index.html notes.json notes-teen.json notes-child.json assets media _site/
           touch _site/.nojekyll
           du -sh _site
 

@@ -20,8 +20,8 @@ var TOPICS = [
   { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
 
-/* Child version: its first slide of the 4th topic (harm-intro) and of the last topic (trends-intro) are hidden, so those topics start elsewhere */
-if (Deck.edition === 'child') TOPICS.forEach(function (t) {
+/* Teen and Child versions: its first slide of the 4th topic (harm-intro) and of the last topic (trends-intro) are hidden, so those topics start elsewhere */
+if (Deck.edition === 'teen' || Deck.edition === 'child') TOPICS.forEach(function (t) {
   if (t.from === 'harm-intro') t.from = 'lost-screen-memorial';
   else if (t.from === 'ai-intro') t.label = 'Destroying Our Children';
   else if (t.from === 'trends-intro') { t.from = 'remember-this'; t.label = 'Remember This'; }

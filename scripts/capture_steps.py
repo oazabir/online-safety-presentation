@@ -1,7 +1,8 @@
 """Capture the screen after every Next press on every slide (3 s after each press), for the presenter view's "Next" box.
 Needs: pip install playwright pillow, Google Chrome installed (plays the H.264 videos), and the deck served at URL below
 (python3 -m http.server 8765 --bind 127.0.0.1 from the repo root).
-usage: python3 scripts/capture_steps.py WORKER NWORKERS [only-slide-ids...]   (env ENTRY_ONLY=1: only the first state of each slide)
+usage: python3 scripts/capture_steps.py WORKER NWORKERS [only-slide-ids...]   (env ENTRY_ONLY=1: only the first state of each slide;
+       env EDITION=child|teen: capture that version instead of adult - needed for the child-only slides in child-extra.js)
   all slides, 4 parallel workers:  for i in 0 1 2 3; do python3 scripts/capture_steps.py $i 4 & done
   one slide:                       python3 scripts/capture_steps.py 0 1 wa-privacy
 Writes media/steps/<slide-id>-<step>.webp (step = state reached after that many Next presses; -0 = the slide as it first appears,
@@ -31,7 +32,7 @@ with sync_playwright() as p:
                           args=['--autoplay-policy=no-user-gesture-required', '--mute-audio'])
     pg = b.new_page(viewport={'width': W, 'height': H})
     pg.on('pageerror', lambda e: L('PAGEERROR', e))
-    pg.goto(URL + '?edition=adult&cap' + str(worker))
+    pg.goto(URL + '?edition=' + os.environ.get('EDITION', 'adult') + '&cap' + str(worker))
     pg.add_style_tag(content=HIDE)
     pg.wait_for_function('window.Deck && Deck.cur')
     keys = pg.evaluate('Deck.order().map(s=>s.key)')
