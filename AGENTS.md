@@ -38,7 +38,8 @@ assets/js/custom/part-j.js  "Spot the scam" (after `wa-privacy`): 5 HTML-drawn s
 assets/js/custom/teen.js   Teen version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
 assets/js/custom/child.js  Child version (ages 10-12, family session): same mechanism as teen.js, its own `Deck.only` list
 assets/js/custom/child-extra.js  slides that exist only in the Child version: `kid-screen-time` (TV/games sliders -> hours a month/year, shared via `Deck.hoursState`), `kid-books`, `kid-light`, `kid-sleep` (images: `media/child/`, made with the Codex CLI)
-assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it)
+assets/js/custom/edition-topics.js  per-version topic names + chapter-intro lists + agenda-map subtitles for Teen/Child (`Deck.topicEdits`, `Deck.agenda`); Adult is the base
+assets/js/custom/topic-bar.js  bottom topic progress bar (7 topics, `TOPICS[].from` = first slide; `T` toggles it). Segments are equal width; a topic with no slides in the version on screen is dropped
 assets/js/boot.js           calls Deck.start(); must stay last
 media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ kahfkids/ posters/ whatsapp/ subfolders
                             (hours/ and games/ = Codex-generated photos for #10 and #44)
@@ -54,7 +55,7 @@ media/                      images, mp4 videos, plus charts/ games/ hours/ ink/ 
 `notes.json`. The Teen and Child versions each set `Deck.only` in `custom/teen.js` / `custom/child.js` (the Child version, for ages 10-12 in a family session with a parent beside them, started as a copy of the Teen list and diverges from it), which makes the engine hide every other slide (so numbers, overview and
 arrow keys skip them), and read `notes-teen.json` / `notes-child.json`. Slide code is shared: a fix to a slide shows in both. Code that must differ checks
 `Deck.edition` (topic-bar.js, the name strip on `ai-intro`). Slide numbers differ between versions, so link by id (`#/roblox`). To add a
-slide to a version, add its id to its list (`teen.js` / `child.js`) and a note to its notes file, and update the matching column in `SLIDES.md`. Run `python3 scripts/sync_notes.py` after editing notes.
+slide to a version, add its id to its list (`teen.js` / `child.js`) and a note to its notes file, update the matching column in `SLIDES.md`, and keep the topic lists in `edition-topics.js` (chapter intros, agenda map, bottom bar) in step with what that version shows. Run `python3 scripts/sync_notes.py` after editing notes.
 
 ## How the deck is built (mental model)
 

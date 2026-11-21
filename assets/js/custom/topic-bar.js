@@ -20,12 +20,8 @@ var TOPICS = [
   { from: 'trends-intro', label: 'Disturbing Trends', color: 'var(--ink)'    }    // research charts, close
 ];
 
-/* Teen and Child versions: its first slide of the 4th topic (harm-intro) and of the last topic (trends-intro) are hidden, so those topics start elsewhere */
-if (Deck.edition === 'teen' || Deck.edition === 'child') TOPICS.forEach(function (t) {
-  if (t.from === 'harm-intro') t.from = 'lost-screen-memorial';
-  else if (t.from === 'ai-intro') t.label = 'Destroying Our Children';
-  else if (t.from === 'trends-intro') { t.from = 'remember-this'; t.label = 'Remember This'; }
-});
+/* Teen and Child versions rename / re-start some topics (edition-topics.js sets Deck.topicEdits = {topicIndex: {from, label}}) */
+TOPICS.forEach(function (t, i) { var e = Deck.topicEdits && Deck.topicEdits[i]; if (e) Object.keys(e).forEach(function (k) { t[k] = e[k]; }); });
 
 var css = [
   ':root{--tb-h:46px}',
@@ -72,8 +68,22 @@ document.body.appendChild(bar);
 
 /* topic index + fill fraction for the slide on screen. Works for hidden slides too (if any),
    which sit between visible ones and count as "just after the previous visible slide". */
+/* The bar follows the version on screen: every segment is the same width, a topic with no slides in this version is dropped, and the numbers
+   close up. The fill inside a segment is that topic's own slides in this version. */
+var laidOut = false;
+function layout() {
+  laidOut = true;
+  var vis = Deck.order(), starts = TOPICS.map(function (t) { var s = Deck.find(t.from); return s ? s.pos : Infinity; }), shown = 0;
+  segs.forEach(function (sg, i) {
+    var lo = starts[i], hi = i + 1 < starts.length ? starts[i + 1] : Infinity;
+    var n = vis.filter(function (s) { return s.pos >= lo && s.pos < hi; }).length;
+    sg.el.style.display = n ? '' : 'none';
+    if (n && !TOPICS[i].mark) sg.el.querySelector('.tb-lab b').textContent = ++shown;
+  });
+}
 function update() {
   var cur = Deck.cur; if (!cur) return;
+  if (!laidOut) layout();
   var starts = TOPICS.map(function (t) { var s = Deck.find(t.from); return s ? s.pos : Infinity; });
   var ti = 0; starts.forEach(function (p, i) { if (p <= cur.pos) ti = i; });
   var vis = Deck.order();
@@ -89,7 +99,7 @@ function update() {
     sg.el.classList.toggle('done', i < ti);
     sg.el.classList.toggle('cur', i === ti);
     var n2 = vis.filter(function (s) { return s.pos >= lo && s.pos < hi; }).length;
-    sg.el.title = (TOPICS[i].mark ? TOPICS[i].mark + " " : "") + TOPICS[i].label + ' · ' + n2 + ' slides';
+    sg.el.title = (TOPICS[i].mark ? TOPICS[i].mark + " " : "") + TOPICS[i].label + ' · ' + n2 + (n2 === 1 ? ' slide' : ' slides');
   });
 }
 Deck.on('show', update);

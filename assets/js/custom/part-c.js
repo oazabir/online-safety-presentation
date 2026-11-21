@@ -2957,6 +2957,8 @@ Deck.registerSlide('dont-drug-kids', {
 }
   ];
 
+  Deck.agenda = { stops: STOPS, chapters: CHAPTERS };   // edition-topics.js adapts these per version (Teen/Child) before Deck.start()
+
   CHAPTERS.forEach(function (CH) { Deck.insertSlide({
     after: CH.after, id: CH.id, title: STOPS[CH.stop].t, section: CH.section, tr: { type: 'fade', ms: 900 }, loop: false,
     render: function (el, ctx) {
