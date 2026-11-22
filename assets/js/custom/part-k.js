@@ -1,5 +1,5 @@
 /* ============================================================================
-   part-k.js - 'audree-trap' (Adult version only, after 'night-contact-abuse'): the story of Audree, 13, Kentucky (died 2024),
+   part-k.js - 'audree-trap' (all three versions, after 'night-contact-abuse'; own notes in each notes file):the story of Audree, 13, Kentucky (died 2024),
    told as three phones side by side: Roblox -> TikTok -> Discord. Each click brings in the next phone with the hand-off line
    that moved her there; then the ultimatum; then what her mother says now.
      click 1  TikTok phone      click 2  Discord phone      click 3  the ultimatum (phones fade)      click 4  what is left
@@ -154,6 +154,17 @@ addCss('ak-css', [
   '.ak-ar .ch{display:flex;gap:2px;font:300 78px/1 var(--f-body);color:#ff6b6b}',
   '.ak-ar .ch i{font-style:normal;animation:ak-ch 1.5s infinite}.ak-ar .ch i:nth-child(2){animation-delay:.25s}.ak-ar .ch i:nth-child(3){animation-delay:.5s}',
   '@keyframes ak-ch{0%,100%{opacity:.15}40%{opacity:1}}',
+  /* intro bullets beside the first phone; they leave when the TikTok phone arrives */
+  '.ak-in{position:absolute;left:720px;top:300px;width:1030px;transition:opacity .6s,transform .7s var(--ease)}',
+  '.ak.k1 .ak-in{opacity:0;transform:translateX(-40px);pointer-events:none}',
+  '.ak-b{display:flex;gap:28px;align-items:flex-start;margin-bottom:40px;opacity:0;transform:translateX(44px)}',
+  '.ak.k0 .ak-b{opacity:1;transform:none;transition:opacity .6s,transform .8s var(--ease);transition-delay:calc(var(--i) * .8s + .5s)}',
+  '.ak-b .m{flex:none;width:20px;height:20px;margin-top:20px;border-radius:5px;background:#ff6b6b;transform:rotate(12deg);box-shadow:0 0 18px rgba(255,107,107,.55)}',
+  '.ak-b span{font:500 48px/1.22 var(--f-body);color:#fff}',
+  '.ak-b span em{font-style:normal;font-weight:700;color:#ff9a9a}',
+  '.ak-b.q span{font:italic 600 52px/1.18 var(--f-display)}',
+  '.ak-b.q span small{display:block;margin-top:8px;font:500 24px/1.2 var(--f-body);font-style:normal;color:var(--muted)}',
+  '.ak-b.go span{font-weight:700;color:#ff9a9a}',
   /* the ultimatum, over the faded phones */
   '.ak-red{position:absolute;inset:0;background:radial-gradient(78% 72% at 50% 50%,rgba(150,10,20,.6),rgba(40,0,6,.45) 65%,rgba(0,0,0,0) 100%);opacity:0;transition:opacity .8s;pointer-events:none}',
   '.ak.k3 .ak-red{opacity:1}.ak.k4 .ak-red{opacity:.7}',
@@ -183,10 +194,10 @@ Deck.insertSlide({
   after: 'night-contact-abuse', id: 'audree-trap', title: 'Audree: from a game to a trap', section: 'grooming',
   tr: { type: 'fade', ms: 900 }, loop: false, calm: true, steps: 4,
   render: function (el, ctx) {
-    var r = h('div', 'ak', el);
+    var r = h('div', 'ak', el), kid = Deck.edition === 'child';   /* Child version (ages 10-12): no "suicide" on screen, and a tell-an-adult footer instead of the lawsuit */
     if (ctx.reduced) r.classList.add('rm');
     h('div', 'ak-red', r);
-    h('div', 'ak-k', r, 'A true story &middot; Kentucky &middot; 2024');
+    h('div', 'ak-k', r, 'A true story &middot; 2024');
     h('div', 'ak-t', r, 'From a game to a <em>trap</em>');
     h('div', 'ak-il', r, 'Illustration of the pattern, not her real messages');
     COLS.forEach(function (c, i) {
@@ -196,15 +207,24 @@ Deck.insertSlide({
       h('div', 'isl', ph);
       if (i < 2) h('div', 'ak-ar a' + (i + 1), r, '<div class="tag">' + HAND[i] + '</div><div class="ch"><i>&rsaquo;</i><i>&rsaquo;</i><i>&rsaquo;</i></div>');
     });
-    h('div', 'ak-ul', r, '<small>Then, the ultimatum</small><h2>Hurt others.<br>Or hurt <em>yourself.</em></h2>');
+    var B = function (i, cls, html) { return '<div class="ak-b ' + cls + '" style="--i:' + i + '"><i class="m"></i><span>' + html + '</span></div>'; };
+    h('div', 'ak-in', r,
+      B(0, '', '<em>Audree</em>, a 13-year-old girl from Kentucky') +
+      B(1, '', 'Started playing Roblox at <em>8</em>') +
+      B(2, 'q', '&ldquo;Funny, smart, and very caring.&rdquo;<small>Her mother, Jaimee Seitz</small>') +
+      B(3, '', 'In 7th grade, she felt left out at school') +
+      B(4, 'go', 'Then, in the game chat, a stranger noticed her.'));
+    h('div', 'ak-ul', r,'<small>Then, the ultimatum</small><h2>Hurt others.<br>Or hurt <em>yourself.</em></h2>');
     h('div', 'ak-end', r,
       '<div class="ak-tl">' +
         '<div class="ak-tile"><b>8</b><span>when she joined Roblox</span></div>' +
         '<div class="ak-tile r"><b>ON</b><span>parental controls</span></div>' +
-        '<div class="ak-tile"><b>13</b><span>when she died by suicide</span></div>' +
+        '<div class="ak-tile"><b>13</b><span>when she died' + (kid ? '' : ' by suicide') + '</span></div>' +
       '</div>' +
       '<div class="ak-q">&ldquo;Monitor as much as possible.&rdquo;<small>Jaimee Seitz, Audree&rsquo;s mother</small></div>');
-    h('div', 'ak-ft', r, 'Her mother is suing Roblox, Discord and TikTok; these are allegations. If you or your child are struggling, tell a trusted adult or call your local crisis line today.');
+    h('div', 'ak-ft', r, kid
+      ? 'If anything online scares or upsets you, tell a trusted adult. Always, even if someone told you to keep it secret.'
+      : 'Her mother is suing Roblox, Discord and TikTok; these are allegations. If you or your child are struggling, tell a trusted adult or call your local crisis line today.');
     var box = h('div', 'chips', r); SRC.forEach(function (u) { box.appendChild(Deck.sourceChip(u)); });
     el.__ak = r;
     if (ctx.static) { for (var k = 0; k <= 4; k++) r.classList.add('k' + k); }

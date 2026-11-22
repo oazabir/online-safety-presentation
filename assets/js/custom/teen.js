@@ -18,7 +18,7 @@ Deck.only = [
   'three-things', 'gray-research', 'boring-devices-color', 'boring-devices-bw',
   'top-10-games', 'less-exciting-games', 'lost-screen-memorial', 'kayleigh-haywood',
   'meet-susan', 'susan-tricked', 'susan-blackmailed', 'photo-spot-the-risk',
-  'photo-how-about-now', 'never-alone', 'night-contact-abuse', 'ai-intro',
+  'photo-how-about-now', 'never-alone', 'night-contact-abuse', 'audree-trap', 'ai-intro',
   'ai-sewell', 'ai-juliana', 'ai-realistic', 'protect-intro',
   'tech-free-zones', 'safe-screen-time', 'protection-threats', 'kahf-browser-hero',
   'kahfguard-website', 'wa-privacy',

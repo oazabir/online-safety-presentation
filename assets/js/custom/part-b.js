@@ -457,7 +457,6 @@ chart('suicide-rate-social-apps', 'e3074', 'e4', 'Smartphone era');
 loops('suicide-rate-social-apps', { float: ['e1028', 'e1030', 'e1032', 'e1034'] });
 
 /* ---------------------------------------------------------------- 9. light motion on other slides (calm slides 51, 57, 58, 74, 90, 93 are left alone) */
-loops('child-is-victim', { shine: ['e3'] });
 loops('not-born-addict', { shine: ['e3'], glow: ['e7'] });
 loops('photo-spot-the-risk', { shine: ['e7'] });
 loops('photo-how-about-now', { shine: ['e3'] });
