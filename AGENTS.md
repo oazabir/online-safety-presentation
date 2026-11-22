@@ -35,6 +35,7 @@ assets/js/custom/part-i.js  `shorts-slowed` (after `intense-colors-effect`): one
 assets/js/custom/part-j.js  "Spot the scam" (after `wa-privacy`): 5 HTML-drawn scam messages (SMS, WhatsApp, email) + a fake
                             "verify you are human" page (`scam-fake-captcha`, ClickFix: Win+R, Ctrl+V, Enter played out), `scam-*`; each click
                             circles one warning sign, the last stamps SCAM and shows what to do instead
+assets/js/custom/part-k.js  `audree-trap` (Adult version only, after `night-contact-abuse`): Audree's story as three phones (Roblox -> TikTok -> Discord), the ultimatum, her mother's advice; illustrative chats, 4 clicks
 assets/js/custom/teen.js   Teen version: `Deck.only` = ids of the slides it shows (the rest are hidden); no-op for the Adult version
 assets/js/custom/child.js  Child version (ages 10-12, family session): same mechanism as teen.js, its own `Deck.only` list
 assets/js/custom/child-extra.js  slides that exist only in the Child version: `kid-screen-time` (TV/games sliders -> hours a month/year, shared via `Deck.hoursState`), `kid-books`, `kid-light`, `kid-sleep` (images: `media/child/`, made with the Codex CLI)

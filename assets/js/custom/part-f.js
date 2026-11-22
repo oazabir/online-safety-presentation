@@ -691,7 +691,7 @@ addCss('pf-ai0-css', [
 ]);
 
 Deck.insertSlide({
-  after: 'night-contact-abuse', id: 'ai-intro', title: 'AI has started killing our children', section: 'grooming', tr: { type: 'fade', ms: 1400 },
+  after: 'audree-trap', id: 'ai-intro',   /* audree-trap (part-k.js, Adult only) sits between 'night-contact-abuse' and this slide */ title: 'AI has started killing our children', section: 'grooming', tr: { type: 'fade', ms: 1400 },
   calm: true, loop: false,
   render: function (el, ctx) {
     var r = h('div', 'ai0' + (ctx.static || ctx.reduced ? ' still' : ''), el);

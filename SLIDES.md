@@ -2,7 +2,7 @@
 
 Three versions of the talk share these slides (chosen on the start screen, or `index.html?edition=adult` / `?edition=teen` / `?edition=child`): the **Adult version** shows all of them; the **Teen version** (~30 min) shows only the slides with a number in the *Teen #* column (list in `assets/js/custom/teen.js`, notes in `notes-teen.json`). `—` in *Teen #* means hidden in the Teen version. The **Child version** (ages 10-12, a family session with a parent beside the child) starts as a copy of the Teen list: *Child #* is its numbering, list in `assets/js/custom/child.js`, notes in `notes-child.json`; it will diverge from Teen as slides are removed or adjusted, so keep both columns in step with the two lists.
 
-Every slide has a **number** (its position in the show, 1-96, the one on screen and in the overview) and a unique, stable **id**
+Every slide has a **number** (its position in the show, 1-97, the one on screen and in the overview) and a unique, stable **id**
 (the key used by `Deck.registerSlide`, `Deck.insertSlide({after})`, `Deck.goto`, and the URL: `#/roblox`). Numbers change when slides are
 added, moved or removed; ids do not. `#/34` and `#/treat-intro` both work.
 
@@ -70,43 +70,44 @@ use it; `—` marks slides that were added after the conversion.
 | 57 | `photo-how-about-now` | grooming | 62 | 42 | 36 |
 | 58 | `never-alone` | grooming | 63 | 43 | 37 |
 | 59 | `night-contact-abuse` | grooming | 64 | 44 | 38 |
-| 60 | `ai-intro` | grooming | — | 45 | 39 |
-| 61 | `ai-sewell` | grooming | — | 46 | 40 |
-| 62 | `ai-juliana` | grooming | — | 47 | 41 |
-| 63 | `ai-adam` | grooming | — | — | — |
-| 64 | `ai-realistic` | grooming | — | 48 | 42 |
-| 65 | `protect-intro` | protect | — | 49 | 43 |
-| 66 | `tech-free-zones` | protect | 66 | 50 | 44 |
-| 67 | `safe-screen-time` | protect | — | 51 | 45 |
-| 68 | `slow-phones` | protect | 70 | — | — |
-| 69 | `protection-threats` | protect | 87 | 52 | 46 |
-| 70 | `parental-controls` | protect | — | — | — |
-| 71 | `parental-gaps` | protect | — | — | — |
-| 72 | `choose-browser` | protect | 91 | — | — |
-| 73 | `kahf-browser-hero` | protect | 92 | 53 | 47 |
-| 74 | `browser-comparison` | protect | 94 | — | — |
-| 75 | `kahfguard-website` | protect | 88 | 54 | 48 |
-| 76 | `kahf-browser-video` | protect | 90 | — | — |
-| 77 | `youtube-hide-content` | protect | 95 | — | — |
-| 78 | `youtube-train` | protect | 96 | — | — |
-| 79 | `kahf-kids-app` | protect | 97 | — | — |
-| 80 | `kid-google` | protect | — | — | — |
-| 81 | `wa-privacy` | protect | — | 55 | 49 |
-| 82 | `scam-parcel-sms` | protect | — | 56 | 50 |
-| 83 | `scam-hi-mum` | protect | — | 57 | 51 |
-| 84 | `scam-roblox-email` | protect | — | 58 | 52 |
-| 85 | `scam-whatsapp-code` | protect | — | 59 | 53 |
-| 86 | `scam-netflix-email` | protect | — | 60 | 54 |
-| 87 | `scam-fake-captcha` | protect | — | 61 | 55 |
-| 88 | `safety-checklist` | protect | 105 | — | — |
-| 89 | `trends-intro` | evidence | — | — | — |
-| 90 | `depression-chart` | evidence | 106 | — | — |
-| 91 | `self-harm-chart` | evidence | 107 | — | — |
-| 92 | `suicide-rate-chart` | evidence | 108 | — | — |
-| 93 | `suicide-rate-social-apps` | evidence | 109 | — | — |
-| 94 | `remember-this` | evidence | 110 | 62 | 56 |
-| 95 | `tahrim-66-6` | evidence | — | 63 | — |
-| 96 | `closing` | evidence | 112 | — | — |
+| 60 | `audree-trap` | grooming | — | — | — |
+| 61 | `ai-intro` | grooming | — | 45 | 39 |
+| 62 | `ai-sewell` | grooming | — | 46 | 40 |
+| 63 | `ai-juliana` | grooming | — | 47 | 41 |
+| 64 | `ai-adam` | grooming | — | — | — |
+| 65 | `ai-realistic` | grooming | — | 48 | 42 |
+| 66 | `protect-intro` | protect | — | 49 | 43 |
+| 67 | `tech-free-zones` | protect | 66 | 50 | 44 |
+| 68 | `safe-screen-time` | protect | — | 51 | 45 |
+| 69 | `slow-phones` | protect | 70 | — | — |
+| 70 | `protection-threats` | protect | 87 | 52 | 46 |
+| 71 | `parental-controls` | protect | — | — | — |
+| 72 | `parental-gaps` | protect | — | — | — |
+| 73 | `choose-browser` | protect | 91 | — | — |
+| 74 | `kahf-browser-hero` | protect | 92 | 53 | 47 |
+| 75 | `browser-comparison` | protect | 94 | — | — |
+| 76 | `kahfguard-website` | protect | 88 | 54 | 48 |
+| 77 | `kahf-browser-video` | protect | 90 | — | — |
+| 78 | `youtube-hide-content` | protect | 95 | — | — |
+| 79 | `youtube-train` | protect | 96 | — | — |
+| 80 | `kahf-kids-app` | protect | 97 | — | — |
+| 81 | `kid-google` | protect | — | — | — |
+| 82 | `wa-privacy` | protect | — | 55 | 49 |
+| 83 | `scam-parcel-sms` | protect | — | 56 | 50 |
+| 84 | `scam-hi-mum` | protect | — | 57 | 51 |
+| 85 | `scam-roblox-email` | protect | — | 58 | 52 |
+| 86 | `scam-whatsapp-code` | protect | — | 59 | 53 |
+| 87 | `scam-netflix-email` | protect | — | 60 | 54 |
+| 88 | `scam-fake-captcha` | protect | — | 61 | 55 |
+| 89 | `safety-checklist` | protect | 105 | — | — |
+| 90 | `trends-intro` | evidence | — | — | — |
+| 91 | `depression-chart` | evidence | 106 | — | — |
+| 92 | `self-harm-chart` | evidence | 107 | — | — |
+| 93 | `suicide-rate-chart` | evidence | 108 | — | — |
+| 94 | `suicide-rate-social-apps` | evidence | 109 | — | — |
+| 95 | `remember-this` | evidence | 110 | 62 | 56 |
+| 96 | `tahrim-66-6` | evidence | — | 63 | — |
+| 97 | `closing` | evidence | 112 | — | — |
 
 Hidden (kept in the deck, not shown when presenting, no number): `kahf-browser-new-tab` (PowerPoint #93, was 66; set in part-c.js).
 
