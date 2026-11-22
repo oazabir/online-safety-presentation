@@ -379,7 +379,7 @@ addCss('pj-web-css', [
   '.cf-lg{position:absolute;right:12px;top:9px;display:flex;flex-direction:column;align-items:center}.cf-lg svg{width:42px;display:block}',
   '.cf-lg b{font:800 10px/1 var(--f-body);letter-spacing:.08em;color:#404040}.cf-lg small{margin-top:3px;font:400 9px/1 var(--f-body);color:#555;text-decoration:underline}',
   /* the popup that asks for the key presses */
-  '.pc-dim{position:absolute;inset:0;background:rgba(70,70,70,.58);opacity:0;transition:opacity .5s}.pj.a3 .pc-dim{opacity:1}',
+  '.pj .pc-dim{position:absolute;inset:0;background:rgba(70,70,70,.58);opacity:0;transition:opacity .5s}.pj.a3 .pc-dim{opacity:1}',   /* scoped: part-c.js puts a `pc-dim` class on the night-contact-abuse slide root */
   '.pj .pc-pop{position:absolute;right:28px;top:22px;width:492px;border-radius:10px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.4);',
   '  opacity:0;transform:translateY(26px) scale(.97);transition:opacity .45s,transform .6s var(--ease)}',
   '.pj.a3 .pc-pop{opacity:1;transform:none}',
