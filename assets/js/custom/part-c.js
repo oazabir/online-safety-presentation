@@ -1785,6 +1785,9 @@ Deck.registerSlide('dont-drug-kids', {
     var st = document.createElement('style'); st.id = 'pc110-css';
     st.textContent = [
       '.pc110{position:absolute;inset:0;pointer-events:none}',
+      '.pc110-sc{position:absolute;left:474.9px;top:49px;width:982px;height:982px;border-radius:var(--radius);overflow:hidden;opacity:0;pointer-events:none;transition:opacity .3s ease-out;box-shadow:var(--shadow);outline:1px solid var(--glass-b);outline-offset:-1px}',
+      '.pc110-sc.on{opacity:1}.pc110-sc.inst{transition:none}',
+      '.pc110-sc img{display:block;width:100%;height:100%;object-fit:cover}',
       '.pc110 .vig{position:absolute;inset:0;opacity:0;transition:opacity .6s ease-out;background:radial-gradient(ellipse 72% 70% at 50% 50%,transparent 55%,rgba(200,0,24,.30) 82%,rgba(120,0,14,.55))}',
       '.pc110 svg{position:absolute;inset:0;width:1920px;height:1080px;overflow:visible}',
       '.pc110 .mk{stroke-dasharray:1 1.2;stroke-dashoffset:1.1;transition:stroke-dashoffset .38s cubic-bezier(.6,0,.85,.55)}',
@@ -1843,17 +1846,28 @@ Deck.registerSlide('dont-drug-kids', {
   }
   if (byId['remember-this']) byId['remember-this'].steps = [];                    // the cross is now one custom build, not the two ink wipes
   Deck.registerSlide('remember-this', {
-    keepBase: true, steps: 1,
+    keepBase: true, steps: 3,
     render: function (el, ctx) {
       hide(ctx, ['e6', 'e7']);                             // the old amber ink strokes
       var u = 'pc110-' + (++uid) + '-';                    // unique svg ids: thumbnails + live slide coexist
+      /* build 1: a hooded black-smoke entity massages the boy's neck while he types with an evil smile (Codex image) */
+      var sc1 = h('div', 'pc110-sc', el, '<img src="media/child/entity-coach.webp?v=2" alt="A faceless hooded figure with glowing eyes, wrapped in black smoke, rubs the boy&rsquo;s neck while he leans into the computer, smiling and typing" draggable="false">');
+      /* build 2: the same scene, a hacker's hand reaches out of the monitor and the boy flinches away (Codex image) */
+      var sc = h('div', 'pc110-sc', el, '<img src="media/child/hand-monitor.webp?v=3" alt="A black-gloved hand reaches out of the monitor towards the boy, who leans away in fright" draggable="false">');
+      el.__sc = sc; el.__sc1 = sc1;
       var r = h('div', 'pc110', el, '<div class="vig"></div>' + SVG.replace(/pc110-/g, u) + '<div class="shock"></div>');
       el.__r = r; el.__gen = 0;
-      if (ctx.static) { r.classList.add('inst'); setAll(r, true); }
+      if (ctx.static) { sc1.classList.add('on', 'inst'); sc.classList.add('on', 'inst'); r.classList.add('inst'); setAll(r, true); }
     },
     enter: function () {},
     step: function (el, i, ctx) {
-      var r = el.__r; if (!r) return;
+      var r = el.__r, sc = el.__sc, sc1 = el.__sc1; if (!r) return;
+      if (i === 1 || i === 2) {                              // 1: the entity at his neck, 2: the hand out of the monitor
+        var pic = i === 1 ? sc1 : sc;
+        if (ctx.reduced || cameBack) { pic.classList.add('inst', 'on'); void pic.offsetWidth; pic.classList.remove('inst'); return; }
+        pic.classList.remove('inst'); pic.classList.add('on'); if (i === 2) shake(ctx, [ctx.view.els, pic], 12); return;
+      }
+      sc1.classList.add('on'); sc.classList.add('on');
       var gen = ++el.__gen;
       if (ctx.reduced || cameBack) {                         // instant when landing on the built slide (Back)
         r.classList.add('inst'); setAll(r, true); if (!ctx.reduced) r.classList.add('live'); void r.offsetWidth; r.classList.remove('inst'); return;
@@ -1865,8 +1879,10 @@ Deck.registerSlide('dont-drug-kids', {
       at(620, function () { r.classList.add('a2'); });
       at(1000, function () { r.classList.add('i2', 'live', 'boom'); shake(ctx, nodes, 18); });
     },
-    unstep: function (el) {
+    unstep: function (el, i) {
       var r = el.__r; if (!r) return; el.__gen++;
+      if (i === 1) { el.__sc1.classList.remove('on'); return; }   // back to the boy at the desk
+      if (i === 2) { el.__sc.classList.remove('on'); return; }    // back to the entity
       r.classList.add('inst'); setAll(r, false); r.classList.remove('live', 'boom'); void r.offsetWidth; r.classList.remove('inst');
     }
   });

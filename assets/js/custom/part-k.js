@@ -168,13 +168,28 @@ addCss('ak-css', [
   /* the ultimatum, over the faded phones */
   '.ak-red{position:absolute;inset:0;background:radial-gradient(78% 72% at 50% 50%,rgba(150,10,20,.6),rgba(40,0,6,.45) 65%,rgba(0,0,0,0) 100%);opacity:0;transition:opacity .8s;pointer-events:none}',
   '.ak.k3 .ak-red{opacity:1}.ak.k4 .ak-red{opacity:.7}',
+  /* the ultimatum, drawn as a big Discord DM; its lines pop in one by one */
+  '.ak-ul{position:absolute;left:340px;width:1240px;top:210px;opacity:0;transform:scale(.94);transition:opacity .7s,transform .9s cubic-bezier(.3,1.3,.5,1);pointer-events:none}',
+  '.ak-ul>small{display:block;margin-bottom:26px;text-align:center;font:700 26px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:#ff8a8a}',
+  '.ak-dw{border-radius:28px;overflow:hidden;background:#313338;box-shadow:0 0 0 2px rgba(255,255,255,.1),0 40px 120px rgba(0,0,0,.7),0 0 120px rgba(255,40,40,.25)}',
+  '.ak-dh{display:flex;align-items:center;gap:20px;padding:20px 34px;background:#2b2d31;border-bottom:2px solid #1e1f22;color:#fff}',
+  '.ak-dh b{font:700 36px/1 var(--f-body)}.ak-dh span{margin-left:auto;font:500 24px/1 var(--f-body);color:#949ba4}',
+  '.ak-dw .av{position:relative;flex:none;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font:700 36px/1 var(--f-body);color:#fff}',
+  '.ak-dh .av{width:62px;height:62px;font-size:30px}',
+  '.ak-dh .av u{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:#23a55a;box-shadow:0 0 0 4px #2b2d31}',
+  '.ak-db{padding:34px 34px 30px;display:flex;flex-direction:column;gap:30px}',
+  '.ak-dm{display:flex;gap:24px;align-items:flex-start;opacity:0;transform:translateY(18px);transition:opacity .45s,transform .55s cubic-bezier(.3,1.4,.5,1)}',
+  '.ak.k3 .ak-dm{opacity:1;transform:none;transition-delay:calc(var(--i) * 1.1s + .7s)}',
+  '.ak.k4 .ak-dm{opacity:1;transform:none}',
+  '.ak-dm .nm{font:700 36px/1.1 var(--f-body)}.ak-dm time{margin-left:16px;font:400 24px/1 var(--f-body);color:#949ba4}',
+  '.ak-dm p{margin:8px 0 0;font:400 46px/1.25 var(--f-body);color:#dbdee1}',
+  '.ak-dm p+p{margin-top:6px}',
+  '.ak-dm p .hot{font-weight:700;color:#fff;background:rgba(255,77,77,.28);border-radius:8px;padding:0 10px;box-shadow:0 0 0 3px rgba(255,77,77,.28)}',
+  '.ak-di{margin:0 34px 34px;height:70px;border-radius:16px;background:#383a40;padding:0 26px;font:400 28px/70px var(--f-body);color:#6d6f78}',
+  '.ak.rm .ak-dm{transition:none!important;transition-delay:0s!important}',
   '.ak.k3 .ak-col{opacity:.12;filter:blur(3px);--tx:0px;--s:.96}.ak.k3 .ak-ar,.ak.k3 .ak-il{opacity:0}.ak.k4 .ak-il{opacity:0}',
   '.ak-il{transition:opacity .6s}',
   '.ak.k4 .ak-col{opacity:.06}',
-  '.ak-ul{position:absolute;left:120px;right:120px;top:300px;text-align:center;opacity:0;transform:scale(.9);transition:opacity .7s,transform .9s cubic-bezier(.3,1.3,.5,1);pointer-events:none}',
-  '.ak-ul small{display:block;font:700 26px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:#ff8a8a}',
-  '.ak-ul h2{margin:30px 0 0;font:600 150px/1.05 var(--f-display);letter-spacing:-.025em;color:#fff;text-shadow:0 8px 60px rgba(0,0,0,.6)}',
-  '.ak-ul h2 em{font-style:italic;color:#ff5a5a}',
   '.ak.k3 .ak-ul{opacity:1;transform:none}.ak.k4 .ak-ul{opacity:0;transform:scale(1.06)}',
   /* what is left: three facts and her mother's advice */
   '.ak-end{position:absolute;left:120px;right:120px;top:190px;opacity:0;transform:translateY(24px);transition:opacity .8s .2s,transform .9s .2s var(--ease);pointer-events:none}',
@@ -214,7 +229,19 @@ Deck.insertSlide({
       B(2, 'q', '&ldquo;Funny, smart, and very caring.&rdquo;<small>Her mother, Jaimee Seitz</small>') +
       B(3, '', 'In 7th grade, she felt left out at school') +
       B(4, 'go', 'Then, in the game chat, a stranger noticed her.'));
-    h('div', 'ak-ul', r,'<small>Then, the ultimatum</small><h2>Hurt others.<br>Or hurt <em>yourself.</em></h2>');
+    var AVK = '<div class="av" style="background:#f0b232">K</div>', AVP = '<div class="av" style="background:#5865f2">P</div>';
+    h('div', 'ak-ul', r,
+      '<small>Then, the ultimatum</small>' +
+      '<div class="ak-dw">' +
+        '<div class="ak-dh"><div class="av" style="background:#f0b232">K<u></u></div><b>Kai_x</b><span>Direct Message</span></div>' +
+        '<div class="ak-db">' +
+          '<div class="ak-dm" style="--i:0">' + AVK + '<div><span class="nm" style="color:#f0b232">Kai_x</span><time>Today at 22:14</time>' +
+            '<p>u want to stay in the group right?</p><p>then u have to prove it</p>' +
+            '<p><span class="hot">hurt someone else.</span></p><p><span class="hot">or hurt urself.</span> ur choice</p></div></div>' +
+          '<div class="ak-dm" style="--i:3">' + AVP + '<div><span class="nm" style="color:#9aa4ff">pixel_kid09</span><time>22:15</time><p>wait what</p></div></div>' +
+        '</div>' +
+        '<div class="ak-di">Message @Kai_x</div>' +
+      '</div>');
     h('div', 'ak-end', r,
       '<div class="ak-tl">' +
         '<div class="ak-tile"><b>8</b><span>when she joined Roblox</span></div>' +
